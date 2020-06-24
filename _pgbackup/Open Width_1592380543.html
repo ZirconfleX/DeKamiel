@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="De Kamiel; " pen Width"" content="">
+        <meta name="author" content="ZirconfleX">
+        <title>"Open Width" Nemo or Nautilus Troubles</title>
+        <!-- Bootstrap core CSS -->
+        <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+        <!-- Custom styles for this template -->
+        <link href="Open Width.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=ABeeZee&display=swap">
+        <meta name="keywords" content="Linux-Mint, Ubuntu, Open Width, Open, Width">
+    </head>
+    <body>
+        <div class="container" style="border-bottom: 2px solid; display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 50px 50px; grid-template-rows: 50px 50px 50px 50px 20px; grid-template-areas: 'Logo Logo Title Title Title Title' 'Logo Logo Title Title Title Title' 'Logo Logo Zirco Zirco Zirco Zirco' 'Logo Logo Web Web Zirco Zirco' '. . . . . .'; margin-top: -50px;">
+            <img src="Figures/Kamiel_2.svg" style=" width: 100%; height: 100%; object-fit: fill;grid-area:1 / 1 / 5 / 3;" data-html="false">
+            <h1 style=" font-weight: bold; text-align: right; font-family: 'ABeeZee', sans-serif; align-self: center; font-size: 70px; line-height: 97px;grid-area:1 / 3 / 3 / 7;">De Kamiel</h1>
+            <img src="Figures/ZirconfleX_Logo_Web_45_Jun20.svg" style="width: 100%; height: 100%; object-fit: fill; grid-area: 3 / 5 / 5 / 7;">
+            <p style="font-family: 'ABeeZee', sans-serif; text-align: right; grid-area: 3 / 3 / 4 / 5; width: 100%; height: 100%; padding-top: 24px;">Offered by: ZirconfleX</p>
+            <p style="grid-area: 4 / 3 / 5 / 5; text-align: right; font-family: 'ABeeZee', sans-serif; color: #1d5de4; width: 100%; height: 100%;">http://www.<a href="http://www.zirconflex.be" target="_blank">zirconflex</a>.be</p>
+        </div>
+        <div class="container" style="padding-top: 30px;">
+            <h1 id="-open-with-troubles" style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;grid-template-rows:48px;grid-template-areas:&quot;Title Title . Download&quot;;"><h1 id="-open-with-troubles" style="grid-area:Title;">&quot;Open With&quot; Troubles</h1><code style="grid-area:1 / 4 / 2 / 5;" a href="/Figures/Pdfs/Nautilus or Nemo Troubles.pdf" download> <img src="/Figures/acroread.png" alt="pdf" width="24" height="24"></code></h1>
+            <h2 id="summary">Summary</h2>
+            <p>Using the Nautilus or Nemo file manager, you can double-click on a file to open it with its default application.  If the default application is not what you like or you are not sure what the default application is,  or want to modify it the default application, then you can right-click on the file. The first item on the fall down menu is the default application, and find a list of mime-type associations under the menu item &quot;Open With&quot;.  The last item on the list [Open Width] menu is [Other Application&hellip;].
+                Clicking on [Other Application&hellip;] brings up a dialogue box that lets one add another application than the default that can be used to open or run the file.<br> <img src="Figures/OpenWidth/OpenWith_1.png" alt="OpenWidth_1" style="zoom: 80%;"> Figure 1 &nbsp;&nbsp;&nbsp;&nbsp; <img src="Figures/OpenWidth/OpenWith_2.png" alt="OpenWith_2" style="zoom: 80%;"> Figure 2</p>
+            <h2 id="introduction">Introduction</h2>
+            No problem was encountered adding new applications to the [Open Width] list of a file.
+            The actions to add an application to open or run a file are:
+            <ul>
+                <li>Right click the file were the default application need to be changed or one needs to be add.
+                    Click [Other Application...] in the popping up dialogue box.
+                    Select an application from the list of applications under [
+                    <strong>Other Applications</strong>] and click [OK].
+                </li>
+                <li>
+                    <img src="Figures/OpenWidth/OpenWith_3.png" alt="OpenWith_3" style="zoom: 80%;"> Figure 3
+                </li>
+                <li>Simple no?</li>
+            </ul>
+            The issue is how to get applications removed from the [Open Width] list.
+            <br>
+            Searching the WWW I could find that an application could be removed from the [Open Width] list by:
+            <ul>
+                <li>Click [Other Application...] in the popping up dialogue box right click the application you want to remove from the [Open Width] list and then select [Remove Application].</li>
+            </ul>
+            But that did not work at all for most of the applications.
+            <br>
+            I write for most because some applications could be removed from the above described way.
+            So: why can some applications be removed and other not?
+            That started my search to find out the why and what of the [Open Width] file option in Nautilus and/or Nemo. Keep reading on to find the how-to...
+            <h2 id="unable-to-remove-application">Unable to remove application</h2>
+            Why is it impossible to remove an application from the [Open with] menu using the GUI method, while other applications can be removed using this method (described above and showed in figure 4).
+            <br>
+            <img src="Figures/OpenWidth/OpenWith_4.png" alt="OpenWith_4" style="zoom: 80%;"> Figure 4 
+            <br>
+            Well; To be able to remove an application from the [Open With] list it must be registered in mime-type files residing in specific directories of the system.
+            <h2 id="mime-type">Mime-type</h2>
+            <a href="https://en.wikipedia.org/wiki/MIME"><strong>MIME</strong></a> stands for 
+            <strong>Multi-purpose Internet Mail Extensions</strong>. MIME types form a standard way of classifying file types on the  Internet. Internet programs such as Web servers and browsers all have a  list of MIME types.
+            It turns out that Gnome based Linux distributions as Ubuntu and Linux-Mint use mime-type associations to know what type of application can run a certain type of file. This is reflected in the Nautilus and Nemo file browser default tool (double click) and right-click menu. The mime-type associations are stored in association list files and Nautilus or Nemo use these files to show file and application sets.
+            Mimi-types are defined under the 
+            <a href="http://standards.freedesktop.org/menu-spec/latest/">freedesktop</a> system.
+            <br>
+            In Linux-Mint-19.3:
+            <ul>
+                <li>The 
+                    <strong>default</strong> mime-type association is listed in 
+                    <code>/usr/share/applications</code> as 
+                    <code>defaults.list</code> file.
+                    This entry is a sim-link of the  
+                    <code>defaults.list</code> file in 
+                    <code>/etc/gnome/defaults.list</code>.
+                </li>
+                <li>The 
+                    <strong>local (user)</strong> mime-type associations are listed in: 
+                    <code>~/.config/mimeapps.list</code>
+                </li>
+            </ul>
+            Other places that possibly can hold mime-type files are:
+            <ul>
+                <li>For the default.list
+                    <ul>
+                        <li>
+                            <code>/etc/gnome/defaults.list</code> (Linux-Mint stores here the original defaults.list file. the version in /usr/share/applications is a sim-link of this file).
+                        </li>
+                    </ul>
+                </li>
+                <li>For the mimeapps.list
+                    <ul>
+                        <li>/usr/share/cinnamon/applications</li>
+                        <li>/usr/share/gnome/applications</li>
+                        <li>~/home/marc/.local/share/flatpak/exports/share/applications</li>
+                        <li>/var/lib/flatpak/exports/share/applications (a 
+                            <code>mimeapps.list</code> file is present here too in my installation)
+                        </li>
+                        <li>/usr/local/share/applications</li>
+                    </ul>
+                </li>
+            </ul>
+            <h2 id="mime-type-files">Mime-type files</h2>
+            <ul>
+                <li>default.list:
+                    <ul>
+                        <li>The 
+                            <code>default.list</code> mime-type association files contain files and their association to a certain application. This is the application used by default to open or run a file, it is the application that runs when at double clicking a file or its the first item in right-click menu as figure 1 shows.
+                            I guess that these files are modified when an application is installed. The installer of the application enters here what files the application can open, run, launch and work with.
+                        </li>
+                    </ul>
+                </li>
+                <li>To modify this file one need to have root(sudo) access.
+</li>
+                <li>mimeapps.list:
+                    <ul>
+                        <li>The 
+                            <code>mimeapps.list</code> files are files created by the user.
+                            <ul>
+                                <li>The [Default Applications] entries in the 
+                                    <code>mimeapps.list</code> files overrule the application entries for that type of file in the 
+                                    <code>defaults.list</code> file.
+                                </li>
+                                <li>The [Added Associations] entries in the  
+                                    <code>mimeapps.list</code> files are showed when clicking [Open With] in the right-click menu as figure 2 shows.
+                                </li>
+                                <li>The [Removed Associations] entries in the  
+                                    <code>mimeapps.list</code> file holds the applications removed from the right-click menu. The associations in the file or other 
+                                    <code>mimeapps.list</code> files are NOT removed.
+                                </li>
+                            </ul>
+                        </li>
+                        <li>REMARK: 
+                            <ul>
+                                <li>Installing applications as user might generate a 
+                                    <code>mimeapps.list</code> file in 
+                                    <code>~/.local/share/applications</code>. This is also the place where user installed application generate or copy their 
+                                    <code>.desktop</code> files.
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li>mime-type file syntax:
+                    <ul>
+                        <li>The syntax is straight forward:
+                            <ul>
+                                <li>file 
+                                    <em>content type = application <code>.desktop</code></em> file list with applications separated by 
+                                    <code>;</code>
+                                </li>
+                                <li>Some examples:
+                                    <pre> <code>
+                [Default Applications]
+                application/<span class="hljs-attr">pdf=FoxitReader.desktop</span>
+                x-scheme-handler/<span class="hljs-attr">mailto=userapp-Thunderbird-VEN8K0.desktop</span>
+                text/<span class="hljs-attr">csv=libreoffice-calc.desktop;</span>
+                text/<span class="hljs-attr">english=code.desktop;atom.desktop;xed.desktop;</span>
+                text/<span class="hljs-attr">google-video-pointer=xplayer.desktop;vlc.desktop;</span>
+                [Added Associations]
+                model/x.<span class="hljs-attr">stl-binary=atom.desktop;</span>
+                application/<span class="hljs-attr">octet-stream=atom.desktop;</span> </code> </pre>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>REMARK:
+                            <ul>
+                                <li>The 
+                                    <code>default.list</code> mime-type association files do NOT have divisions as [Default Applications],  [Added Associations] and  [Removed Associations]. It&apos;s just a list of associations between applications and file types.
+                                </li>
+                                <li>The 
+                                    <code>.desktop</code> files are the files used to launch an application from a Gnome GUI.
+                                    These files are by default (unless an application is installed as user) and when a tool is installed as root(sudo) stored in:
+                                    <ul>
+                                        <li>
+                                            <code>/usr/share/applications</code> or 
+                                            <code>/home/marc/.local/share/applications</code>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <h2 id="mime-types">Mime-types</h2>
+            Mime types are predefined and determine the function of a file, so rather than, as Microsoft does, relying only on the file extension of a file name Linux uses a file&rsquo;s MIME type that&apos;s
+            embedded in the beginning of the file itself. Linux can easily open, with the correct application, a file without extension because it looks at the file&rsquo;s MIME type to determine what type of file it is.
+            <h3 id="manually-add-an-association-">Manually add an association:</h3>
+            Associating applications to files is easy using the GUI as showed and explained before, but removing applications from the [Open With] menu or if one wants to add file associations manually the
+            mime type of a file needs to be known. To do this:
+            <br>
+            Use: 
+            <code>mimetype &lt;filename&gt;</code> or in this case 
+            <code>mimetype OpenWith_1.png</code>
+            <br>
+            Example: 
+            <br>
+            <ul>
+                <ul>
+                    <li>Assume there is a file available called: 
+                        <em>OpenWith_1.png</em>
+                    </li>
+                    <li>Open a terminal and enter: 
+                        <em>mimetype OpenWith_1.png</em>
+                    </li>
+                    <li>The results in the terminal is: 
+                        <em>OpenWith_1.png: image/png</em>
+                    </li>
+                </ul>
+                <li>The first part of the file association is known.</li>
+                <li>The mime type of a PNG file is: 
+                    <em>image/png</em>
+                </li>
+                <li>Determine now the application that&apos;s going to be used to open, view or modify this file.</li>
+                <li>Assume the GNU Image Manipulation Program (GIMP) will be used.</li>
+                <li>Find where the 
+                    <code>.desktop</code> file of this tool is stored (Of course, the tool must be installed)
+                </li>
+                <li>Type in the terminal: 
+                    <code>locate gimp.desktop</code>
+                </li>
+                <li>The result in the terminal is a list of all places where a file called 
+                    <code>gimp.desktop</code> is stored.
+                </li>
+                <li>Example:
+                    <br>
+                    <pre> <code>
+                        mine<span class="hljs-meta">@desktop</span>:~$ locate gimp.desktop <span class="hljs-regexp">/usr/</span>share<span class="hljs-regexp">/app-install/</span>desktop/<span class="hljs-string">gimp:</span>gimp.desktop <span class="hljs-regexp">/usr/</span>share<span class="hljs-regexp">/applications/</span>gimp.desktop
+                        mine<span class="hljs-meta">@desto</span>:~$ </code> </pre>
+                </li>
+                <li>The list of results certainly shows a 
+                    <code>.desktop</code>file in 
+                    <code>/usr/share/applications</code> or in 
+                    <code>~/.local/share/appliactions</code>.
+                    That is the 
+                    <code>.desktop</code> file to use for the file association.
+                </li>
+                <li>Open with a text editor the 
+                    <code>mimeapps.list</code>file in 
+                    <code>~/.config</code> and add what we just found out under [Default Applications] or
+                    [Added Associations]. Save the file and try it out in Nautilus or Nemo.
+                </li>
+                <h3 id="manually-remove-an-association">Manually remove an association</h3>
+                <p>Open with a text editor the <code>mimeapps.list</code>file in <code>~/.config</code> or in <code>~/.local/share/applications</code>and simply delete the line of the tool no longer wanted in the [Open With] menu.</p>
+                <p>Possibly a saver way to remove tools from the [Open With] list is to add them under the [Removed Associations] entries in the  <code>mimeapps.list</code> file.
+            When an application is listed in the [Open With] list is means it has an entry in a <code>defalts.list</code> file or in a <code>mimeapps.list</code> file on the system. When dropping a line under the [Removed Associations] entries everything else is overruled and the application is gone in the [Open With] list. It is now very easy to put the tool back in the menu by removing it from the [Removed Associations] entries.</p>
+                <p>Example:</p>
+                <ul>
+                    <li>The right-click menu of a SVG file contains an option to open the file with &quot;libreoffice-writer&quot; (figure 6).
+                        <br>
+                        That tool is never going to be used to open this kind of files, so it will be removed from the menu.
+                        <br>
+                        The GUI method seems not to work, so we need to do it manually.
+                    </li>
+                    <li>Open a terminal and find out what the mime type of a svg file is (it is: 
+                        <code>image/svg+xml</code>)
+                    </li>
+                    <li>Open with a text editor 
+                        <code>~/.config/mimeapps.list</code> and browse to the [Removed Associations] section
+                        <ul>
+                            <li>When 
+                                <code>image/svg+xml</code> is already registered with an applications 
+                                <code>.desktop</code> entry add &quot;libreoffice-writer&quot; to the entry as showed below:
+                            </li>
+                            <li>
+                                <pre><code> <span class="hljs-string">[Removed Associations]</span>
+                    image/svg+xml=pix.desktop;latexdraw.desktop;libreoffice-writer.desktop; </code></pre>
+                            </li>
+                            <li>When there is not yet a registration for the  
+                                <code>image/svg+xml</code>  type in the [Removed Associations] section, simply add the registration and possibly also the title of the section.
+                                <br>
+                                To get &quot;libreoffice-writer&quot; removed from the list, this is how the [Removed Associations] section must look like:
+                                <br>
+                                <pre><code> <span class="hljs-string">[Removed Associations]</span>
+                    image/svg+xml=libreoffice-writer.desktop; </code></pre>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>Save the 
+                        <code>mimeapps.list</code> file and try out if the &quot;libreoffice-writer&quot; is removed from the [Open With] right-click menu.
+                        <ul>
+                            <li>Open a Nautilus or nemo file browser.</li>
+                            <li>Right-click a SVG file.</li>
+                            <li>Is the &quot;libreoffice-writer&quot; entry removed? It should as showed in figure 7</li>
+                            <ul>
+                                <li>If it&apos;s not close Nautilus or Nemo and start it again.</li>
+                            </ul>
+                        </ul>
+                    </li>
+                    <li>
+                        <img src="Figures/OpenWidth/OpenWith_6.png" alt="OpenWith_6" style="zoom: 67%;"> Figure 6 &nbsp;&nbsp;&nbsp;&nbsp;
+                        <img src="Figures/OpenWidth/OpenWith_7.png" alt="OpenWith_7" style="zoom: 80%;"> Figure 7 
+                        <br>
+                        <ul>
+                            <li>REMARK:
+                                <ul>
+                                    <li>Simply deleting an entry is not the best idea when editing the 
+                                        <code>defaults.list</code> in 
+                                        <code>/usr/share/appliactions</code>!
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <h2 id="useful-commands">Useful Commands</h2>
+                <ul>
+                    <li>To find a file, this command can help:  
+                        <em>locate <filename .extension=""></filename></em>
+                        <ul>
+                            <li>Example:
+                                <ul>
+                                    <li>locate defaults.list</li>
+                                    <li>locate mimeapps.list</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>To automatically add 
+                        <code>.desktop</code> files to 
+                        <code>default.list and/or</code>mimeapps.list files, this command can be used: 
+                        <em>update-desktop-database</em>
+                        <ul>
+                            <li>update-desktop-database /home/
+                                <user>/.config/mimeapps.list
+</user>
+                            </li>
+                            <li>sudo update-desktop-database</li>
+                            <li>sudo update-desktop-database /usr/share/applications</li>
+                        </ul>
+                    </li>
+                </ul>
+            </ul>
+        </div>
+        <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="assets/js/jquery.min.js"></script>
+        <script src="assets/js/popper.js"></script>
+        <script src="bootstrap/js/bootstrap.min.js"></script>
+    </body>
+</html>

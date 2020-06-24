@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="De Kamiel; GHDL and GtkWave" content="">
+        <meta name="author" content="ZirconfleX">
+        <title>Install GHDL and GtkWave</title>
+        <!-- Bootstrap core CSS -->
+        <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+        <!-- Custom styles for this template -->
+        <link href="InstallGhdlGtkWave.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=ABeeZee&display=swap">
+        <meta name="keywords" content="FPGA, Xilinx, Samtec, Blueribbon, Blue Ribbon, HDR, FMC, VITA-57, development boards,">
+    </head>
+    <body>
+        <div class="container" style="border-bottom: 2px solid; display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 50px 50px; grid-template-rows: 50px 50px 50px 50px 20px; grid-template-areas: 'Logo Logo Title Title Title Title' 'Logo Logo Title Title Title Title' 'Logo Logo Zirco Zirco Zirco Zirco' 'Logo Logo Web Web Zirco Zirco' '. . . . . .'; margin-top: -50px;">
+            <img src="Figures/Kamiel_2.svg" style=" width: 100%; height: 100%; object-fit: fill;grid-area:1 / 1 / 5 / 3;" data-html="false">
+            <h1 style=" font-weight: bold; text-align: right; font-family: 'ABeeZee', sans-serif; align-self: center; font-size: 70px; line-height: 97px;grid-area:1 / 3 / 3 / 7;">De Kamiel</h1>
+            <img src="Figures/ZirconfleX_Logo_Web_45_Jun20.svg" style="width: 100%; height: 100%; object-fit: fill; grid-area: 3 / 5 / 5 / 7;">
+            <p style="font-family: 'ABeeZee', sans-serif; text-align: right; grid-area: 3 / 3 / 4 / 5; width: 100%; height: 100%; padding-top: 24px;">Offered by: ZirconfleX</p>
+            <p style="grid-area: 4 / 3 / 5 / 5; text-align: right; font-family: 'ABeeZee', sans-serif; color: #1d5de4; width: 100%; height: 100%;">http://www.<a href="http://www.zirconflex.be" target="_blank">zirconflex</a>.be</p>
+        </div>
+        <div class="container" style="padding-top: 30px;">
+
+            <h1 id="Install and use GHDL and GtkWave">Install and use GHDL and GtkWave
+                <a href="Figures/Pdfs/Install and use GHDL and GtkWave.pdf" download>
+                <img src="Figures/acroread.png" alt="pdf" style="zoom: 80%;">
+            </a></h1>
+            <h2 id="ghdl">GHDL</h2>
+            <p>GHDL is an open-source simulator for the VHDL hardware language. GHDL is not an interpreter; it allows you to analyze and elaborate sources to generate machine code from your design. Native program execution is the only way for high speed simulation.</p>
+            <p>Features as given on the official <a href="https://github.com/ghdl/ghdl">GHDL Github</a> page.</p>
+            <ul>
+                <li>GHDL fully supports the 1987, 1993, 2002 versions of the IEEE 1076 VHDL standard, and the latest 2008 revision</li>
+                <li>Partial support of <a href="https://en.wikipedia.org/wiki/Property_Specification_Language">PSL</a>.</li>
+                <li>By using a code generator (<a href="http://llvm.org/">LLVM</a>, <a href="http://gcc.gnu.org/">GCC</a> or, <a href="https://en.wikipedia.org/wiki/X86-64">x86_64</a>/<a href="https://en.wikipedia.org/wiki/Intel_80386">i386</a> only, a built-in one), it is much faster than any interpreted simulator. It can handle very large designs, such as <a href="http://www.gaisler.com/index.php/downloads/leongrlib">leon3/grlib</a>.</li>
+                <li>GHDL runs on <a href="http://en.wikipedia.org/wiki/Linux_distribution">GNU/Linux</a>, <a href="http://en.wikipedia.org/wiki/Microsoft_Windows">Windows</a> and <a href="http://en.wikipedia.org/wiki/MacOS">macOS</a>, both on <code>x86</code> and on <code>x86_64</code>.</li>
+                <li>GHDL can write waveforms to a <a href="http://ghdl.readthedocs.io/en/latest/using/Simulation.html?highlight=GHW#cmdoption-wave">GHW</a>, <a href="https://en.wikipedia.org/wiki/Value_change_dump">VCD</a> or FST file. Combined with a <a href="http://en.wikipedia.org/wiki/Graphical_user_interface">GUI</a>-based <a href="https://en.wikipedia.org/wiki/Waveform_viewer">waveform viewer</a> and a good text editor, GHDL is a very powerful tool for writing, testing and simulating  code.</li>
+                <li>Supported third party projects: <a href="https://vunit.github.io/">VUnit</a>, <a href="http://osvvm.org/">OSVVM</a>, <a href="https://github.com/potentialventures/cocotb">cocotb</a> (through the <a href="https://en.wikipedia.org/wiki/Verilog_Procedural_Interface">VPI interface</a>), ...</li>
+            </ul>
+            <h2 id="gtkwave">GtkWave</h2>
+            <p>GTKWave is a fully featured <a href="http://www.gtk.org/">GTK+</a> based <a href="https://en.wikipedia.org/wiki/Waveform_viewer">waveform viewer</a> for Unix, Win32, and Mac OSX which reads LXT, LXT2, VZT, FST, and GHW files as well as standard Verilog VCD/EVCD files and allows their viewing.</p>
+            <h2 id="to-install-get-the-necessary-programs-and-tools">To install, Get the necessary programs and tools</h2>
+            <p>This is a guide to install both tools on Ubuntu_18.04 and possibly next coming releases of Ubuntu. Download GHDL and GtkWave and download tools and programs necessary to install and run both tools.</p>
+            <h3 id="ghdl-">GHDL:</h3>
+            <ul>
+                <li>This guide describes the GHDL - LLVM installation, thus download the latest pre-build GHDL-LLVM version.  At time of writing this article it was: <a href="https://github.com/ghdl/ghdl/releases/download/20181129/ghdl-20181129-ubuntu14-llvm-3.8.tgz"><strong>ghdl-20181129-ubuntu14-llvm-3.8</strong></a></li>
+                <li>Other tools necessary to install GHDL-LLVM are:
+                    <ul>
+                        <li>GNAT - ADA compiler: The latest community version at the time of writing was/is <strong>gnat-community-2018-20180528-x86_64-linux-bin</strong>. Get it <a href="http://mirrors.cdn.adacore.com/art/5b0d7bffa3f5d709751e3e04">here</a>.</li>
+                        <li>LLVM - Low Level Virtual Machine: In the GHDL documentation pages version 5.0 is the most recent version that can be used, but it’s running without any issue with newer versions too. This guide uses version 7.0. This tool can directly installed using apt. See below how to install LLVM.</li>
+                    </ul>
+                </li>
+            </ul>
+            <h3 id="gtkwave">GtkWave</h3>
+            <ul>
+                <li>Download GtkWave from <a href="https://sourceforge.net/projects/gtkwave/">here</a>.</li>
+                <li>Just click the big [Download] button and the latest version for the used operating system is selected and downloaded. It is also possible to select the file manually. To pursue this path, click on the download page the [Files] tab 1/3 (down the page). Select there the version of the tool to download and save it onto your system.</li>
+                <li>At time of writing this article the latest version Linux Ubuntu it was &quot;<strong>gtkwave-3.3.98.tar.gz</strong>&quot;.</li>
+            </ul>
+            <h2 id="install-the-tools">Install the tools</h2>
+            <h3 id="install-gnat">Install GNAT</h3>
+            <ul>
+                <li>Assumed is that the earlier downloaded files are stored in <em>/Downloads/Ghdl</em></li>
+                <li>Create under /Downloads/Vhdl a folder for unzipping of the compiler.</li>
+                <li>Unzip the downloaded file using the Ubuntu &quot;Archive Manager&quot;.</li>
+                <li>Run the <em>doinstall</em> script. and install the ADA compiler under <em>/opt/Gnat</em>.<br>
+                  Be aware that installing software in /opt requires one to be sudo or root.
+                </li>
+                <li>Add following line to your <em>.bashrc</em> file.<br>
+                <pre>
+                <code>
+<span class="hljs-comment"># GNAT GPL (ADA compiler) for GHDL</span>
+export PATH=<span class="hljs-variable">$PATH</span><span class="hljs-symbol">:/opt/Gnat/</span><span class="hljs-number">2018</span>/bin
+                </code>
+                </pre>
+                </li>
+            </ul>
+            <h3 id="install-llvm">Install LLVM</h3>
+            <ul>
+                <li>Browse to this page: <a href="https://apt.llvm.org/">https://apt.llvm.org/</a></li>
+                <li>On the page go to the Ubuntu section and copy the two text lines for version 7 on Bionic (18.04)
+                    <ul>
+                        <li>This are the lines:<br>
+                        <pre>
+                        <code>
+deb http://apt.llvm.org/<span class="hljs-keyword">bionic/ </span>llvm-toolchain-<span class="hljs-keyword">bionic-7 </span>main
+deb-src http://apt.llvm.org/<span class="hljs-keyword">bionic/ </span>llvm-toolchain-<span class="hljs-keyword">bionic-7 </span>main
+                        </code>
+                        </pre>
+                        </li>
+                    </ul>
+                </li>
+                <li>Press the windows key and start typing <strong>Software &amp; Updates</strong>. AS soon as some letters are typed, icons will appear.
+                    Click the [Software &amp; Update] icon and select the [Other Software] tab. Click [Add] and enter the first “deb ...” line in the new popup.
+                    Click [Add Source] and provide the sudo(root) password.
+                    Add the second ”deb ...“ line the same way.
+                </li>
+                <li>Hit [Close] and allow a new scan of the repositories.</li>
+                <li>Install the stable version of all key packages
+                    <ul>
+                        <li>Lower on the page with repository archive information find how to install all key packages or just read on here.</li>
+                        <li>Open a terminal (Right click the desktop and select [Open Terminal]).</li>
+                        <li>Type or better copy, one by one, following lines in the terminal:
+                            <ul>
+                                <li>
+<pre><code>wget -O - https://apt.llvm<span class="hljs-meta">.org</span>/llvm-snapshot.gpg.key|sudo apt-key <span class="hljs-keyword">add</span></code></pre>
+                                    and provide the sudo password to install the archive signature.
+                                </li>
+                                <li>Install LLVM
+<pre><code>apt-get install libllvm<span class="hljs-number">-7</span>-ocaml-dev libllvm7 llvm<span class="hljs-number">-7</span> llvm<span class="hljs-number">-7</span>-dev llvm<span class="hljs-number">-7</span>-doc llvm<span class="hljs-number">-7</span>-examples llvm<span class="hljs-number">-7</span>-runtime</code></pre>
+                                </li>
+                                <li>Install Clang &amp; co
+<pre><code>apt-get install clang<span class="hljs-number">-7</span> clang-tools<span class="hljs-number">-7</span> clang<span class="hljs-number">-7</span>-doc libclang-common<span class="hljs-number">-7</span>-dev libclang<span class="hljs-number">-7</span>-dev libclang1<span class="hljs-number">-7</span> clang-format<span class="hljs-number">-7</span> python-clang<span class="hljs-number">-7</span>
+</code></pre>
+                                </li>
+                                <li>Libfuzzer<br>
+<pre><code>apt-<span class="hljs-built_in">get</span> install libfuzzer<span class="hljs-number">-7</span>-<span class="hljs-built_in">dev</span>
+</code></pre>
+                                </li>
+                                <li>lldb
+<pre><code>apt-<span class="hljs-keyword">get</span> install lldb<span class="hljs-number">-7</span>
+</code></pre>
+                                </li>
+                                <li>lld (linker)
+<pre><code>apt-<span class="hljs-keyword">get</span> install lld<span class="hljs-number">-7</span>
+</code></pre>
+                                </li>
+                                <li>libc++
+<pre><code>apt-<span class="hljs-built_in">get</span> install libc++<span class="hljs-number">-7</span>-<span class="hljs-built_in">dev</span> libc++abi<span class="hljs-number">-7</span>-<span class="hljs-built_in">dev</span>
+</code></pre>
+                                </li>
+                                <li>OpenMP
+<pre><code>apt-<span class="hljs-built_in">get</span> install libomp<span class="hljs-number">-7</span>-<span class="hljs-built_in">dev</span>
+</code></pre>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>To make use of this latest version of LLVM tools some settings need to be done. In the terminal continue typing or copying and executing following lines one after the other.sudo update-<br>
+<pre><code>alternatives --install <span class="hljs-regexp">/usr/</span>bin<span class="hljs-regexp">/clang clang /u</span>sr<span class="hljs-regexp">/bin/</span>clang-<span class="hljs-number">7</span> <span class="hljs-number">100</span>
+sudo update-alternatives --install <span class="hljs-regexp">/usr/</span>bin<span class="hljs-regexp">/clang++ clang++ /u</span>sr<span class="hljs-regexp">/bin/</span>clang++-<span class="hljs-number">7</span> <span class="hljs-number">100</span>
+sudo update-alternatives --install <span class="hljs-regexp">/usr/</span>bin<span class="hljs-regexp">/clang-apply-replacements clang-apply-replacements /u</span>sr<span class="hljs-regexp">/bin/</span>clang-apply-replacements-<span class="hljs-number">7</span> <span class="hljs-number">100</span>
+sudo update-alternatives --install <span class="hljs-regexp">/usr/</span>bin<span class="hljs-regexp">/clang-check clang-check /u</span>sr<span class="hljs-regexp">/bin/</span>clang-check-<span class="hljs-number">7</span> <span class="hljs-number">100</span>
+sudo update-alternatives --install <span class="hljs-regexp">/usr/</span>bin<span class="hljs-regexp">/clang-query clang-query /u</span>sr<span class="hljs-regexp">/bin/</span>clang-query-<span class="hljs-number">7</span> <span class="hljs-number">100</span>
+sudo update-alternatives --install <span class="hljs-regexp">/usr/</span>bin<span class="hljs-regexp">/clang-tidy clang-tidy /u</span>sr<span class="hljs-regexp">/bin/</span>clang-tidy-<span class="hljs-number">7</span> <span class="hljs-number">100</span>
+sudo update-alternatives --install <span class="hljs-regexp">/usr/</span>bin<span class="hljs-regexp">/scan-build scan-build /u</span>sr<span class="hljs-regexp">/bin/</span>scan-build-<span class="hljs-number">7</span> <span class="hljs-number">100</span>
+sudo update-alternatives --install <span class="hljs-regexp">/usr/</span>bin<span class="hljs-regexp">/scan-view scan-view /u</span>sr<span class="hljs-regexp">/bin/</span>scan-view-<span class="hljs-number">7</span> <span class="hljs-number">100</span>
+</code></pre>
+                            The above lines set a permanent link for the system to use the newly installed LLVM tools instead of possible pre-installed or earlier installed versions.
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <h3 id="install-ghdl">Install GHDL</h3>
+            <p>In the assumption that GNU-ADA and LLVM are installed and the downloaded GHDL .tgz file is uncompressed in <em>/Downloads/Ghd/Ghdl</em> , do following to install GHDL.</p>
+            <ul>
+                <li>Open a terminal window and change directory (cd) to the <em>/opt</em> folder.<br>
+                    Create a new directory called /Ghdl (<em>sudo mkdir Ghdl</em>).
+                </li>
+                <li>Change the owner and group of the directory (sudo chown <user> Ghdl &amp; sudo chgrp <user> Ghdl)<br>
+                    <user> = your user name. This is done to make later modifications and additions easier.
+                </li>
+                <li>change directory to the folder used by the uncompressed GHDL files,<br>
+                    <em>cd /home/Downloads/Vhdl/Ghdl</em>.
+                </li>
+                <li>Run the terminal command:
+<pre><code>.<span class="hljs-regexp">/configure --with-llvm-config=/u</span>sr<span class="hljs-regexp">/lib/</span>llvm-<span class="hljs-number">7</span><span class="hljs-regexp">/bin/</span>llvm-config --prefix=<span class="hljs-regexp">/opt/</span>Ghdl
+</code></pre>
+                </li>
+                <li>When the previous run is done, type <em>make</em> and let run again.</li>
+                <li>Run <em>make install</em> when previous run has finished.</li>
+                <li>The tool should now be installed in <em>/opt/Ghdl</em>, showing three folders (bin, include, lib).</li>
+                <li>Add the path <em>/opt/Ghdl/bin</em> to the systems path by editing the <em>.bashrc</em> file.
+<pre><code><span class="hljs-comment"># GHDL simulator</span>
+<span class="hljs-built_in">export</span> GHDL_ROOT=<span class="hljs-string">"/opt/Ghdl"</span>
+<span class="hljs-built_in">export</span> PATH=<span class="hljs-variable">$PATH</span>:<span class="hljs-variable">$GHDL_ROOT</span>/bin
+</code></pre>
+                </li>
+                <li>Change directory to <em>/opt/Ghdl/bin</em> and create a symbolic link for ghdl.
+<pre><code>sudo ln -s  <span class="hljs-regexp">/opt/</span>Ghdl<span class="hljs-regexp">/bin/g</span>hdl <span class="hljs-regexp">/usr/</span>bin<span class="hljs-regexp">/ghdl</span>
+</code></pre>
+                </li>
+            </ul>
+
+            <h3 id="gtkwave">GtkWave</h3>
+            <p>This is a similar install procedure as for GHDL, do following:</p>
+            <ul>
+                <li>Open a terminal window and change directory (cd) to the <em>/opt</em> folder.<br>
+                  Create a new directory called <em>/GtkWave</em> (<em>sudo mkdir GtkWave</em>).
+                </li>
+                <li>Change the owner and group of the directory (sudo chown <user> GtkWave &amp; sudo chgrp <user> GtkWave). <user> = your user name.
+                    This is done to make later modifications and additions easier.
+                </li>
+                <li>Change directory to the folder used for the uncompressed files, <em>cd /home/Downloads/Vhdl/GtkWave</em>.</li>
+                <li>Run the terminal command: <em>./configure --prefix=/opt/GtkWave</em>
+                    <ul>
+                        <li>The above command should do the job when the configure script can find the Tcl/TK tools installed on the machine. The tool must be able to find following
+                            files: tclConfig.sh and tkConfig.sh. When the configure script cannot find one of the files check if tcl and tk are installed. When not install both and
+                            try again. When tcl and tk are installed run the script with following options:
+                        </li>
+                        <li><em>./configure --prefix=/opt/GtkWave --with-tcl=/opt/ActiveTcl/lib/tcl8.6 --with-tk=/opt/ActiveTcl/lib/tk8.6</em> (replace the path /opt/ActiveTcl/lib/tcl8.6 (tk8.)
+                            by the appropriate path on your system).
+                        </li>
+                        <li>Another thing where the configuration script can trip over are the xz-utils (zip utilities). To avoid problems run the command:<br>
+                          <em>./configure --prefix=/opt/GtkWave --with-tcl=/opt/ActiveTcl/lib/tcl8.6 --with-tk=/opt/ActiveTcl/lib/tk8.6 --disable-xz</em>
+                        </li>
+                    </ul>
+                </li>
+                <li>When the previous run is done, type <em>make</em> and let run again</li>
+                <li>Type <em>su</em> and provide the root or sudo password then type <em>make install</em> and let run again until finished.</li>
+                <li>Check the install by running: <em>make installcheck</em>.</li>
+                <li>The tool should now be installed in <em>/opt/GtkWave</em>, showing three folders (bin, lib, share).</li>
+                <li>Add the path <em>/opt/GtkWave/bin</em> to the systems path by editing the <em>.bashrc</em> file.
+<pre><code><span class="hljs-comment"># GtkWave viewer</span>
+<span class="hljs-built_in">export</span> GTKWAVE_ROOT=<span class="hljs-string">"/opt/GtkWave"</span>
+<span class="hljs-built_in">export</span> PATH=<span class="hljs-variable">$PATH</span>:<span class="hljs-variable">$GTKWAVE_ROOT</span>/bin
+</code></pre>
+                </li>
+                <li>Change directory to <em>/opt/GtkWave/bin</em> and create a symbolic link for ghdl.
+                    <ul>
+                        <li>sudo ln -s  /opt/GtkWave/bin/gtkwave /usr/bin/gtkwave</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3 id="the-end">The end</h3>
+            <p>Both tools are installed now.<br>
+            Open a terminal and type:</p>
+            <ul>
+                <li>ghdl<br>
+                    The result in the terminal window is:
+<pre><code>Shows **ghd<span class="hljs-variable">l:error</span>: missing <span class="hljs-keyword">command</span>, <span class="hljs-keyword">try</span> ghdl --<span class="hljs-keyword">help</span>**
+</code></pre>
+                </li>
+                <li>Then type: gtkwave<br>
+                    The result is:
+<pre><code> Shows <span class="hljs-keyword">an</span> <span class="hljs-literal">empty</span> <span class="hljs-keyword">black</span> pop-up screen normally used <span class="hljs-keyword">for</span> waveforms.
+</code></pre>
+                </li>
+            </ul>
+            <p>The tools are installed and functional.</p>
+            <h2 id="tools-documentation">Tools Documentation</h2>
+            <h5 id="ghdl">GHDL</h5>
+            <ul>
+                <li><a href="https://ghdl.readthedocs.io/en/latest/index.html">https://ghdl.readthedocs.io/en/latest/index.html</a></li>
+            </ul>
+            <h5 id="gtkwave">GtkWave</h5>
+            <ul>
+                <li><a href="http://gtkwave.sourceforge.net/gtkwave.pdf">http://gtkwave.sourceforge.net/gtkwave.pdf</a></li>
+                <li>VCD writer: <a href="http://pyvcd.readthedocs.io/en/latest/index.html">http://pyvcd.readthedocs.io/en/latest/index.html</a></li>
+            </ul>
+            <p>Marc Defossez<br>
+            <p>20 Jan 2019</p>
+
+        </div>
+        <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="assets/js/jquery.min.js"></script>
+        <script src="assets/js/popper.js"></script>
+        <script src="bootstrap/js/bootstrap.min.js"></script>
+    </body>
+</html>

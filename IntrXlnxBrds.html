@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="De Kamiel; Interconnect Xilinx Boards" content="">
+        <meta name="author" content="ZirconfleX">
+        <title>Interconnect Xilinx Boards</title>
+        <!-- Bootstrap core CSS -->
+        <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+        <!-- Custom styles for this template -->
+        <link href="IntrXlnxBrds.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=ABeeZee&display=swap">
+        <meta name="keywords" content="FPGA, Xilinx, Samtec, Blueribbon, Blue Ribbon, HDR, FMC, VITA-57, development boards,">
+    </head>
+    <body>
+        <div class="container" style="border-bottom: 2px solid; display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 50px 50px; grid-template-rows: 50px 50px 50px 50px 20px; grid-template-areas: 'Logo Logo Title Title Title Title' 'Logo Logo Title Title Title Title' 'Logo Logo Zirco Zirco Zirco Zirco' 'Logo Logo Web Web Zirco Zirco' '. . . . . .'; margin-top: -50px;">
+            <img src="Figures/Kamiel_2.svg" style=" width: 100%; height: 100%; object-fit: fill;grid-area:1 / 1 / 5 / 3;" data-html="false">
+            <h1 style=" font-weight: bold; text-align: right; font-family: 'ABeeZee', sans-serif; align-self: center; font-size: 70px; line-height: 97px;grid-area:1 / 3 / 3 / 7;">De Kamiel</h1>
+            <img src="Figures/ZirconfleX_Logo_Web_45_Jun20.svg" style="width: 100%; height: 100%; object-fit: fill; grid-area: 3 / 5 / 5 / 7;">
+            <p style="font-family: 'ABeeZee', sans-serif; text-align: right; grid-area: 3 / 3 / 4 / 5; width: 100%; height: 100%; padding-top: 24px;">Offered by: ZirconfleX</p>
+            <p style="grid-area: 4 / 3 / 5 / 5; text-align: right; font-family: 'ABeeZee', sans-serif; color: #1d5de4; width: 100%; height: 100%;">http://www.<a href="http://www.zirconflex.be" target="_blank">zirconflex</a>.be</p>
+        </div>
+        <div class="container" style="padding-top: 30px;">
+
+            <h1 id="interconnect-xilinx-boards-over-fmc-connectors">Interconnect Xilinx boards over FMC connectors
+                <a href="Figures/Pdfs/Interconnect Xilinx Boards over FMC connectors.pdf" download>
+                <img src="Figures/acroread.png" alt="pdf" style="zoom: 80%;">
+            </a></h1>
+            <h2 id="would-it-not">Would it not</h2>
+            <p>be nice to have the possibility to connect two Xilinx development boards, as the VCU108 Ultrascale board,
+                together over one of the on board FMC connectors like below figure shows.<br>
+                <img alt="BoardsThruBlueRibbon" src="Figures/BoardsThruBlueRibbon.png" style="width:60%"> Figure 1</p>
+
+            <p>To realize this setup <a href="www.samtec.com">Samtec</a> is of great help because they make the flat cables with connectors to plug in the FMC connectors.
+                 The cable part number is <strong>HDR-16947-XX</strong> (where the XX is the length of the cable). The cable datasheet can be viewed, downloaded and saved
+                 from <a href="hdr-169470-xx.pdf">here</a>.</p>
+            <p>If you have two Xilinx development boards (not necessary equipped with the same FPGA or the same type of development board) and are the owner of a Samtec HDR
+                cable then it seems to be a simple action to interconnect two boards. Plug one end of the cable in an FMC connector on one board and do the same on the other
+                board. Power up the boards and start working.
+                What will happen is that nothing will work. It&#39;s not possible to configure anything over JTAG on the boards.</p>
+            <p>Bummer! So let&#39;s go look what&#39;s wrong and make the whole thing run.<br>
+            Put your engineers hat on!<br>
+            The <a href="https://www.xilinx.com/products/boards-and-kits/ek-u1-vcu108-g.html">XCVU108 Ultrascale</a> board is used as example in this description.</p>
+
+            <h2 id="xilinx-boards">Xilinx Boards</h2>
+            <p>Xilinx Demo\Development Boards use the JTAG chain to configure the FPGA and other JTAG enabled devices  on the board and possibly configure also FPGA and JTAG
+                enable devices on boards plugged into the FMC connector(s). </p>
+            <p>The JTAG chain runs over the board interconnecting the different devices that can make use of JTAG. Included in this chain are the two Samtec FMC connectors as
+                below figure from the Xilinx &quot;ug1066-vcu108-eval-bd.pdf&quot; user guide shows.<br>
+            <img src="Figures/VCU108JtagChain.png" alt="VCU108JtagChain" style="width:50%;" /> Figure 2</p>
+            <p>Thus it should be possible to interconnect two boards and use JTAG to configure everything that is JTAG enabled on both boards. As we discovered, it is not.</p>
+
+            <h2 id="vita-57">VITA-57</h2>
+            <p>The VITA specification makes it possible that plugged mezzanine boards are tested or configured through JTAG chain starting from the FPGA.</p>
+            <p>s with everything, there are some rules to respect in order to pass the JTAG chain to/through the FMC connector are:</p>
+            <ol>
+                <li>The TMS and TCK signals are required to be driven to the module from the carrier, therefore per FMC spec, the mezzanine card CANNOT behave as a master.
+                    <ul>
+                        <li>This is the case for the Xilinx boards, the TMS and TCK signals originate from the boards JTAG connector and run to the FMC connectors.</li>
+                    </ul>
+                </li>
+                <li>Vita rule 5.59: The carrier card shall ensure that an independently buffered TCK shall be input to each IO mezzanine module.
+                    <ul>
+                        <li>That is the case on Xilinx boards. The main TCK signal is passed to an on-board 74AVC8T245, for an VCU108 board this is U19. Each FMC connector gets this way
+                        it&#39;s own TCK signal.
+                        </li>
+                    </ul>
+                </li>
+                <li>Vita rule 5.60: The mezzanine module card shall only have one load on the TMS signal.
+                    <ul>
+                        <li>As for the TCK signal above, the main TMS signal is passed through an on-board buffer so that a single TMS signal runs to the FMC connectors.</li>
+                    </ul>
+                </li>
+                <li>Vita rule 5.61: The carrier card shall connect TDI directly to TDO, if the FMC module is not plugged into carrier card
+                    <ul>
+                        <li>This is where it goes contrary on Xilinx boards. </li>
+                        <li>The rule says that when a mezzanine card is not plugged into the connector TDI and TDO should be
+                            connected. This rule is obvious and is done in order to let the JTAG chain operate normally when a board is not plugged into the FMC connector.
+                        </li>
+                        <li>What should happen when a mezzanine board is not plugged into the main board FMC connector is showed in below figure.<br>
+                            <img src="Figures/FMC_Figure1.png" alt="FMC_Figure1"> Figure 3
+                        </li>
+                        <li>What&#39;s created as Xilinx JTAG chain when a board is not plugged in. TDI and TDO are connected over a jumper or switch (SPST) as shown in below figure.<br>
+                            <img src="FMC_Figure2.png" alt="FMC_Figure2"> Figure 4
+                        </li>
+                        <li>The whole thing here turns around the words: <strong>not plugged into</strong>
+                          That is also the big stumble stone for many customers. It is impossible to remove the mezzanine card from the JTAG chain.
+                            <u>without physically removing it</u>. In a lot of cases it is not wanted or even not possible to remove the mezzanine board while debugging or testing.
+                          People then get stuck if they don&#39;t want the plug-on board in the JTAG chain but cannot remove it physically.
+                        </li>
+                        <li>If one leaves a plug-on board in the FMC connector and closes the switch or jumper to take the connector, and by that the plug-on board, out of the
+                            JTAG chain some circuit/signal cluttering will happen.<br>
+                            See below figure.<br>
+                            <img src="Figures/FMC_Figure3.png" alt="FMC_Figure3"> Figure 5
+                        </li>
+                        <li>The above happens also when one wants to interconnect two Xilinx board over a Samtec HDR cable. When plugging a HDR cable in an FMC connector, it triggers
+                            the PRSNT pin and that pin disables the SPST switch of the FMC connector on the board.
+                            The switch opens and the signals are obliged to flow through the FMC setup.  When plugging the cable into an FMC connector of one board, the TDO, TCK, TMS
+                            and TDI signals are carried to the other side of the cable. When that side is plugged into a FMC connector on the second board, TDO, TCK and TMC signals of
+                            both boards are driving up to each other, cluttering the whole JTAG setup.
+                        </li>
+                        <li>Solution, let’s make sure the PRSNT signals do not engage (open) the switch of the connector.
+                          Even then the JTAG signals are still routed to the FMC connector and thus keep cluttering the signals. So it was not really a solution.
+                        </li>
+                    </ul>
+                </li>
+            </ol>
+
+            <h2 id="make-the-setup-work">Make the setup work</h2>
+            <p>Do this (take the VCU108 figure of the JTAG chain to be able to follow next guidelines):</p>
+            <ul>
+                <li>U19 (<a href="sn74avc8t245.pdf">SN74AVC8T245</a>) fits on the TOP of the PCB.</li>
+                <li>U13 (SN74AVC2T245) fits on the bottom of the PCB.</li>
+                <li>Lift following pins of component U19:</li>
+                    <ul>
+                        <li>21 <i>(FPGA_TDO_FMC_TDI_BUF)</i>,</li>
+                        <li>20 <i>(FMC_HPC0_TMS_BUF)</i><br>
+                        and</li>
+                        <li>17 <i>(FMC_HPC0_TCK_BUF).</i></li>
+                    </ul>
+                </li>
+                <li>Turn the PCB upside down and at the bottom, cut the small trace from U13 pin 5 to a VIA.<br>
+                  <img src="Figures/U13_Pin5_Cut.png" alt="U13_Pin5_Cut" style="width:60%;" />
+                  <p> </p>
+                </li>
+                <li>Now a small wire need to be placed to close the JTAG chain.</li>
+                <li>Connect on the top level of the PCB a wire between U19 – pin 3 and J3 pin TDO.</li>
+                <li>Glue the wire with tape or nail polish onto the area of the bulls-eye connector.<br>
+                  <img src="Figures/U19_Pin3_Wire.png" alt="U19_Pin3_Wire" style="width:60%;" />
+                  <p> </p>
+                </li>
+            </ul>
+            <p>Now we would like to program each FPGA on its board in one JTAG chain. That would be easy because then we can use one. JTAG cable to download and debug a
+                components in the JTAG chain on both boards at the same time.</p>
+            <p>At time of writing this article, the advise is: Do not try to put two boards in a single JTAG chain. It’s not working.</p>
+            <p>Do following:</p>
+            <ul>
+                <li>Plug the USB programming cables of both boards in USB ports of the same PC.</li>
+                <li>On the PC start two hardware managers.</li>
+                <li>Each hardware manager will show both boards, but each hardware manager can only serve one JTAG connection and thus one board.</li>
+                <li>In one hardware manger select one board to use and in the other hardware manager select the other board</li>
+                <li>Now it is possible to work on one PC, but using two hardware managers.</li>
+            </ul>
+
+            <h2 id="my-old-pcb-designs-">My old PCB designs.</h2>
+            <p>When I used to make Xilinx PCBs back in 2004 (XVamPire, …) I created the JTAG chain differently.
+            With my setup it’s easy to take a JTAG device or board <strong>completely</strong> out of the JTAG chain while keeping the rest of the JTAG chain intact.
+            When I made boards there were no FMC connectors nor VITA specification, but I used the first versions of the Samtec FMC connectors and was engaged with Samtec
+            in a discussion that ended later in the VITA-57 specification. </p>
+            <ul>
+                <li>Nothing holds one to follow the rules explained above!
+                  The whole extra thing with my approach is that it adds a extra dimension to Vita rule 5.61.
+                    <ul>
+                        <li>When there is no plug-in board mounted on the FMC connector it interconnects TDI to TDO.</li>
+                        <li>With a plug-in card mounted in the FMC connector it can do the same but without having to remove the mezzanine or plug-in card. This way the plug-in
+                            card can be removed from the JTAG chain without the need to be physically removed.
+                        </li>
+                        <li>A plug-in card can never become a master.</li>
+                        <li>With my design of the JTAG chain it’s also easy to interconnect JTAG chains of different boards or systems into one larger JTAG chain.</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>This is a screenshot of the original schematics of an XVamPire-board.<br>
+             <img src="Figures/Original_Jtag_Chain.png" alt="Original_Jtag_Chain"></p>
+            <p>A updated figure of above presented of the JTAG setup:<br>
+            <img src="Figures/Update_Jtag_Chain.png" alt="Update_Jtag_Chain"></p>
+
+            <h2 id="picture">Picture</h2>
+            <p>This is a picture of a modified XCVU108 board where the HDR cable connects both FMC connectors on the board. One can now transceive signals between different IO banks of the FPGA.
+             <img src="Figures/IMG_20161018_HDR_1.jpg" alt="IMG_20161018_HDR_1" style="widh:60%"> </p>
+            <p>The End.</p>
+
+        </div>
+        <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="assets/js/jquery.min.js"></script>
+        <script src="assets/js/popper.js"></script>
+        <script src="bootstrap/js/bootstrap.min.js"></script>
+    </body>
+</html>

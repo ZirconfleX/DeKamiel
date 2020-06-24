@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="De Kamiel; Arm microcontroller to FPGA via EMI" content="">
+        <meta name="author" content="ZirconfleX">
+        <title>Arm micro to FPGA via EMI</title>
+        <!-- Bootstrap core CSS -->
+        <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+        <!-- Custom styles for this template -->
+        <link href="ArmMicroToFpga.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=ABeeZee&display=swap">
+        <meta name="keywords" content="FPGA, ARM, EMI, Linux, Vhdl, Interface">
+    </head>
+    <body>
+        <div class="container" style="border-bottom: 2px solid; display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 50px 50px; grid-template-rows: 50px 50px 50px 50px 20px; grid-template-areas: 'Logo Logo Title Title Title Title' 'Logo Logo Title Title Title Title' 'Logo Logo Zirco Zirco Zirco Zirco' 'Logo Logo Web Web Zirco Zirco' '. . . . . .'; margin-top: -50px;">
+            <img src="Figures/Kamiel_2.svg" style=" width: 100%; height: 100%; object-fit: fill;grid-area:1 / 1 / 5 / 3;" data-html="false">
+            <h1 style=" font-weight: bold; text-align: right; font-family: 'ABeeZee', sans-serif; align-self: center; font-size: 70px; line-height: 97px;grid-area:1 / 3 / 3 / 7;">De Kamiel</h1>
+            <img src="Figures/ZirconfleX_Logo_Web_45_Jun20.svg" style="width: 100%; height: 100%; object-fit: fill; grid-area: 3 / 5 / 5 / 7;">
+            <p style="font-family: 'ABeeZee', sans-serif; text-align: right; grid-area: 3 / 3 / 4 / 5; width: 100%; height: 100%; padding-top: 24px;">Offered by: ZirconfleX</p>
+            <p style="grid-area: 4 / 3 / 5 / 5; text-align: right; font-family: 'ABeeZee', sans-serif; color: #1d5de4; width: 100%; height: 100%;">http://www.<a href="http://www.zirconflex.be" target="_blank">zirconflex</a>.be</p>
+        </div>
+        <div class="container" style="padding-top: 30px;">
+            <h1 id="Connect ARM microcontrolled and FPGA over EMI">Connect ARM microcontrolled and FPGA over EMI.
+                <a href="Figures/Pdfs/ARM Microcontroller to FPGA using  EMI.pdf" download>
+                <img src="Figures/acroread.png" alt="pdf" style="zoom: 80%;">
+            </a></h1>
+
+            <h2 id="summary">Summary</h2>
+            <p>Although there is the versatile and powerful ZYNQ extensible  processor-centric architecture with its on board dual-core Cortex-A9 ARM processor devices,
+                sometimes it is necessary to use a standalone micro-controller  in  combination with a processor-less FPGA. Of course a standalone  micro-controller can
+                also be used in combination with a ZYNQ FPGA.. This note provides a way to hook a FPGA to an off the shelf available  ARM  micro-controller. The FPGA can
+                use the micro-controller as process  controller  or as extended multi-peripheral (USB, LCD, Keyboard, etc.) device.  The micro-controller mostly uses the
+                FPGA as a pre-processing  high-speed,  high performance calculation extension.</p>
+
+            <h2 id="introduction">Introduction</h2>
+            <p>An FPGA is primary used for computationally intensive, high-speed and/or  parallel processing tasks while the ARM micro-controller is widely used due to its
+                versatility, many manufacturers implement it as the core of their  applications (Including he ZYNQ family of devices). Because ARM devices  are so widely
+                used across the processor sector there is a variation of  operating systems available. An application that caused this note to be written was a video application
+                using an FPGA as high speed – parallel video processing engine and a  dedicated ARM micro-controller as human interaction interface. The solution provided is to
+                use one Chip Select area of the micro-controllers  External Memory Controller (EMC) in SRAM mode and connect this to the  FPGA. Figure 1shows the setup of an
+                example video design.</p>
+                [<img src="Figures/FPGA_ARM_Figures01.png" alt="FPGA ARM Figures - 01.png" style="width:50%;"> <br>
+                <strong><em>Figure 1: Micro-controller – FPGA video application.</em></strong>
+                <p>The FPGA connects via the External Memory Interface (EMI) to the ARM processor. To prove this concept some design decisions were taken:</p>
+            <ul>
+                <li>Use off the shelf micro-controller hardware.</li>
+                <li>The Phytec phyCORE-LPC3250 development board was chosen.</li>
+                <li>Use an available Xilinx Development board.</li>
+                <li>Virtex-6 LM605, 7-Series KC705 or VC707 boards.</li>
+                <li>A board with a processor-less FPGA is chosen because the successful  connection between the external processor and FPGA must be proven.</li>
+                <li>A ZYNQ connecting to its FPGA Block-RAM is a topic of another article.</li>
+                <li>Use an OS.</li>
+                <li>The Phytec development system comes with a Linux port.</li>
+                <li>The obvious choice was thus to go for Linux instead of writing code on the bare metal of the ARM processor.</li>
+            </ul>
+
+            <h2 id="the-processor">The Processor</h2>
+            <p>With the choice of the Phytec board came the NXP LPC3250-A9 micro-controller. The Phytec board data can be found on: <a href="http://www.phytec.com">www.phytec.com</a>.</p>
+            <p>The details of the micro-conroller can be obtained from: <a href="http://www.nxp.com">www.nxp.com</a> The LPC3220/30/40/50 embedded micro-controllers are designed for low  power,
+                high performance applications. NXP achieved these goals using a  90 nano-meter process to implement an ARM926EJ-S CPU core with a vector  floating point co-processor and a
+                large set of standard peripherals.</p>
+            <p>The NXP implementation uses a ARM926EJ-S CPU core with a Harvard  architecture, 5-stage pipeline, and an integrated Memory Management Unit (MMU). The MMU provides the
+                virtual memory capabilities needed to support the programming demands of modern  operating systems. The ARM926EJ-S also has a hardware based set of DSP  instruction extensions,
+                which  includes single cycle MAC operations, and hardware based native Jazelle Java Byte-code  execution. The implementation has a 32kB instruction cache and a 32kB data cache.
+                The LPC3220/30/40/50 includes a whole set of peripherals and memory  support:</p>
+            <ul>
+                <li>256 kB of on-chip static RAM,</li>
+                <li>NAND flash interface,</li>
+                <li>External bus interface (EMI) supporting SDR, DDR SDRAM and static devices.</li>
+                <li>Ethernet MAC</li>
+                <li>LCD controller that supports STN and TFT panels</li>
+                <li>USB 2.0 full-speed interface</li>
+                <li>Seven UARTs</li>
+                <li>Two I2C-bus interfaces, two SPI/SSP ports, two I2S-bus interfaces.</li>
+                <li>Two single output PWMs, a motor control PWM</li>
+                <li>Six general purpose timers with capture inputs and compare outputs</li>
+                <li>Secure Digital (SD) interface</li>
+                <li>10-bit Analog-to-Digital Converter (ADC) with a touch screen sense option.</li>
+            </ul>
+            <p>The interesting peripheral for this FPGA application is the processors External Memory  Interface. The EMI is controlled by the External Memory Controller (EMC),
+                an ARM PrimeCell MultiPort Memory Controller peripheral. The EMC is an Advanced Microcontroller Bus  Architecture (AMBA) compliant peripheral, Figure2.</p>
+            <p><strong>Features of the EMC are:</strong></p>
+            <ul>
+                <li>Dynamic memory interface support including Single Data Rate and Double Data Rate SDRAM.</li>
+                <li>Supports mobile SDRAM devices with 1.8 V I/O interface.</li>
+                <li>Asynchronous static memory device support including RAM, ROM, and Flash, with or without asynchronous page mode.</li>
+                <li>2k, 4k, and 8k row address synchronous memory devices.
+                    <ul>
+                        <li>Typically 512 Mbit, 256 Mbit, and 128 Mbit devices.</li>
+                        <li>with 4, 8, 16, or 32 data bits per device.</li>
+                    </ul>
+                </li>
+                <li>Low transaction latency.</li>
+                <li>Read and write buffers to reduce latency and to improve performance.</li>
+                <li>8 bit, 16 bit, and 32 bit wide static memory support.</li>
+                <li>16-bit and 32-bit wide SDRAM memory support.</li>
+                <li>Four chip selects for static memory devices.</li>
+                <li>Two chip selects for synchronous memory devices.</li>
+                <li>Static memory features include:
+                    <ul>
+                        <li>Asynchronous page mode read</li>
+                        <li>Programmable wait states</li>
+                        <li>Bus turnaround delay</li>
+                        <li>Output enable and write enable delays</li>
+                        <li>Extended wait</li>
+                    </ul>
+                </li>
+                <li>Power-saving modes dynamically control clock and clock enable to SDRAMs.</li>
+                <li>Dynamic memory self-refresh mode controlled by software.</li>
+                <li>Separate reset domains allow the for auto-refresh through a chip reset if desired</li>
+            </ul>
+            <img src="Figures/FPGA_ARM_Figures02.png" alt="FPGA ARM Figures - 02.png" style="width:50%;"> <br>
+            <strong><em>Figure 2: EMC block diagram.</em></strong>
+            <p>The External Memory Controller (EMC) has four memory areas where static memory can be  connected, and an FPGA can be seen as static memory. The FPGA - micro-processor
+                connection uses for this design the memory range of chip select CS2 (Figure 3). A single FPGA will occupy only a small amount of memory in this address space. When the
+                processor read and/or writes to this EMC_CS2 address space it accesses the  contents of registers and memory blocks (FF registers, BlockRAM and/or distributed  memory)
+                in the FPGA. Read and write operations from the EMC to static memory a fairly simple and straight  forward. Figure 4 shows the waveform of a read operation and figure 5
+                shows the write  operation. In case it might be needed, the EMC controller contains a register set which configures the  control access delays for the static memory. For
+                the description an use of these registers  consult the LPC3250 User Guide.</p>
+            <p>Since for the demo/test design, only two Block-RAMs are used, the  address decoding is not  very fine tuned. The address space to access the Block-RAM appears  several
+                times in the  CS2 address block of the EMC. When the FPGA is effectively used in an application as co-processor,  pre-processor, high-speed calculation or high-speed
+                communication engine for the ARM micro-controller different Block-RAM and separate registers need to be individually addressed. In that case, it will be necessary to fine
+                tune the  addressing of the FPGA from the micro-controllers EMC.</p>
+            <img src="Figures/FPGA_ARM_Figures05.png" alt="FPGA ARM Figures - 05.png" style="width:40%;"> <br>
+            <strong><em>Figure 3: Cut-out of the External memory map from the LPC3250 memory map.</em></strong><br>
+            <img src="Figures/FPGA_ARM_Figures03.png" alt="FPGA ARM Figures - 03.png" style="width:50%;"> <br>
+            <strong><em>Figure 4: EMC static memory read operation.</em></strong><br>
+            <img src="Figures/FPGA_ARM_Figures04.png" alt="FPGA ARM Figures - 04.png" style="width:50%;"> <br>
+            <strong><em>Figure 5: EMC static memory write operation.</em></strong>
+            <p>In case it is needed, the EMC controller contains a full set of configuration registers for every  possible type of memory that can be connected to the EMI interface.
+                It is thus possible to set  read and/or write delays, bus turn around times, etc.</p>
+            <p>To get the finesses of this, please read the LPC datasheet and User Guides.</p>
+
+            <h2 id="the-fpga">The FPGA</h2>
+            <p>The interface in the FPGA is very straight forward. It consists of a  bidirectional 32-bit data  bus and a unidirectional address and control bus. Only these address
+                bits from the micro-controllers address bus are needed for the FPGA  application. A block diagram of the ARM interface in the FPGA is shown in Figure 6.</p>
+            <ul>
+                <li>The address interface in the FPGA makes sure that the  combination of the address bits and control bits (read, write, enable,  interrupt, etc.) make sure the correct peripheral
+                    in the FPGA gets  accessed in the right direction, read from or write to from the ARM.</li>
+                <li>The data part of the interface is a data pass through at the IO  level, and internally it can be seen as a address bus, read and write  controlled set of multiplexers.</li>
+            </ul>
+            <img src="Figures/FPGA_ARM_Figures06.png" alt="FPGA ARM Figures - 06.png" style="width:40%;"> <br>
+            <strong><em>Figure 6: FPGA ARM interface block diagram.</em></strong>
+            <p>The demonstration design contains two Block-RAM components, one used  to write to and  one used to read from. The other access ports of both Block-RAMs are connected together
+                and when the Block-RAM for write is completely full, data is transferred to the read Block-RAM. When the read Block-RAM becomes full, data can  be read from it, Figure 7.
+                Correctness of the read and write operation can easily be checked this  way. Of course, a real life application will probably have multiple  Block-RAM. Distributed memory
+                and normal FF registers that can be written and/or read via the EMI  interface of the micro-controller.</p>
+            <img src="Figures/FPGA_ARM_Figures07.png" alt="FPGA ARM Figures - 07.png" style="width:40%;"> <br>
+            <strong><em>Figure 7: Design to show ARM - FPGA read and write.</em></strong>
+            <p>The connection of the LPC3250 component and the FPGA on PCB board level is very important.</p>
+            <ul>
+                <li>The micro-controller External Memory Controller voltage can be  1V8, 2V5 or 3V3 as shown in figure 8 . The EMC must run in 3V3 voltage  mode to connect to the FPGA because
+                    it is used in SRAM mode.</li>
+                <li>All IO of the micro-controller are LVCMOS compatible.</li>
+                <li>The IO of the FPGA can be used in different voltages and different IO standards, but LVCMOS must be selected as IO-standard.
+                    <ul>
+                        <li>Virtex-6 runs at LVCMOS 2V5.<ul>
+                        <li>Level translation components will be needed to be able to let the micro-controller and FPGA exchange data.</li>
+                        </ul>
+                        </li>
+                        <li>7-Series runs at: LVCMOS 3V3 in HR IO-banks and 2V5 in HP IO-banks.
+                            <ul>
+                                <li>For HR IO, level translators will not be needed.</li>
+                                <li>For HP IO level translators are necessary.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <p>In most cases, in order to let the micro-controller and the FPGA  exchange data, it is necessary to use level shifting components. Figure 9 shows a schematic
+                (figure 10a photo) of the setup.</p>
+            <img src="Figures/FPGA_ARM_Figures08.png" alt="FPGA ARM Figures - 08.png" style="width:60%;"> <br>
+            <strong><em>Figure 8: LPC3250 EMC power and operating supply voltages.</em></strong><br>
+            <img src="Figures/FPGA_ARM_Figures09.png" alt="FPGA ARM Figures - 09.png" style="width:50%;"> <br>
+            <strong><em>Figure 9: Connection between LPC3250 and FPGA using level shifters.</em></strong><br>
+            <img src="Figures/FPGA_ARM_Figures10.png" alt="FPGA ARM Figures - 10.png" style="width:50%;">  <br>
+            <strong><em>Figure 10a: Photo of the realized setup.</em></strong><br>
+            <strong>REMARK:</strong> The schematic figure 9 shows a circuit using Texas  Instrument level shifter components, however,
+            this is not the only good  level shifter component that can be used.</p>
+
+            <h2 id="make-linux-work-on-the-phytec-board-">Make Linux work on the Phytec board.</h2>
+            <p>The following description describes how to build and port Linux onto  the Phytec board and assumes that the host computer runs a Linux  distribution, as Ubuntu.
+                The host computer is connected to the Phytec  board via a serial cable (at the side of the PC the RS232 cable is  probably converted to USB and a USB driver
+                translates all RS232  communication for the PC).Firstly your own version of Linux needs to  compiled, to do this a PC running Linux or at least a PC equipped
+                with a virtual machine running Linux is needed.</p>
+            <p>The Linux Target Image Builder (LTIB) will be used to generated the  embedded kernel. LTIB, the operating flow is shown in figure 11, is a  tool used to develop
+                and deploy Board Support Packages (BSP) for a  number of embedded target platforms including PowerPC,  ARM, and Coldfire. It can be found and downloaded at:
+                <a href="http://bitshrine.org/ltib/">http://bitshrine.org/ltib/</a>.<br>
+            <img src="Figures/FPGA_ARM_Figures11.png" alt="FPGA ARM Figures - 11.png" style="width:50%;"> <br>
+            <strong><em>Figure 11: LTIB Flow Diagram.</em></strong>
+            <p>LTIB will not only compile the kernel but also supply a root file  system, an additional boot loader (Das U-BOOT) and further everything  you need to write your own
+                applications. To start programming, a  compiler is needed and since it is not included in with LTIB it needs to be downloaded from the WWW. Recommendation: Download
+                the command line  compiler from <strong>CodeSourcery</strong>.  It&#39;s free, and other tried/tested compilers were badly documented or not compatible with the
+                ARM926EJ-S core in the NXP LPC3250 on the Phytec  development board. Following pages provide a tutorial to build a Linux kernel for the  LPC3250 on the Phytec
+                PhyCore board.</p>
+            <p><strong>REMARK:</strong> In the commands that should be typed at the command line heave the ComicSans MSfont, that way they can easily be recognized.</p>
+
+            <h3 id="install-ltib-on-the-host-">Install LTIB on the host:</h3>
+            <ul>
+                <li>Make sure to operate in the projects directory where the kernel  will be made. Create a sub-directory for LPC3250 related development and switch to the new directory:</li>
+<pre><code><span class="hljs-built_in">mkdir</span> lpc3250
+<span class="hljs-built_in">cd</span> lpc3250
+</code></pre>
+            </ul>
+            <ul>
+                <li>Download the netinstall script:</li>
+<pre><code>.<span class="hljs-regexp">/lpc3250&gt; wget http:/</span><span class="hljs-regexp">/www.bitshrine.org/</span>netinstall
+</code></pre>
+            </ul>
+            <ul>
+                <li>Run the netinstall script:</li>
+<pre><code>./lpc3250&gt; <span class="hljs-keyword">perl</span> netinstall
+</code></pre>
+            </ul>
+            <ul>
+                <li>For the LTIB install, “sudo” permissions to execute rpm commands as root without a password are required. To enable this run visudoas  root.</li>
+<pre><code>./lpc3250&gt; sudo /usr/sbin/visudo
+This allows editing <span class="hljs-keyword">of</span> <span class="hljs-keyword">the</span> “sudoers”<span class="hljs-built_in">file</span>.
+Enter <span class="hljs-keyword">the</span> <span class="hljs-built_in">line</span>:
+&lt;username&gt; ALL = NOPASSWD: /bin/rpm, /opt/ltib/usr/bin/rpm
+Restart <span class="hljs-keyword">the</span> install <span class="hljs-built_in">process</span> <span class="hljs-keyword">by</span> executing again <span class="hljs-keyword">the</span> “perl netinstall“ script. The setup
+will ask <span class="hljs-keyword">for</span> <span class="hljs-keyword">a</span> install path, provide <span class="hljs-keyword">the</span> full path <span class="hljs-keyword">as</span>: /home/&lt;username&gt;/”Path”/lpc3250/
+</code></pre>
+            </ul>
+            <ul>
+                <li>Hint: If the “netinstall” script does not work automatically  open another terminal window, open the “perl netinstall” script with an  editor and execute every instruction by hand. This can be done by typing the following commands:</li>
+<pre><code><span class="hljs-keyword">cd</span> /home/<span class="hljs-symbol">&lt;username&gt;</span>/lpc3250
+~/lpc3250&gt; <span class="hljs-keyword">vi</span> netinstall
+</code></pre>
+            </ul>
+            <ul>
+                <li>Still problems? Pay a visit to: <a href="http://www.bitshrine.org/ltib/resources-download">http://www.bitshrine.org/ltib/resources-download</a></li>
+                <li>Normally the install runs without problems and LTIB is ready.</li>
+                <li>Hint: Modifying the LTIB configuration is done by:</li>
+<pre><code>./lpc3250/ltib qs&gt; ./ltib  ‐ <span class="hljs-comment">--configure</span>
+</code></pre>
+            </ul>
+            <ul>
+                <li>A menu will pop-up, follow the instructions to:
+                    <ul>
+                        <li>Select the platform.</li>
+                        <li>Choose the Phytec 3250 board.</li>
+                        <li>With the NXP LPC32XX SoC from the list.</li>
+                        <li>Select Exit and Yes to save the new configuration.</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3 id="build-u-boot-linux-kernel-and-root-file-system-">Build U-boot, Linux kernel and root file system:</h3>
+            <ul>
+                <li>LTIB automates building U-Boot, Linux kernel, and root file  system. LTIB allows configuration of the boot loader, kernel, and  installed packages through a menu driven system.</li>
+                <li>Begin the build process by returning to the shell window used to install LTIB.</li>
+<pre><code>~/lpc3250&gt; cd ltib‐qs
+./lpc3250/ltib qs&gt; ./ltib
+&lt;pre&gt;
+*  A menu <span class="hljs-keyword">with</span> a lot <span class="hljs-keyword">of</span> options will pops-up.
+   The recommendation <span class="hljs-keyword">is</span> <span class="hljs-keyword">to</span> start experimenting <span class="hljs-keyword">with</span> <span class="hljs-keyword">the</span> settings. The settings made <span class="hljs-keyword">in</span> <span class="hljs-keyword">the</span> menu
+   are very specific <span class="hljs-keyword">and</span> depending <span class="hljs-keyword">on</span> <span class="hljs-keyword">the</span> <span class="hljs-built_in">application</span>.
+** The settings <span class="hljs-keyword">that</span> worked <span class="hljs-keyword">for</span> this test <span class="hljs-built_in">application</span> are <span class="hljs-keyword">given</span>
+   <span class="hljs-keyword">in</span> table <span class="hljs-number">1.</span>
+</code></pre>
+            </ul>
+            <table>
+            <thead>
+            <tr>
+            <th>System features</th>
+            <th>[*] cache target rpms</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <td>Target C library type</td>
+            <td>(X) glibc</td>
+            </tr>
+            <tr>
+            <td>C library package</td>
+            <td>(X) from toolchain only</td>
+            </tr>
+            <tr>
+            <td>Toolchain component options</td>
+            <td>[<em>] libc shared libraries [</em>] c++ shared libraries  [<em>] libgcc</em>.so*</td>
+            </tr>
+            <tr>
+            <td>Toolchain</td>
+            <td>(X) gcc-3.4.5-glibc 2.3.6 (soft_float)</td>
+            </tr>
+            <tr>
+            <td>Enter any CFLAGS for gcc/g++</td>
+            <td>-fsigned-char-msoft-float-O3</td>
+            </tr>
+            <tr>
+            <td>bootloader choice</td>
+            <td>(X)u-boot1.3.3 for the Phytec3250 board</td>
+            </tr>
+            <tr>
+            <td>u boot flags</td>
+            <td><empty></td>
+            </tr>
+            <tr>
+            <td>kernel</td>
+            <td>(X) Linux 2.6.27.8 for LPC3250 / Phytec3250</td>
+            </tr>
+            <tr>
+            <td>Always rebuild the kernel</td>
+            <td>[*] (checked)</td>
+            </tr>
+            <tr>
+            <td>Produce cscope index</td>
+            <td>[ ] (unchecked)</td>
+            </tr>
+            <tr>
+            <td>Kernel preconfig</td>
+            <td>Linux-2.6.27.8-phy3250.config</td>
+            </tr>
+            <tr>
+            <td>Include kernel headers</td>
+            <td>[ ] (unchecked)</td>
+            </tr>
+            <tr>
+            <td>Configure the kernel</td>
+            <td>[ ] (unchecked)</td>
+            </tr>
+            <tr>
+            <td>Leave the kernel sources after building</td>
+            <td>[*] (checked)</td>
+            </tr>
+            <tr>
+            <td>Package list</td>
+            <td>Check only: [<em>] busybox   [</em>] module dependencies   [<em>] mp3play   [</em>] mtd utils   [*] Skeleton base files</td>
+            </tr>
+            <tr>
+            <td>Target System Configuration Options Check only:</td>
+            <td>[<em>] start networking [</em>] start syslogd/klogd</td>
+            </tr>
+            <tr>
+            <td>Target Image Generation Options</td>
+            <td>Target image: (NFS only)</td>
+            </tr>
+            </tbody>
+            </table>
+            <ul>
+                <li>Select Exit and Yes to save the new configuration.</li>
+                <li>LTIB will start to compile the custom kernel this will take a while.</li>
+                <li>Hint:   get a cup of coffee.</li>
+                <li>It is possible that a menu pops up while compiling, this means that  some options are left unchecked or are checked. Example: The option to  configure the kernel is left checked.
+                    <ul>
+                        <li>Explore with the options, but for the first time it is maybe better to leave all options a default.</li>
+                    </ul>
+                </li>
+                <li>When all goes well the compile process is done with the message “Build Succeeded”.</li>
+                <li>Hint: it&#39;s possible that the process fails. Restart the LTIB  configuration process to adjust the settings.To restart the LTIB  configuration menu, type:</li>
+            </ul>
+        <pre><code>~<span class="hljs-regexp">/lpc3250/</span>ltib‐qs&gt; .<span class="hljs-regexp">/ltib ‐‐configure</span> </code></pre>
+            <p>Note that LTIB will only enter the configuration menu the first time after install when  typing <em>./ltib</em> a the prompt. After the first run, typing <em>./ltib</em>
+                at the prompt will rebuild  modified source. It is thus necessary to type <em>./ltib ‐‐configure</em> in order to modify the configuration of LTIB.</p>
+            <p>The list of all options for LTIB is showed in table 1.</p>
+
+            <h3 id="place-the-system-on-the-sd-card-">Place the system on the SD-card.</h3>
+            <ul>
+                <li>Copy the rootfs.jffs2image and the uImagefile to the root  directory of the FAT formatted SD-card and insert the card in the X15  connector of the Phytec board.</li>
+                <li>Hint: Don’t forget to unmount!</li>
+                <li>Everything is now ready to flash the custom kernel. Table 2 shows a  description of the memory map of the generated system in order to make  following instructions meaningful.</li>
+                <table>
+                <thead>
+                <tr>
+                <th>Start block</th>
+                <th>End Block</th>
+                <th>Number of Blocks</th>
+                <th>Size (KB)</th>
+                <th>Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                <td>0</td>
+                <td>0</td>
+                <td>1</td>
+                <td>16</td>
+                <td>Kickstart Loader</td>
+                </tr>
+                <tr>
+                <td>1</td>
+                <td>24</td>
+                <td>24</td>
+                <td>384</td>
+                <td>Stage 1 Loader</td>
+                </tr>
+                <tr>
+                <td>25</td>
+                <td>89</td>
+                <td>65</td>
+                <td>1001</td>
+                <td>Das U-boot</td>
+                </tr>
+                <tr>
+                <td>90</td>
+                <td>99</td>
+                <td>10</td>
+                <td>160</td>
+                <td>Das U-boot environment variables</td>
+                </tr>
+                <tr>
+                <td>100</td>
+                <td>355</td>
+                <td>256</td>
+                <td>4000</td>
+                <td>Linux Kernel</td>
+                </tr>
+                <tr>
+                <td>356</td>
+                <td>4095</td>
+                <td>3740</td>
+                <td>58440</td>
+                <td>Linux File System</td>
+                </tr>
+                </tbody>
+                </table>
+                <p>Make sure no other boot loader is running and delete all previous boot loader environments.</p>
+<pre><code>phy3250&gt; erase <span class="hljs-number">90</span> <span class="hljs-number">10</span> <span class="hljs-number">0</span>
+</code></pre>
+            </ul>
+            <ul>
+                <li>The image file can be loaded from the SD-card into the SDRAM.</li>
+                <li>Stop the boot process in the stage 1 loader by pressing any key.</li>
+                <li>Then type following commands:</li>
+<pre><code><span class="hljs-symbol">phy3250</span>&gt; load <span class="hljs-keyword">blk </span>uimage raw <span class="hljs-number">0x80100000</span>
+<span class="hljs-symbol">phy3250</span>&gt; nsave
+<span class="hljs-symbol">phy3250</span>&gt; <span class="hljs-keyword">boot</span>
+</code></pre>
+            </ul>
+            <ul>
+                <li>Then wait for U-Boot to boot.</li>
+                <li>Type now following commands to flash the kernel image.</li>
+<pre><code>uboot&gt; nand erase <span class="hljs-number">0x590000</span> <span class="hljs-number">0x3a70000</span>; nand write.jffs2 <span class="hljs-number">0x80100000</span>
+<span class="hljs-number">0x590000</span> &lt;image size&gt;*
+</code></pre>
+            </ul>
+            <ul>
+                <li>Power cycle or press the reset button.</li>
+                <li>Stop the boot process on the stage 1 loader by pressing any key and type the</li>
+                <li>following commands:</li>
+<pre><code>phy3250&gt; load blk ROOTFS~<span class="hljs-number">1.</span>JFF raw <span class="hljs-number">0x80100000</span>
+phy3250&gt; nsave
+phy3250&gt; boot
+</code></pre>
+            </ul>
+            <ul>
+            <li>Wait for U-boot to boot and when this is done type the following commands to flash the file system image into nand flash.</li>
+<pre><code>uboot&gt; nand erase <span class="hljs-number">0x590000</span> <span class="hljs-number">0x3a70000</span>; nand write.jffs2 <span class="hljs-number">0x80100000</span>
+<span class="hljs-number">0x590000</span> &lt;image size&gt;*
+</code></pre>
+            </ul>
+            ><ul>
+                <li>Hint: The size must always be a multiple of the erase block  size (16kB or 0x4000hex). Round it up the image size if this is not the  case. If the JFFS2 erase block size was set correctly in the LTIB  configuration menu the image size will automatically fall on a block  size boundary, and no rounding is required.</li>
+                <li>Change the “booatargs” to the following (watch the apostrophe’s):</li>
+<pre><code>-<span class="ruby"> uboot&gt; bootargs ‘console=ttyS<span class="hljs-number">0</span>,<span class="hljs-number">115200</span>n81 root=<span class="hljs-regexp">/dev/mtdblock</span>3 rw rootfstype=jffs2 init=<span class="hljs-regexp">/sbin/init</span>’
+</span>-<span class="ruby"> uboot&gt; setenv bootcmd ‘nboot.jffs2 <span class="hljs-number">0x80100000</span> <span class="hljs-number">0x0</span> <span class="hljs-number">0x190000</span>; bootm’</span>
+</code></pre>
+            </ul>
+            <ul>
+                <li>Save the environment variables and boot up the system by typing:</li>
+<pre><code>uboot&gt; saveenv </code></pre>
+                <p>Congratulations, A customized ready to start Linux kernel is available for the Phytec development board. Type:</p>
+<pre><code></code>uboot&gt; <span class="hljs-keyword">run</span> bootcmd
+<span class="hljs-keyword">or</span>
+hit the <span class="hljs-keyword">system</span> reset <span class="hljs-keyword">button</span> S1.
+</code></pre>
+                <p>If the Linux build procedure is done correctly the system should boot to a prompt.
+                What&#39;s now needed is some home made programming to show that the micro-controller can write and  read from the BlockRam memory in the FPGA.
+                A normal boot procedure, after reset, takes following steps:</p>
+                <ul>
+                    <li>On-chip bootstrap executes and boots the Kickstart Loader.</li>
+                    <li>Kickstart Loader executes and boots the Stage 1 Loader.</li>
+                    <li>Stage 1 Loader executes and boots Das U-Boot.</li>
+                    <li>Das U-Boot executes and boots the Linux kernel.</li>
+                </ul>
+            </ul>
+
+            <h2 id="user-software">User Software</h2>
+            <p>As earlier written a embedded system is not needed to run a communication between the  ARM micro-controller and the FPGA but it helps ease writing applications in more complex  application. To prove the OS approach, an embedded Linux operating system is chosen.  Reasons for this choice are:</p>
+            <ul>
+                <li>Linux is the most popular embedded environment.</li>
+                <li>Provides easier software portability</li>
+                <li>Allows that any C coded program only needs recompilation to make it work on another platform.</li>
+                <li>Using Linux provides the endless range of peripherals that can be accessed.</li>
+            </ul>
+
+            <h3 id="setting-up-the-tool-chain-">Setting up the tool chain.</h3>
+            <p>First: Using the CodeSourcery compiler is not a must. If another compiler is available  or more familiar, please use that. CodeSourcery is used in the application note
+                because I liked it, it is free (lite version) and works perfect. One thing to remark is that all the source files of your BSP have to be supplied  manually.
+                These files are available at:
+<pre><code>ltib<span class="hljs-number">-10</span><span class="hljs-number">-1</span><span class="hljs-number">-1</span>a-sv\rpm\BUILD\linux<span class="hljs-number">-2.6</span><span class="hljs-number">.27</span><span class="hljs-number">.8</span> \include
+</code></pre></p>
+            <p>Insert these files into:
+<pre><code>.<span class="hljs-symbol">\C</span>odeSourcery<span class="hljs-symbol">\S</span>ourcery_G++_Lite<span class="hljs-symbol">\a</span>rm-none-linux-gnueabi<span class="hljs-symbol">\l</span>ibc<span class="hljs-symbol">\u</span>sr<span class="hljs-symbol">\i</span>nclude.
+</code></pre></p>
+
+            <h3 id="linux-memory-management-">Linux memory management.</h3>
+            <p>The following provides a help in understanding memory management of Linux based systems.</p>
+            <p><strong>Hint:</strong> Read <strong>&quot;Linux Device Drivers&quot; from O&#39;Reilly Media</strong> if deeper understanding of Linux memory management is wanted or needed (The book is available in electronic format for free).</p>
+            <p>Linux is a virtual memory system, meaning that the addresses seen by user programs  do not directly correspond to the physical addresses used by the hardware. Virtual  memory introduces a layer of indirection that allows a number of nice things to  happen. Programs running on the system can allocate far more memory than  physically available. Even single processes can occupy a virtual address space larger  than the system&#39;s physical memory. Virtual memory also allows the program  to play a  number of tricks with the process&#39;s address space, including mapping the program&#39;s  memory to device memory.The following text list the address types used in Linux and figure 12 shows how these  address types related to physical memory.</p>
+            <p><strong>Physical addresses:</strong></p>
+            <p>The addresses used between the processor and the system’s memory. Physical  addresses are 32- or 64-bit quantities; even 32-bit systems can use larger physical  addresses in some situations.</p>
+            <p><strong>Bus addresses:</strong></p>
+            <p>Bus addresses are highly architecture dependent. They are used between peripheral buses and memory. These are often the same as  the physical addresses used by the processor, but that is not necessarily always the  case. Some architectures provide an I/O memory management unit (IO-MMU) that remaps  addresses between a bus and main memory. An IO-MMU can make life easier in a  number of ways (A buffer scattered in memory can appear continuous to the device).  Programming the IO-MMU is an extra step that must be performed when setting up  DMA operations.</p>
+            <p><strong>User virtual addresses:</strong></p>
+            <p>These are the regular addresses seen by user-space programs. User addresses are  either 32 or 64 bits in length, depending on the underlying hardware architecture, and  each process has its own virtual address space.</p>
+            <p><strong>Kernel logical addresses:</strong></p>
+            <p>Make up the normal address space of the kernel and map some portion (perhaps all)  of main memory. These addresses are often treated as if they were physical  addresses. On most architectures, logical addresses and their associated physical  addresses differ only by a constant offset. Logical addresses use the hardware’s native pointer size and, therefore, may be unable to  address all of physical memory on heavily equipped 32-bit systems. Logical addresses are usually stored in variables of type unsigned long or void *. Memory returned from  “kmalloc” has a kernel logical address.</p>
+            <p><strong>Kernel virtual addresses:</strong></p>
+            <p>Kernel virtual addresses are similar to logical addresses in that they are a mapping  from a kernel space address to a physical address. Kernel virtual addresses do not  necessarily have the linear, one-to-one mapping to physical addresses that  characterize the logical address space. All logical addresses are kernel virtual  addresses, but many kernel virtual addresses are not logical addresses. For example,  memory allocated by “vmalloc” has a virtual address (but no direct physical mapping).  The “kmap” function (described later in this chapter)  also returns virtual addresses.  Virtual addresses are usually stored in pointer variables.</p>
+
+            <h3 id="memory-used-by-the-design">Memory used by the design</h3>
+            <p>The physical memory discussed above is divided into discrete units called pages.  Much of the system’s internal handling of memory is done on a per-page basis. Page  size varies from architecture
+                to architecture but most systems currently use pages of  4096 bytes.</p>
+            <p>The FPGA is accessed as memory via the mmap() function, discussed hereafter. In order to use the function some information how memory can be accessed in a  uniform way in order to make design portable.
+                The only device independent way to get to the physical memory with the mmap() function is by using the “/dev/mem” file.</p>
+            <p>This /dev/mem file is a special file that provides access to  physical memory. The size  of the file is equal to the amount of available physical memory. A  system running 32-bit operating environment
+                can have access to memory  larger than 4GB, and it is even possible to access memory beyond 4GB..</p>
+            <p>The constant PAGE_SIZE (defined in <asm/page.h>) gives the page size on any  given architecture. Memory addresses, virtual or physical, are divided into page  numbers and an offset within that page. If
+                pages of 4096 bytes are used the 12 least-significant bits are the offset and the  remaining,bits indicate the page number.</p>
+            <p>Discard the offset and shift the rest to the right then the result is called a page frame  number (PFN). Convert between page frame numbers and addresses is a fairly common operation. The macro
+                PAGE_SHIFT tells how many bits must be shifted to provide this conversion.<br>
+            <img src="Figures/FPGA_ARM_Figures12.png" alt="FPGA ARM Figures - 12.png" style="width:40%;"><br>
+            <strong><em>Figure 12: Address types used by Linux</em></strong></p>
+
+            <h3 id="the-memory-map-function-mmap-">The Memory Map Function – mmap().</h3>
+            <p>Synopsis:</p>
+<pre><code><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;sys/mman.h&gt;</span></span>
+<span class="hljs-function"><span class="hljs-keyword">void</span> *<span class="hljs-title">mmap</span> <span class="hljs-params">(
+            <span class="hljs-keyword">void</span> *addr,
+            <span class="hljs-keyword">size_t</span> length,
+            <span class="hljs-keyword">int</span> prot,
+            <span class="hljs-keyword">int</span> flags,
+            <span class="hljs-keyword">int</span> fildes,
+            <span class="hljs-keyword">off_t</span> offset
+            )</span></span>;
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">munmap</span> <span class="hljs-params">(
+            <span class="hljs-keyword">void</span> *addr,
+            <span class="hljs-keyword">size_t</span> length
+            )</span></span>;
+</code></pre>
+            <p><strong>Syntax description:</strong><br>
+            This function creates a new mapping in the virtual address space of  the calling process. Memory mapping allocates a block of memory so that  fetching from the memory block will obtain the corresponding bytes of  the file. Flags allow that the memory mapping is capable to change the  corresponding bytes of the file when data  is stored in the memory block.</p>
+            <p><strong>addr:</strong><br>
+            Specifies the starting address for the new mapping. The argument can  be either NULL or a memory address. If NULL the system chooses the address at which to create the mapping.  This is the most portable method of creating a new mapping. If not NULL, then the system will attempt to allocate the memory for the  mapping near the address specified this is the nearby page boundary.The  address of the new mapping is returned as the result of the call.</p>
+            <p><strong>len:</strong><br>
+            Specifies the number of bytes, length, of the file to map. The length value cannot cause the mapping to extend beyond the end of the  file. If length is not specifying an integral amount of pages, the map is extended  to the next highest page boundary. The left space is set to binary zeroes.</p>
+            <p><strong>prot:</strong><br>
+            Specifies the protection status of the mapped memory. It is either PROT_NONE or the bit-wise OR of one or more of the described flag constants below:</p>
+            <ul>
+                <li>PROT_EXEC: The memory is execute mode only.</li>
+                <li>PROT_NONE: No access to the memory is permitted.</li>
+                <li>PROT_READ:The memory can be read, but not written.</li>
+                <li>PROT_WRITE: Both read and write access to the memory is permitted.</li>
+            </ul>
+            <p>Note 1: It is not permitted to specify PROT_WRITE when the file descriptor of the file doesn&#39;t allow writing.<br>
+            Note 2: Calling the mproctect function allows the protection status of the mapped memory to be changed.</p>
+            <p><strong>flags:</strong><br>
+            Specifies one or more option flags, combined using the or operator (|). Each flag should be specified as one of the following symbolic constants.</p>
+            <ul>
+                <li>MAP_SHARED: Share this mapping. Updates to the mapping are  visible to other processes that map this file, and are carried through  to the underlying file. The file may not actually be updated until  msync(2) or munmap() is called.</li>
+                <li>MAP_PRIVATE: Create a private copy-on-write mapping. Updates to the  mapping are not visible to other processes mapping the  same file and  are not carried through to the underlying file. It is unspecified  whether changes made to the file after the mmap() call are visible in  the mapped region.</li>
+                <li>MAP_FIXED: Don&#39;t interpret addr as a hint; place the mapping at  exactly that address. addr must be a multiple of the page size. If the  memory region specified by addr and len overlaps pages of any existing  mapping(s), then</li>
+            </ul>
+            <p>the overlapped part of the existing mapping(s) will be discarded. If the specified address cannot be used, mmap() will fail.</p>
+            <p><strong>fd:</strong><br>
+            File descriptor-argument specifies an open file descriptor for a file or other object to be mapped.</p>
+            <p><strong>offset:</strong><br>
+            Specifies the first byte of the file to be mapped. The offset must be an exact multiple of the system page size (returned by  sysconf(_SC_PAGE_SIZE and in most cases 4096 bytes)</p>
+
+            <h2 id="c-source-code-of-a-user-program-">C-source code of a User Program.</h2>
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;string.h&gt;
+#include &lt;errno.h&gt;
+#include &lt;signal.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;ctype.h&gt;
+#include &lt;termios.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/mman.h&gt;
+
+#define FATAL <span class="hljs-keyword">do</span> { fprintf(stderr, <span class="hljs-string">"Error at line %d, file %s (%d) [%s]\n"</span>, \
+__LINE__, __FILE__, errno, strerror(errno)); exit(<span class="hljs-number">1</span>); } <span class="hljs-keyword">while</span>(<span class="hljs-number">0</span>)
+
+<span class="hljs-comment"><span class="markdown">/<span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-emphasis">***</span>*/</span></span>
+<span class="hljs-comment">/*  Define masks    */</span>
+<span class="hljs-comment">/* for read and write  */</span>
+<span class="hljs-comment"><span class="markdown">/<span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-emphasis">***</span>/</span></span>
+
+<span class="hljs-comment">//#define ADDR_RANGE_MASK 0xE2000FFF                                      // "00111111111111" Allows only the the</span>
+                                                                          <span class="hljs-comment">// 12 first bit's to be set since we use the</span>
+                                                                          <span class="hljs-comment">// first 12 bits for addressing in the FPGA</span>
+<span class="hljs-comment">//#define READ_MASK 0xE2001FFF                                            // "01111111111111" read bit 1 &amp; write bit 0</span>
+<span class="hljs-comment">//#define WRITE_MASK 0xE2002FFF                                           // "10111111111111" read bit 0 &amp; write bit 1</span>
+<span class="hljs-comment">//#define BASE_ADDR 0xE2000000                                            //CS_2 range starts @ 0xE2000000</span>
+<span class="hljs-comment"><span class="markdown">/<span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-emphasis">***</span>/</span></span>
+<span class="hljs-comment">/*  Define size to allocate */</span>
+<span class="hljs-comment"><span class="markdown">/<span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-emphasis">***</span>/</span></span>
+#define MAP_SIZE <span class="hljs-number">4096</span>UL                                                   <span class="hljs-comment">// needs to be looked at....</span>
+#define MAP_MASK (MAP_SIZE - <span class="hljs-number">4</span>)
+
+<span class="hljs-built_in">int</span> main(<span class="hljs-built_in">int</span> argc, char **argv) {
+   <span class="hljs-built_in">int</span> fd;
+   <span class="hljs-keyword">void</span> *map_base, *virt_addr;
+   unsigned long read_result, writeval;
+   off_t target;
+         <span class="hljs-keyword">if</span>(argc &lt; <span class="hljs-number">2</span>){                                                    <span class="hljs-comment">//error message in case of wrong input</span>
+           fprintf (stderr, <span class="hljs-string">"\nUsage:\t%s { address } [ data ]\n"</span>
+              <span class="hljs-string">"\taddress : memory address to act upon\n"</span>
+              <span class="hljs-string">"\tdata : data to be written (32bit)\n\n"</span>
+              <span class="hljs-string">"To [i]nitialize type only i leaving out the addresses \n\n"</span>,
+              argv[<span class="hljs-number">0</span>] );
+          exit(<span class="hljs-number">1</span>);
+         }
+
+<span class="hljs-comment"><span class="markdown">/<span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-emphasis">***</span>/</span></span>
+<span class="hljs-comment">/*  Init */</span>
+<span class="hljs-comment"><span class="markdown">/<span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-emphasis">***</span>/</span></span>
+<span class="hljs-keyword">if</span>(strcmp(argv[<span class="hljs-number">1</span>],<span class="hljs-string">"i"</span> ) == <span class="hljs-number">0</span> )                                           <span class="hljs-comment">//strcmp() returns 0 if strings are the same (case sensitive)</span>
+{
+    printf (<span class="hljs-string">"init started.\n"</span>);
+    target = <span class="hljs-number">0x31080240</span>;
+  <span class="hljs-comment">//              Open /dev/mem file &amp; error handling</span>
+    <span class="hljs-keyword">if</span> ((fd = open (<span class="hljs-string">"/dev/mem"</span>, O_RDWR | O_SYNC)) == <span class="hljs-number">-1</span>) FATAL;
+    printf (<span class="hljs-string">"/dev/mem opened.\n"</span>);
+    fflush (stdout);
+  <span class="hljs-comment">//              Map one page</span>
+    map_base = mmap (<span class="hljs-number">0</span>, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, target &amp; ~MAP_MASK);
+    <span class="hljs-keyword">if</span> (map_base == (<span class="hljs-keyword">void</span> *) <span class="hljs-number">-1</span>) FATAL;
+    printf (<span class="hljs-string">"Memory (0x31080240) mapped at address %p.\n"</span>, map_base);
+    fflush (stdout);
+  <span class="hljs-comment">// start WRITE</span>
+    virt_addr = map_base + (target &amp; MAP_MASK);
+    writeval = <span class="hljs-number">0x2</span>;                                                        <span class="hljs-comment">//32Bit data bus setting for static memory of CS_2</span>
+          *((unsigned long *) virt_addr) = writeval;
+          printf (<span class="hljs-string">"Written 0x%X\n"</span>, writeval);
+          fflush (stdout);
+          printf (<span class="hljs-string">"init successful\nRestart program to write or read data\n\n"</span>);
+  <span class="hljs-comment">// stop WRITE</span>
+}
+<span class="hljs-keyword">else</span>
+  <span class="hljs-comment"><span class="markdown">/<span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-emphasis">***</span>/</span></span>
+  <span class="hljs-comment">/*  Read/Write */</span>
+  <span class="hljs-comment"><span class="markdown">/<span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-emphasis">***</span>/</span></span>
+{
+target = strtoul (argv[<span class="hljs-number">1</span>], <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);                                         <span class="hljs-comment">// Parsing the input &amp; leaving out leading 0 &amp; 0x's</span>
+<span class="hljs-comment">// Open /dev/mem file &amp; error handling</span>
+   <span class="hljs-keyword">if</span>( (fd = open(<span class="hljs-string">"/dev/mem"</span>, O_RDWR | O_SYNC)) == <span class="hljs-number">-1</span>) FATAL;
+   printf (<span class="hljs-string">"/dev/mem opened.\n"</span>);
+   fflush (stdout);
+<span class="hljs-comment">// Map one page</span>
+   map_base = mmap (<span class="hljs-number">0</span>, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, target &amp; ~MAP_MASK);
+   <span class="hljs-keyword">if</span> (map_base == (<span class="hljs-keyword">void</span> *) <span class="hljs-number">-1</span>) FATAL;
+   printf (<span class="hljs-string">"Memory mapped at address %p.\n"</span>, map_base);
+   fflush (stdout);
+   virt_addr = map_base + (target &amp; MAP_MASK);
+<span class="hljs-comment">// start READ</span>
+   <span class="hljs-keyword">if</span> (argc &lt;= <span class="hljs-number">2</span>) {
+         read_result = *((unsigned long *) virt_addr); <span class="hljs-comment">//unsigned long fits the 32 bit bus data</span>
+<span class="hljs-comment">// stop READ</span>
+         printf (<span class="hljs-string">"Value at address 0x%X (%p): 0x%X\n"</span>, target, virt_addr, read_result);
+         fflush (stdout);
+}
+<span class="hljs-comment">// start WRITE if there is data to write given in the arguments</span>
+         <span class="hljs-keyword">if</span> (argc &gt; <span class="hljs-number">2</span>) {
+       writeval = strtoul(argv[<span class="hljs-number">2</span>], <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+         *((unsigned long *) virt_addr) = writeval;
+         printf (<span class="hljs-string">"Written 0x%X\n"</span>, writeval);
+         fflush (stdout);
+}
+<span class="hljs-comment">// stop WRITE</span>
+}
+<span class="hljs-comment"><span class="markdown">/<span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-emphasis">***</span>/</span></span>
+<span class="hljs-comment">/*  UnMap one page  */</span>
+<span class="hljs-comment"><span class="markdown">/<span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-emphasis">***</span>/</span></span>
+  <span class="hljs-keyword">if</span> (munmap(map_base, MAP_SIZE) == <span class="hljs-number">-1</span>) FATAL;
+  close (fd);
+  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+
+            <h2 id="final-word">Final Word</h2>
+            <p>This is an article I wrote in 2013 on the <a href="https://elinux.org/Main_Page">eLinux</a> wikki page for embedded systems.
+                The article itself can be found <a href="https://elinux.org/Connect_a_ARM_Microcontroller_to_a_FPGA_using_its_Extended_Memory_Interface_(EMI">here</a>#The_FPGA).</p>
+
+            <h2 id="bibliography">Bibliography</h2>
+            <ul>
+            <li><a href="http://www.phytec.com/products/linux/bsp-LPC3250.html">http://www.phytec.com/products/linux/bsp-LPC3250.html</a><ul>
+            <li>L-715e Linux Quickstart Guide</li>
+            <li>L-714e_1 System on Module and Carrier Board Hardware Manual</li>
+            </ul>
+            </li>
+            <li><a href="http://www.phytec.com/products/linux/bsp-LPC3250.html">http://www.phytec.com/products/linux/bsp-LPC3250.html</a></li>
+            <li><a href="http://www.nxp.com/products/microcontrollers/arm9/lpc3200/series/LPC3220_30_40_50.html">http://www.nxp.com/products/microcontrollers/arm9/lpc3200/series/LPC3220_30_40_50.html</a></li>
+            <li><a href="http://www.nxp.com/products/microcontrollers/arm9/lpc3200/series/LPC3220_30_40_50.html#documentation">http://www.nxp.com/products/microcontrollers/arm9/lpc3200/series/LPC3220_30_40_50.html#documentation</a><ul>
+            <li>User Manual</li>
+            <li>Data sheet</li>
+            <li>Errata sheet</li>
+            <li>Software</li>
+            </ul>
+            </li>
+            <li><a href="http://www.bitshrine.org/ltib/resources-download">http://www.bitshrine.org/ltib/resources-download</a></li>
+            </ul>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- Bootstrap core JavaScript
+                    ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="assets/js/jquery.min.js"></script>
+        <script src="assets/js/popper.js"></script>
+        <script src="bootstrap/js/bootstrap.min.js"></script>
+    </body>
+</html>
+
+
+

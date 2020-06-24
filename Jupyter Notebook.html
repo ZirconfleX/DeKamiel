@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="De Kamiel; Jupyter Notebook" content="">
+        <meta name="author" content="ZirconfleX">
+        <title>Jupyter Notebook</title>
+        <!-- Bootstrap core CSS -->
+        <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+        <!-- Custom styles for this template -->
+        <link href="Jupyter Notebook.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=ABeeZee&display=swap">
+        <meta name="keywords" content="Linux-Mint, Ubuntu, Microsoft, Windows, Python">
+    </head>
+    <body>
+        <div class="container" style="border-bottom: 2px solid; display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 50px 50px; grid-template-rows: 50px 50px 50px 50px 20px; grid-template-areas: 'Logo Logo Title Title Title Title' 'Logo Logo Title Title Title Title' 'Logo Logo Zirco Zirco Zirco Zirco' 'Logo Logo Web Web Zirco Zirco' '. . . . . .'; margin-top: -50px;">
+            <img src="Figures/Kamiel_2.svg" style=" width: 100%; height: 100%; object-fit: fill;grid-area:1 / 1 / 5 / 3;" data-html="false">
+            <h1 style=" font-weight: bold; text-align: right; font-family: 'ABeeZee', sans-serif; align-self: center; font-size: 70px; line-height: 97px;grid-area:1 / 3 / 3 / 7;">De Kamiel</h1>
+            <img src="Figures/ZirconfleX_Logo_Web_45_Jun20.svg" style="width: 100%; height: 100%; object-fit: fill; grid-area: 3 / 5 / 5 / 7;">
+            <p style="font-family: 'ABeeZee', sans-serif; text-align: right; grid-area: 3 / 3 / 4 / 5; width: 100%; height: 100%; padding-top: 24px;">Offered by: ZirconfleX</p>
+            <p style="grid-area: 4 / 3 / 5 / 5; text-align: right; font-family: 'ABeeZee', sans-serif; color: #1d5de4; width: 100%; height: 100%;">http://www.<a href="http://www.zirconflex.be" target="_blank">zirconflex</a>.be</p>
+        </div>
+        <div class="container" style="padding-top: 30px;">
+            <h1 id="jupyter-notebook">Jupyter Notebook
+              <a href="Figures/Pdfs/Jupyter Notebook.pdf" download>
+              <img src="Figures/acroread.png" alt="pdf" style="zoom: 80%;">
+          </a></h1>
+            <h2 id="launch-it-">Launch it.</h2>
+            <ul>
+            <li>Start a command window</li>
+            <li>Go to the root directory where the notebook needs to be opened.<br>
+                For test and in order to be able to follow all that’s going on, use a completely empty directory
+            </li>
+            <li>Type: <code>jupyter notebook</code> and hit [Enter]</li>
+            <li>While the notebook opens in the web browser of your computer, it might be that the output in the command windows is:</li>
+            <li><pre><code>  [w 10:08:38.454 NotebookApp] <span class="hljs-keyword">Error</span> loading server extension
+              jupyter_nbextensions_configurator
+                  Traceback (most recent call last):
+                  <span class="hljs-keyword">File</span> “C:\caetools\python\1ib\site-packages\notebook\notebookapp. py",
+              <span class="hljs-keyword">line</span> 1572, <span class="hljs-keyword">in</span> init _server_extensions
+                  mod = importlib.import_module(modulename)
+                  <span class="hljs-keyword">File</span> “C:\caetools\python\lib\importlib\__init__.py”, <span class="hljs-keyword">line</span> 127, <span class="hljs-keyword">in</span> import_module
+                    <span class="hljs-keyword">return</span> _bootstrap._gcd_import(name[level:], package, level)
+                <span class="hljs-keyword">File</span> <span class="hljs-string">"&lt;frozen importlib._bootstrap&gt;"</span>, <span class="hljs-keyword">line</span> 1006, <span class="hljs-keyword">in</span> _gcd_import
+                  <span class="hljs-keyword">File</span> <span class="hljs-string">"&lt;frozen importlib._bootstrap&gt;"</span>, <span class="hljs-keyword">line</span> 983, jin _find_and_load
+                <span class="hljs-keyword">File</span> <span class="hljs-string">"&lt;frozen importlib._bootstrap&gt;"</span>, <span class="hljs-keyword">line</span> 965, <span class="hljs-keyword">in</span> _find_and_load_unlocked
+              ModuleNotFoundError: <span class="hljs-keyword">No</span> module named ‘jupyter_nbextensions_configurator'
+              [I 10:08:38.460 NotebookApp] Serving notebooks from <span class="hljs-keyword">local</span> directory: C:\Projects\Python\MyHd1\Notebooks
+              [I 10:08:38.461 NotebookApp] The Jupyter Notebook is running at:
+              [I 10:08:38.461 NotebookApp] http:<span class="hljs-comment">//localhost:8888/?</span>
+              <span class="hljs-keyword">token</span>=2bb13de400af2f125680f03dcc026430a2a1155fc6997dde
+              [I 10:08:38.461 NotebookApp] <span class="hljs-keyword">Use</span> Control-c to Stop this server and shut down
+              all kernels (twice to skip confirmation).
+              [C 10:08:38.572 NotebookApp]
+            </code></pre></li>
+            <li>When the above is the case and ... to stop the complaint use pip to install following:
+            <pre><code>  pip <span class="hljs-keyword">install</span> jupyter_nbextensions_configurator
+            </code></pre></li>
+            <li>To be sure, quit the notebook in the web browser, close the command window and launch it again.</li>
+            <li>Type as above <code>jupyter notebook</code> and hit [Enter]</li>
+            <li>As before the notebook should open in the web browser but now the status messages in the command window should look as:
+            <pre><code>  [I <span class="hljs-number">10</span>:<span class="hljs-number">38</span>:<span class="hljs-number">23.165</span> NotebookApp] [jupyter_nbextensions_configurator] enabled <span class="hljs-number">0.4</span><span class="hljs-number">.1</span>
+              [I <span class="hljs-number">10</span>:<span class="hljs-number">38</span>:<span class="hljs-number">23.165</span> NotebookApp] Serving notebooks <span class="hljs-built_in">from</span> <span class="hljs-built_in">local</span> <span class="hljs-built_in">directory</span>:
+              c:\Projects\Python\MyHd!\Notebooks
+              [I <span class="hljs-number">10</span>:<span class="hljs-number">38</span>:<span class="hljs-number">23.165</span> NotebookApp] The Jupyter Notebook is running <span class="hljs-keyword">at</span>:
+              [I <span class="hljs-number">10</span>:<span class="hljs-number">38</span>:<span class="hljs-number">23.165</span> NotebookApp] <span class="hljs-keyword">http</span>://localhost: <span class="hljs-number">8888</span>/?
+              <span class="hljs-keyword">token</span>=b6c3f4466c09e303eeba87bc2d27189b0F7e6d85ccb684bc
+              [I <span class="hljs-number">10</span>:<span class="hljs-number">38</span>:<span class="hljs-number">23.165</span> NotebookApp] Use Control-C <span class="hljs-built_in">to</span> <span class="hljs-built_in">stop</span> this server <span class="hljs-keyword">and</span> shut down
+              all kernels (twice <span class="hljs-built_in">to</span> skip confirmation).
+              [c <span class="hljs-number">10</span>:<span class="hljs-number">38</span>:<span class="hljs-number">23.274</span> NotebookApp]
+                  To access <span class="hljs-keyword">the</span> notebook, <span class="hljs-built_in">open</span> this <span class="hljs-built_in">file</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">a</span> browser:
+                      <span class="hljs-built_in">file</span>:<span class="hljs-comment">///cC:/Users/defossez/AppData/Roaming/jupyter/runtime/nbserver- 9688-open. htm!</span>
+                      Or copy <span class="hljs-keyword">and</span> paste <span class="hljs-literal">one</span> <span class="hljs-keyword">of</span> these URLs:
+                          <span class="hljs-keyword">http</span>://localhost: <span class="hljs-number">8888</span>/?<span class="hljs-keyword">token</span>=b6c3f4466c09e303eeba87bc2d27189b0F7e6d85ccbh684bc
+            </code></pre></li>
+            </ul>
+            <h2 id="using-it">Using it</h2>
+            <ul>
+            <li>Hit [New] and add a kernel, select Python 3 from the fall down menu.</li>
+            <li>To find your way around, click [Help] and hover buttons to discover their function.</li>
+            <li>For a non-mac machine, click [ctr1][Shift][P] for a list of all possible commands.</li>
+            <li>The notebook has no title, so better give it one. Click right of <strong>Jupyter</strong> the title <strong>Untitled1</strong>.
+              In the popup give the notebook a meaning full name and click then the [Rename] button.
+            </li>
+            <li>Start adding stuff to the notebook.<br>
+              A notebook has two modes: command mode [hit esc key] and Edit mode [hit Enter key].<br>
+              Edit mode is also invoked when clicking in a cell, then the cell turns green.<br>
+              Edit mode is also indicated by a pencil icon in the right-top of the window.<br>
+              Command mode, by hitting esc turns a cell blue and removes the pencil icon from the window.
+            </li>
+            <li>Test coding python:<br>
+              Click the available cell and type: print (&#39;Hello world&#39;)<br>
+              To execute the code in the cell, click the [Cell] tab in the upper menu. Options to run the cell are presented:
+            </li>
+            <li>[Run Cells]: just execute the code and presents the output below the cell.
+            <ul>
+            <li>[Run Cells and Select Below]: Runs the code in the cell and select the cell below after execution.</li>
+            <li>[Run Cells and Insert below]: Runs the code in the selected cell and inserts a new cell below. </li>
+            <li>[Run All]: run all available cells.</li>
+            </ul>
+            </li>
+            <li>Add some text in the notebook:
+            <ul>
+            <li>Text is written in markdown and later on translated to HTML.</li>
+            <li>To add text, add a new cell by clicking the [Insert] tab button and select one of the two options, insert a cell above or below the selected cell.</li>
+            <li>Select the new cell and click the [Cell] tab button and select [Cell Type] as [Markdown].</li>
+            <li>Enter some markdown text and then run or translate the markdown to HTM by hitting [Ctrl Enter]</li>
+            </ul>
+            </li>
+            <li>This is the short introduction to notebooks.<br>
+              Find listed below some useful things:
+            <ul>
+            <li>Enter ! in a cell to execute bash commands.</li>
+            <li>% and %% lines for bash commands and magic command.
+              To list all possible commands enter in a cell %1smagic</li>
+            </ul>
+            </li>
+            <li>For a lot more and a very good tutorial or introduction go here.
+              <a href="https://www.youtube.com/watch?v=HW29067qVWk">https://www.youtube.com/watch?v=HW29067qVWk</a>
+              Type in a web browser: Notebook galleries.
+            </li>
+            </ul>
+            <p>[^1]: UG900-Vivado-Logic_simulation.pdf. Chapter 7 - Example of running Vivado Simulator in stand alone mode.
+            [^2]: Use VCD2WLF in order to display waveforms in Mentors viewer (vsim-view).
+            [^3]: Example: impulse in Eclipse : one of the best VCD viewers, with support for large VCD dumps and capable of showing all kinds of waveforms (analog &amp; digital). FREE for NON-COMMERCIAL USE.
+            [^4]: Another waveform plotting application that can possibly be used is a library like matplotlib : chaco : <a href="https://pypi.org/project/chaco/">https://pypi.org/project/chaco/</a></p>
+
+          </div>
+          <!-- Bootstrap core JavaScript
+          ================================================== -->
+          <!-- Placed at the end of the document so the pages load faster -->
+          <script src="assets/js/jquery.min.js"></script>
+          <script src="assets/js/popper.js"></script>
+          <script src="bootstrap/js/bootstrap.min.js"></script>
+      </body>
+  </html>

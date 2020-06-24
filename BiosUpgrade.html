@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="How-to BIOS Upgrade" content="">
+        <meta name="ZirconfleX" content="">
+        <title>Linux Dell BIOS Upgrade</title>
+        <!-- Bootstrap core CSS -->
+        <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+        <!-- Custom styles for this template -->
+        <link href="BiosUpgrade.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=ABeeZee&display=swap">
+        <meta name="keywords" content="BIOS, Upgrade, Motherboard, Dell, XPS">
+    </head>
+    <body>
+        <div class="container" style="border-bottom: 2px solid; display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 50px 50px; grid-template-rows: 50px 50px 50px 50px 20px; grid-template-areas: 'Logo Logo Title Title Title Title' 'Logo Logo Title Title Title Title' 'Logo Logo Zirco Zirco Zirco Zirco' 'Logo Logo Web Web Zirco Zirco' '. . . . . .'; margin-top: -50px;">
+            <img src="Figures/Kamiel_2.svg" style=" width: 100%; height: 100%; object-fit: fill;grid-area:1 / 1 / 5 / 3;" data-html="false">
+            <h1 style=" font-weight: bold; text-align: right; font-family: 'ABeeZee', sans-serif; align-self: center; font-size: 70px; line-height: 97px;grid-area:1 / 3 / 3 / 7;">De Kamiel</h1>
+            <img src="Figures/ZirconfleX_Logo_Web_45_Jun20.svg" style="width: 100%; height: 100%; object-fit: fill; grid-area: 3 / 5 / 5 / 7;">
+            <p style="font-family: 'ABeeZee', sans-serif; text-align: right; grid-area: 3 / 3 / 4 / 5; width: 100%; height: 100%; padding-top: 24px;">Offered by: ZirconfleX</p>
+            <p style="grid-area: 4 / 3 / 5 / 5; text-align: right; font-family: 'ABeeZee', sans-serif; color: #1d5de4; width: 100%; height: 100%;">http://www.<a href="http://www.zirconflex.be" target="_blank">zirconflex</a>.be</p>
+        </div>
+        <div class="container">
+            <div class="row" style="font-family: 'ABeeZee', sans-serif; font-size: 16px;">
+                <div class="card">
+                    <div class="card-body">
+                        <h1 class="card-title"></h1>
+                        <h1 cid="n0" mdtype="heading">BIOS Upgrade with FreeDOS on a Linux USB removable device
+                            <a href="Figures/Pdfs/FreeDos to Upgrade BIOS.pdf" download>
+                            <img src="Figures/acroread.png" alt="pdf" style="zoom: 80%;">
+                        </a></h1>
+                        <h2 class="card-subtitle mb-2 text-muted"></h2>
+                        <h2 cid="n2" mdtype="heading">Introduction</h2>
+                        <p class="card-text">As of writing (Nov 2019), unetbootin doesn&apos;t support versions of FreeDOS more recent than 1.0 (current  version is 1.2). <br>The following procedure worked to upgrade a Dell XPS18 from a A06 to the A10 BIOS. </p>
+                        <p class="card-text">Some notes before starting: </p>
+                        <ul>
+                            <li>You can check the current BIOS version.</li>
+                            <ul>
+                                <li>Possible that it can be observed when booting (under the Dell logo).</li>
+                                <li>Press F12 at boot and enter the setup. On the first setup page all system settings are shown, including BIOS version and Dell Tag code (necessary to download software drivers including BIOS). </li>
+                                <li>If the Latest BIOS is already installed read no further and exit here!</li>
+                            </ul>
+                            <li>Dell BIOS updates are always delivered as .EXE files. Modern (after 2016) Dell machines have a BIOS upgrade option in the F12 pop-up menu. Earlier machines need an approach were the .exe file can be read and executed. </li>
+                            <li>Laptop users should not attempt this without AC power</li>
+                            <li>This is dangerous, and you assume all risk for following this procedure.</li>
+                            <ul>
+                                <li>Backup on an external device all important information (documents, programs and other) before attempting to follow this BIOS upgrade procedure.</li>
+                            </ul>
+                        </ul>
+                        <h2 cid="n2" mdtype="heading">Procedure</h2>
+                        <ol>
+                            <li>Create a bootable USB device.</li>
+                            <ul>
+                                <li>Use a tool as
+                                    <i>Gparted</i>&nbsp;to do this.
+                                </li>
+                                <li>Create a 'GPT' partition table.</li>
+                                <li>Create a new partition, FAT32, and set the boot/esp/lba flags.</li>
+                                <li>Format the partition and give it a name to easily recognize it.</li>
+                            </ul>
+                            <li>Download from Dell the latest BIOS for your computer.
+                                It will be something as &quot;
+
+                                <i>ComputerType_BiosVersion.exe</i>&quot; (XPS18_A10.exe).
+                            </li>
+                            <li>Grab the latest USB installer from the FreeDOS Download Page.</li>
+                            <ul>
+                                <li>
+                                    <a href="https://www.freedos.org/" target="_blank">https://www.freedos.org/</a>
+                                </li>
+                                <li>The latest version at the time of writing is version 1.2.</li>
+                                <li>It is possible to download several versions of the Freedos OS but since CD&apos;s and Floppy&apos;s are outdated, the only valuable download can be that for USB. </li>
+                                <li>Download and save the &quot;Full&quot; version on suspicion that it might include more than the &quot;Lite&quot; version.</li>
+                            </ul>
+                            <li>Extract the archive:</li>
+                            <ul>
+                                <li>This produces three files.</li>
+                                <li>Keep only the
+                                    <i>.img</i> file.
+                                </li>
+                            </ul>
+                            <li>Determine which of
+                                <mark>&quot;/dev/sdX&quot;</mark>                                 is your USB stick (use
+
+                                <mark>&quot;fdisk -l&quot;</mark>                                )
+                            </li>
+                            <li>Write the image directly to the block device: </li>
+                            <ul>
+                                <li>
+                                    <mark>dd if=FD12FULL.img of=/dev/sdX status=progress</mark>
+                                    where
+
+                                    <mark>X</mark>                                     is the letter representing your USB stick as a block device.
+                                    Don't write the image to a partition)
+                                </li>
+                            </ul>
+                            <li>Double-check that the image copying worked: </li>
+                            <ul>
+                                <li>Run
+                                    <mark>fdisk -l</mark>                                     in a terminal.
+                                    It should show a single partition on a DOS disk with the bootable ("boot" *) flag set.
+                                </li>
+                            </ul>
+                            <li>Mount the USB drive.</li>
+                            <ul>
+                                <li>In most cases it's enough to unplug the USB drive and plug it back in to mount it.</li>
+                                <li>Else, run the &quot;
+                                    <i>disks</i>&quot; tool and click the mount button for the USB drive.
+                                </li>
+                            </ul>
+                            <li>Copy the downloaded and saved Dell BIOS .exe used to update your firmware.</li>
+                            <ul>
+                                <li>First rename the file (remove the
+                                    <u>undersore</u>).
+                                </li>
+                                <li>Stay on the safe side and limit the filename to 8 characters (without extension).</li>
+                                <li>Use only upper case characters.</li>
+                                <li>Ensure that you verified any checksums provided by your hardware vendor.</li>
+                            </ul>
+                            <li> Unmount the USB disk.</li>
+                            <ul>
+                                <li>Plug it in another PC (not booted yet).</li>
+                                <li>Leave it in the PC used to create the USB disk.</li>
+                            </ul>
+                            <li> Boot or reboot and do whatever is needed to boot from the USB drive.</li>
+                            <ul>
+                                <li>For Dell devices:</li>
+                                <ul>
+                                    <li>When the Dell logo is presented hit the F12 key a couple of times and watch the "boot options" message change style.</li>
+                                    <li>Select the "boot form USB" in the legacy menu part.</li>
+                                </ul>
+                            </ul>
+                        </ol>
+                        <h2 cid="n2" mdtype="heading">Freedos</h2>
+                        <p>Freedos will boot from the USB drive.</p>
+                        <ul>
+                            <li>In my case I had to hit the F5 key during the boot process to get the classic &quot;C:\&gt;&quot; prompt.
+                                If I didn&apos;t do this the PC went beeping continuously (only way to get rid of it - shut down the PC).
+                            </li>
+                            <li>A different scenario can happen and then Freedos will ask questions.</li>
+                            <ul>
+                                <li>Select your language.</li>
+                                <li>A prompt to install FreeDOS might appear</li>
+                                <ul>
+                                    <li>
+                                        <b>Select &quot;No - Return to DOS&quot;</b>
+                                    </li>
+                                </ul>
+                                <li>Now the `C:\&gt;` prompt shoul pop up.</li>
+                                <li>Run `dir` and verify that the firmware upgrade .exe tool is present.</li>
+                                <li>Run the executable, type &apos;
+                                    &lt;
+
+                                    <i>filename</i>&gt;.exe&apos;
+                                </li>
+                                <li>Let the PC do it&apos;s job.</li>
+                                <li>Don&apos;t be too impatient and don&apos;t touch the PC during the update process!</li>
+                                <li>Once the process completes verify the new BIOS version.</li>
+                                <ul>
+                                    <li>Through the BIOS setup screen (F12 menu).</li>
+                                    <li>As well as by running
+                                        <a href="https://www.archlinux.org/packages/?name=dmidecode" target="_blank">dmidecode</a> when you&apos;re back in linux.
+                                    </li>
+                                </ul>
+                            </ul>
+                            <p> </p>
+                            <p>06 Nov 2019</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="assets/js/jquery.min.js"></script>
+        <script src="assets/js/popper.js"></script>
+        <script src="bootstrap/js/bootstrap.min.js"></script>
+    </body>
+</html>

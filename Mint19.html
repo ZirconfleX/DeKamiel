@@ -1,0 +1,2037 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="De Kamiel; a page with Guides, notes and application ideas" content="">
+        <meta name="author" content="ZirconfleX">
+        <title>Install and Configure Mint-19 Linux</title>
+        <!-- Bootstrap core CSS -->
+        <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+        <!-- Custom styles for this template -->
+        <link href="Mint19.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=ABeeZee&display=swap">
+        <meta name="keywords" content="Linux-Mint,VHDL,Python,FPGA">
+    </head>
+    <body>
+        <div class="container" style="border-bottom: 2px solid; display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 50px 50px; grid-template-rows: 50px 50px 50px 50px 20px; grid-template-areas: 'Logo Logo Title Title Title Title' 'Logo Logo Title Title Title Title' 'Logo Logo Zirco Zirco Zirco Zirco' 'Logo Logo Web Web Zirco Zirco' '. . . . . .'; margin-top: -50px;">
+            <img src="Figures/Kamiel_2.svg" style=" width: 100%; height: 100%; object-fit: fill;grid-area:1 / 1 / 5 / 3;" data-html="false">
+            <h1 style=" font-weight: bold; text-align: right; font-family: 'ABeeZee', sans-serif; align-self: center; font-size: 70px; line-height: 97px;grid-area:1 / 3 / 3 / 7;">De Kamiel</h1>
+            <img src="Figures/ZirconfleX_Logo_Web_45_Jun20.svg" style="width: 100%; height: 100%; object-fit: fill; grid-area: 3 / 5 / 5 / 7;">
+            <p style="font-family: 'ABeeZee', sans-serif; text-align: right; grid-area: 3 / 3 / 4 / 5; width: 100%; height: 100%; padding-top: 24px;">Offered by: ZirconfleX</p>
+            <p style="grid-area: 4 / 3 / 5 / 5; text-align: right; font-family: 'ABeeZee', sans-serif; color: #1d5de4; width: 100%; height: 100%;">http://www.<a href="http://www.zirconflex.be" target="_blank">zirconflex</a>.be</p>
+        </div>
+        <div class="container" style="padding-top: 30px;">
+            <h1 id="Install & Configure Linux-Mint19">Install & Configure Linux-Mint19
+                <a href="Figures/Pdfs/Install and Configure Mint-19 Linux on PC.pdf" download>
+                <img src="Figures/acroread.png" alt="pdf" style="zoom: 80%;">
+            </a></h1>
+            <div class="row">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">Preparation</h2>
+                        <p class="card-text"></p>
+                        <ol>
+                            <li>It&apos;s best to do a complete clean install.</li>
+                            <li>Don&apos;t us dual boot. Not because it doesn&apos;t work but because of speed and it&apos;s always going to be a half-hearted solution.</li>
+                            <li>If installing Linux Mint on an exiting PC, make sure to update everything important onto an external drive because the installation procedure requires to (re-)partition the drive where Linus Mint is going to be installed.
+                                <strong>(re-)Partitioning a drive destroys all data on that drive</strong>.
+                            </li>
+                            <li>To continue you need two USB drives.</li>
+                            <li>It is assumed that the OS is going to be installed Dell laptop and on a UEFI system.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">Software</h2>
+                        <p class="card-text"></p>
+                        <ol>
+                            <li>Download the newest Mint version from <a href="https://www.linuxmint.com/download.php" title="Mint">here</a>.</li>
+                                <ol>
+                                    <li>I&apos;ve downloaded the Cinnamon - 64-bit version (what looks today the most obvious for any PC.)</li>
+                                </ol>
+                            <li>If you&apos;re on Windows, use a tool to create a bootable USB drive from the downloaded ISO.<br>
+                                If your on Linux, use a build in bootable USB disk creator or use these command lines in a terminal:
+                            </li>
+                                <ol>
+                                    <li>Plug in the USB drive and determine the device it&apos;s mounted on with the command:
+                                        <br>
+                                        <span style="background-color: rgb(238, 231, 231)"><i>sudo fdisk -l</i></span>
+                                        <br>
+                                        Example: it was /dev/sdc1 for me, so I&apos;ll use that as my example.
+                                    </li>
+                                    <li>Umount the device
+                                        <br>
+                                        <span style="background-color: rgb(238, 231, 231)"><i>umount /dev/sdc1</i></span>
+                                        <br>
+                                    </li>
+                                    <li>Not sure if necessary but I formatted the drive in FAT32, just in case
+                                        <br>
+                                        <span style="background-color: rgb(238, 231, 231)"><i>sudo mkdosfs -n &lt;Label-for-USB-drive&gt; -I /dev/sdc -F 32</i></span>
+                                        <br>
+                                    </li>
+                                    <li>If the ISO is using isolinux and not syslinux call the isohybrid command, which allows for an ISO to be recognized by the BIOS from a hard drive.
+                                        Find out more about the command
+                                        <a href="http://www.syslinux.org/wiki/index.php/Doc/isolinux#HYBRID_CD-ROM.2FHARD_DISK_MODE">here</a>.
+                                        <br>
+                                        <span style="background-color: rgb(238, 231, 231)"><i>isohybrid filename.iso</i></span>
+                                        <br>
+                                    </li>
+                                    <li>Next step is to copy and uncompress the ISO onto the USB disk.
+                                        <br>
+                                        <span style="background-color: rgb(238, 231, 231)"><i>sudo dd if=&lt;ISO-Filename&gt;.iso of=/dev/sdc bs=4k status=progress</i></span>
+                                        <br>
+                                        Then do the following before unplugging the device:
+                                        <br>
+                                        <span style="background-color: rgb(238, 231, 231)"><i>sync <br>sudo eject /dev/sdc</i></span>
+                                        <br>
+                                    </li>
+                                </ol>
+                            <li>Preparations to be able to install Mint are done.
+                                Continue to make the PC ready for the Linux Mint installation therefore download
+                                <a href="https://gparted.org/download.php">Gparted</a>.
+                                Download the
+                                <em>gparted-live-&lt;version&gt;-amd64.iso</em> for newer (&gt;2010) computers with UEFI instead of legacy BIOS try this one.
+                            </li>
+                            <li>Create a bootable USB drive from the Gparted ISO.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">Hard Disk</h2>
+                        <p class="card-text">We could do what most people do, plug the USB drive in to PC.
+                        Boot it or reboot it in single boot mode. Select the USB-drive to boot from. Boot and start a Linux Mint installation.
+                        This will perfectly work but I learned that then after install the system is as slow at startup and functionality as Windows is.
+                        So we can do better with a small amount of extra work. That&rsquo;s why we created the Gparted USB-drive.</p>
+                        <p>Insert the Gparted USB-drive and boot or reboot the PC.
+                        Enable the BIOS menu(s) (press F12 at boot for a Dell PC) and set the PC to boot from the USB-drive.
+                        Save and close the settings and let the PC boot in Gparted mode.</p>
+                        <p>When Gparted started, make the Gparted view/window as big as possible (get a good overview).</p>
+                        <p> </p>
+                        <ol>
+                            <li>Select the drive, [Gparted]-[Devices], that&apos;s going to be the boot drive.</li>
+                                <ul>
+                                    <li>On a PC with a single hard drive, there can only one drive to be the boot drive.</li>
+                                    <li>On a PC with multiple hard drives we will need to choose what drive to use as boot device.</li>
+                                </ul>
+                            <li>Select the chosen drive and delete, [Partition]-[Delete], all partitions on that drive. When the delete option is grayed out,
+                                it might be possible that the drive is mount. unmounted, [Partition]-[Unmount], it first.</li>
+                            <li>To use UEFI, a UEFI partition must be created on the drive first. Then other partitions can be created.</li>
+                                <ol>
+                                    <li>Have a GPT partition table on the hard drive you want to install to. Check, [View]-[Device Information], and if needed
+                                        change the partition table type.<br>
+                                        <img alt="Figure 5" src="Figures/Mint19/Figure_5.png?lastModify=1591601290" onerror="onImageErrorFunc(event)" onload="onLoadedFuncForQuickAction(event)" style="width:80%""></p>
+                                        <p>If the partition table attribute reads <code>msdos</code> instead of <code>gpt</code>, then it&apos;s wrong and need
+                                        to be changed. Select the disk of which you want to change the partition, then select [Device]-[Create Partition Table]
+                                        from the menu. A warning about destroying all data will pop up. The warning contains the current type of the partition <code>msdos</code> what is the old format. Click <code>msdos</code> and select in the presented list <code>gpt</code>.
+                                        All other options are for other operating systems or architectures.</p>
+                                        <img alt="Figure 6" src="Figures/Mint19/Figure_6.png?lastModify=1591601290" onerror="onImageErrorFunc(event)" onload="onLoadedFuncForQuickAction(event)" style="width:80%""></p>
+                                        <p><strong>REMARK 1:</strong> If a warning displays that the device contains active partitions, unmount these first (2).
+                                            Note that you cannot unmount partitions of your currently running operating system.</p>
+                                        <p><strong>REMARK 2:</strong> Unfortunately creating/changing a new partition table destroys the existing one and all data on the disk.</p>
+                                    </li>
+                                    <li>Create a EFI system partition. This partition type is `ef00` and usually contains a FAT32 file system.<br>
+                                        Do this as:
+                                    </li>
+                                        <ul>
+                                            <li>[Partition]-[New].<br>
+                                                <img alt="Figure 7" src="Figures/Mint19/Figure_7.png?lastModify=1591601290" onerror="onImageErrorFunc(event)" onload="onLoadedFuncForQuickAction(event)" style="width:80%""></p>
+                                            </li>
+                                            <li>In the pop up screen enter:</li>
+                                                <ul>
+                                                    <li>New size (MiB): 600</li>
+                                                    <li>Partition Name: EFI System Partition</li>
+                                                    <ul>
+                                                        <li>File System: fat32</li>
+                                                        <li>Label: EFI Boot</li>
+                                                    </ul>
+                                                </ul>
+                                            <li>Click [Add] and then tick the <img alt="Tick" src="Figures/Mint19/Tick.png?lastModify=1591601290" onerror="onImageErrorFunc(event)" onload="onLoadedFuncForQuickAction(event)"></p> tab in the main window.<br>
+                                                <img alt="Figure 8" src="Figures/Mint19/Figure_8.png?lastModify=1591601290" onerror="onImageErrorFunc(event)" onload="onLoadedFuncForQuickAction(event)"" style="width:80%""></p>
+                                            </li>
+                                            <li>A new pop up will appear, click [Apply] to proceed and apply all changes. When all changes are applied click [Close].</li>
+                                            <li>Make the EFI partition bootable.<br>
+                                                Select the partition and right click it.<br>
+                                                In the fall down menu select [Manage Flags]<br>
+                                                The tick the voting box in front of <i>boot</i>, automatically a vote will be displayed for <i>esp</i>.<br>
+                                                As showed in the figure below.<br>
+                                                <img alt="Figure 9" src="Figures/Mint19/Figure_9.png?lastModify=1591601290" onerror="onImageErrorFunc(event)" onload="onLoadedFuncForQuickAction(event)" style="width:80%""></p>
+                                            </li>
+                                        </ul>
+                                    <li>Create now the other partition or partitions.</li>
+                                        <ul>
+                                            <li>Assume Linux Mint is installed on a single partition, letting Mint decided how to divide the partition.<br>
+                                                Then do:
+                                            </li>
+                                                <ul>
+                                                    <li>Click the remaining unallocated space.</li>
+                                                    <li>Right click it and select in the menu [New]</li>
+                                                    <li>Enter or check following parameters:</li>
+                                                        <ul>
+                                                            <li>Create as, must be: Primary Partition</li>
+                                                            <li>File System, this must be: ext4</li>
+                                                            <li>Label, enter a label, or not if you don’t want.</li>
+                                                        </ul>
+                                                    <li>Click [Add]</li>
+                                                    <li>Tick the <img alt="Tick" src="Figures/Mint19/Tick.png?lastModify=1591601290" onerror="onImageErrorFunc(event)" onload="onLoadedFuncForQuickAction(event)">
+                                                        tab in the main window.</li>
+                                                    <li>Click [Apply] and when everything is finished, click [Close]</li>
+                                                    <li>Close Gparted.</li>
+                                                </ul>
+                                            <li>If Mint needs to be installed on a manual partitioned drive, go to <strong>Partition a Drive</strong>.</li>
+                                        </ul>
+                                    <li>Assumed is that the drive has a small UEFI boot partition an a large user partition where Linux Mint can be installed.</li>
+                                    <li>Before starting the Linux Mint installation some settings in the BIOS need to be done to allow a quick boot and obtain a fast system.</li>
+                                    <li>Boot into the BIOS, check it and change some boot settings.</li>
+                                        <ul>
+                                            <li>Shut down the PC if it was running.</li>
+                                            <li>Press the power button to turn the PC on.</li>
+                                            <li>Press as soon as the power button is released and before the Dell logo appears the [F12] key on the keyboard.</li>
+                                            <li>The PC will now boot in BIOS mode showing something like below menu.</li>
+                                            <li><img alt="Figure 10" src="Figures/Mint19/FrstBootMenu.png?lastModify=1591601290" onerror="onImageErrorFunc(event)" onload="onLoadedFuncForQuickAction(event)" style="width:60%""></p></li>
+                                            <li>Select, using the up and down keys, under *OTHER OPTIONS, BIOS Setup*.</li>
+                                            <li>This will show a menu structure as showed below:</li>
+                                            <li><img alt="Figure 11" src="Figures/Mint19/BootSequence.png?lastModify=1591601290" onerror="onImageErrorFunc(event)" onload="onLoadedFuncForQuickAction(event)" style="width:60%""></p></li>
+                                            <li>Use the up/down arrow key or the mouse to select *Boot Sequence* and tap [Enter].</li>
+                                            <li>The menu as displayed below is now popping up.<br>
+                                                <img alt="Figure 12" src="Figures/Mint19/BootSettings.png?lastModify=1591601290" onerror="onImageErrorFunc(event)" onload="onLoadedFuncForQuickAction(event)" style="width:60%""></p>
+                                                In the figure above two devices are visible in the *Boot Sequence* part of the screen. It is possible that there are
+                                                multiple items listed and that seems to slow down the boot speed of the PC enormously. Let us remove everything from
+                                                that list and add only the necessary boot devices.
+                                            </li>
+                                                <ul>
+                                                    <li>Click in the *Boot List Option* the [Delete Boot Option] button to remove boot devices from the boot sequence list.<br>
+                                                        Do this till the list is empty.
+                                                    </li>
+                                                    <li>Click then [Add Boot Option] and in the pop up menu:</li>
+                                                        <ul>
+                                                            <li>Select the hard disk designated as boot device in the [File System List].<br>
+                                                                This is the disk were an UEFI partition has been created. View the figure below.<br>
+                                                                <img alt="Figure 13" src="Figures/Mint19/BootOption.png?lastModify=1591601290" onerror="onImageErrorFunc(event)" onload="onLoadedFuncForQuickAction(event)" style="width:60%""></p>
+                                                            </li>
+                                                        </ul>
+                                                    <li>Enter a [Boot Option Name] like Mint or Ubuntu or …</li>
+                                                </ul>
+                                            <li>Click [Add]</li>
+                                        </ul>
+                                </ol>
+                                <p><strong>REMARK:</strong> When installing on other PC brands, similar options as discussed above are available in the BIOS. Sometimes a extra option
+                                 need to be set in order to make the PC boot in UEFI configuration before loading other drivers. Make sure to set this option.</p>
+                                <ol>
+                                    <li>Plug the Mint bootable USB drive in a USB slot.</li>
+                                    <li>Save and Exit the BIOS and let the PC reboot.</li>
+                                    <li>before the Dell logo appear push the F12 key. Thus as soon as the PC attempts to start boot, push the key a couple of times.</li>
+                                    <li>The PC will show the BIOS Boot Menu.</li>
+                                        <ol>
+                                            <li>The USB drive will, when everything went well, under the UEFI BOOT option.</li>
+                                            <li>Select it using the up/down arrow keys and press [Enter].</li>
+                                        </ol>
+                                    <li>The PC will boot from the Mint USB disk.<br>
+                                        Probably you will need to select to start Mint 64-bit in a grub menu.<br>
+                                        After boot there is a full functional Mint version at your disposal while it is running from the USB disk.
+                                    </li>
+                                    <li>Click the [Install Linux Mint] icon.</li>
+                                    <li>A menu setup will ask:</li>
+                                        <ol>
+                                            <li>Select the language and press [Continue].</li>
+                                            <li>Select the keyboard setup and press [Continue].<br>
+                                                Test the special keys of the keyboard in the provided test line.
+                                            </li>
+                                            <li>Tick the box to install third party software.</li>
+                                            <li>Tick the first option to install a fresh Mint option.<br>
+                                                I’m leaving the partitioning job of the hard disk over to the installer.<br>
+                                                If one wants a particular partitioning then select that options in the installation menu and provide the partition scheme you want.
+                                            </li>
+                                            <li>Follow all menus and answer all questions asked.</li>
+                                            <li>Let Mint install on the PC and at the end remove the USB drive and press [Enter] to let the PC reboot.</li>
+                                        </ol>
+                                </ol>
+                                <p></p>
+                                <p>You should have now a very fast booting Linux Mint PC.</p>
+                                <p>Be aware that after the first reboot the OS will want to install a big amount of updates!<br>
+                                Allow this to happen.</p>
+                                <ul>
+                                    <li>The Update manager will pop up and present a  long list of software that needs to be updated or upgraded.</li>
+                                    <li>Make sure all packages have a green tick-mark and then click [Install Updates].</li>
+                                    <li>Enter your password and let the OS update itself.<br>
+                                        Probably it will need a reboot after this large update session.<br>
+                                        After the reboot it’s possible that a new set op updates pops up, allow these to happen.
+                                    </li>
+                                </ul>
+                                <p><strong>REMARK:</strong> The first time the software updater starts it will ask to setup system snapshots.<br>
+                                 Follow the procure to do this. System snapshots will be taken from that moment on regularly base and can save you life later on.</p>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">Customize the Base Installation</h2>
+                        <p class="card-text">This is something everybody needs to do following his/her own taste and colors.
+                        The chapter below only provides a set of basic customisation making the use of Mint more enjoyable.</p>
+                        <ol>
+                            <li>Install missing proprietary graphic and communication drivers.
+                                When the PC is equipped with an Nvidia or other graphics card or the Ethernet card uses specific,
+                                such as Broadcom, devices it might be interesting to install the drivers for those specific devices.</p>
+                                Installing the latest graphics and other dedicated drivers is one of the first things you should do after installing Mint or any other Linux distributions.</p>
+                                To get the most out of graphic cards like Nvidia use the provided proprietary/restricted drivers supplied by the manufacturer of the graphics card in favour
+                                of the general drivers supplied by the Linux distribution. The same applies for other dedicated hardware.
+                            </li>
+                                <ul>
+                                    <li>Start the <u>Driver Manager</u> from the start menu.</li>
+                                    <li>Enter your password.</li>
+                                    <li>After updating of the cache the tool presents options for the hardware that can benefit from proprietary drivers.</li>
+                                    <li>Install the recommended driver(s).</li>
+                                    <li>Restart the PC after the driver installation.<br>
+                                        <img alt="Figure 14" src="Figures/Mint19/Figure_10.png?lastModify=1591601290" onerror="onImageErrorFunc(event)" onload="onLoadedFuncForQuickAction(event)" style="width:80%""></p>
+                                    </li>
+                                    <li>These are the proprietary drivers default in the Linux Mint repositories.
+                                        Nvidia for instance outputs on regularly base new drivers for their video cards.
+                                        First for Microsoft but soon after also for Linux. Thus lets find out if there is not a more recent video driver for the Nvidia card in the PC.
+                                        Add Nvidia repositories to the software sources in order to find new drivers, at the same time the presence of the repositories will make sure
+                                        that when new video drivers are available they are installed when performing a software update.
+                                    </li>
+                                    <li>Add the graphics drivers repository of Ubuntu to the machines repository list.
+                                        <br>
+                                        <span style="background-color: rgb(238, 231, 231)"><i>sudo add-apt-repository ppa:graphics-drivers/ppa</i></span><br>
+                                        <span style="background-color: rgb(238, 231, 231)"><i>sudo apt-get update</i></span>
+                                        <br>
+                                    </li>
+                                    <li>Open the Software Sources manager and check if the graphics drivers repository is indeed add to the list.
+                                        There should be under the [PPAs] tab a new repository, probably the only one now, showing <strong>Graphics-Drivers</strong> and <strong>Graphics-Drivers (Sources)</strong>.
+                                        While under [Authentication Keys] a line showing *Launchpad PPA for Graphics-Drivers* should appear.<br>
+                                        If that's the case do next.
+                                    </li>
+                                    <li>Start <i>System Settings</i> and click the <i>Driver Manager</i> icon in the bottom of the window.<br>
+                                        When its window pops up a list of available graphic drivers should show.<br>
+                                        But what driver to install, well:
+                                    </li>
+                                    <li>Open a terminal and type: <span style="background-color: rgb(238, 231, 231)"><i>ubuntu-drivers devices</i></span><br>
+                                        That will present a list of all available drivers and tell what the best driver is for the system. Style:<br>
+                                        <img alt="Figure 22" src="Figures/Mint19/Figure_22.png?lastModify=1591601290" onerror="onImageErrorFunc(event)" onload="onLoadedFuncForQuickAction(event)"  style="width:80%""></p>
+                                    </li>
+                                    <li>Go back to the <i>Driver Manager</i> and tick the voting bullet left of the driver listed as recommended in the terminal output. In this case it's <i>nvidia-driver-418</i>.</li>
+                                    <li>Wait until it's installed and hit the [reboot] button.</li>
+                                </ul>
+                            <li>Optimize the SWAP space usage.</li>
+                                <ul>
+                                    <li>Check the current swap setting.</li>
+                                    <li>Open a terminal and type at the command line: <span style="background-color: rgb(238, 231, 231)"><i>cat /proc/sys/vm/swappiness</i></span><br>
+                                        If it reports 60 or a different number than 10, set it to 10.
+                                    </li>
+                                    <li>Do this in the open terminal, type <span style="background-color: rgb(238, 231, 231)"><i>sudo xed /etc/sysctl.conf</i></span> on the command line.</li>
+                                    <li>Scroll to the bottom of the page and enter there:<br>
+                                        <span style="background-color: rgb(238, 231, 231)"><i># Decrease swap usage to a more reasonable level<br>
+                                        vm.swappiness=10</i></span>
+                                    </li>
+                                    <li>Save the file, restart the PC and check the swappiness again.</li>
+                                </ul>
+                            <li>Improve battery life by installing TLP for Linux<br>
+                                <p><strong>TLP</strong> is a great command line tool for improving the battery performance for your laptop running Linux mint 19.
+                                    This advanced power management tool comes with automated background tasks which can help you get the most out of your battery.</p>
+                                <p>To install TLP in Linux Mint 19,
+                                    <span style="background-color: rgb(238, 231, 231)"><i>sudo add-apt-repository ppa:linrunner/tlp<br>
+                                    sudo apt update<br>
+                                    sudo apt install tlp tlp-rdw<br>
+                                    sudo tlp start
+                                </i></span></p>
+                                <p>Most noteworthy is that the default settings  would be the recommended one and that it is safe to assume that it would  do well enough.
+                            </li>
+                            <li>On a laptop (desktop too) with full keyboard (keyboard with side numeric keypad) it is handy when the keypad is on from boot. To obtain this effect do:</li>
+                                <ul>
+                                    <li>Install numlockx: <span style="background-color: rgb(238, 231, 231)"><i>sudo apt install numlockx</i></span></li>
+                                    <li>Open the *Login Window* application and select the <i>Settings</i> tab.</li>
+                                    <li>Activate numlock.</li>
+                                    <li><img alt="Figure 16" src="Figures/Mint19/Figure_16.png?lastModify=1591601290" onerror="onImageErrorFunc(event)" onload="onLoadedFuncForQuickAction(event)"  style="width:80%""></li>
+                                </ul>
+                            <li>Most, if not all, laptops are equipped with <strong>Bluetooth</strong>.
+                                To make Bluetooth reliably work remove the default installed software and install BlueMan Bluetooth software.<br>
+                                <span style="background-color: rgb(238, 231, 231)"><i>sudo apt remove blueberry<br>
+                                    sudo apt install blueman
+                                </i></span><br>
+                                Above terminal commands install the Blueman package from the Ubunutu/Mint repositories.
+                                As with all packages in the repositories, it is very likely that there is a newer version available elsewhere.
+                                Below describes how to install the latest version of Blueman.
+                                But: <strong>Below description might make Blueman unusable!</strong>
+                                Test it, when Blueman afterwards no longer works, remove the entire Blueman package and take Blueman from the Mint repositories.
+                                The repository provided below are pointing to git storage with the most up to date version of Blueman.
+                                This new version often depends from other new packages not yet available for Linux Mint.
+                            </li>
+                                <ul>
+                                    <li>In order to get the Bluetooth manager software updated automatically setup the PPA site.</li>
+                                    <li>Start a terminal.</li>
+                                    <li>Add the public key to apt by typing or copying below line.<br>
+                                        <span style="background-color: rgb(238, 231, 231)"><i>sudo curl https://cschramm.eu/blueman/debian/blueman.gpg.key | sudo apt-key add -</i></span><br>
+                                    <li>Next, add the PPA sources to <span style="background-color: rgb(238, 231, 231)"><i>/etc/apt/sources.list.d</i></span> directory.<br>
+                                        Pick the right Python version depending on your distribution. For Mint 19 this is:
+                                        <span style="background-color: rgb(238, 231, 231)"><i>deb https://cschramm.eu/blueman/debian/ python3.6 main<br>
+                                        deb-src https://cschramm.eu/blueman/debian/ python3.6 main</i></span>
+                                    </li>
+                                    <li>Go to the above mentioned directory and launch an editor. Copy the above given lines into the document and save it as <i>blueman-repositories.list</i>.</li>
+                                    <li>In a terminal type: <span style="background-color: rgb(238, 231, 231)"><i>sudo apt update</i></span> in order to integrate the newly add repositories into the system.</li>
+                                    <li>Above instructions can also be found on:<br>
+                                        <span style="background-color: rgb(238, 231, 231)"><i>https://github.com/blueman-project/blueman/wiki/Packaged-versions</i></span>
+                                    </li>
+                                    <li>After reboot of the PC, a Linux Log file reported: "[pulseaudio] backend-ofono.c: Failed to register as a handsfree audio ...... ..." .<br>
+                                        This was Bluetooth related and installing ofono solved the issue.
+                                    </li>
+                                    <li>Open a terminal and enter: <span style="background-color: rgb(238, 231, 231)"><i>sudo apt install ofono</i></span><br>
+                                        When done, enter <span style="background-color: rgb(238, 231, 231)"><i>systemctl enable ofono</i></span>.
+                                    </li>
+                                </ul>
+                            <li>Install codecs to be able to play movies and music.<br>
+                                <span style="background-color: rgb(238, 231, 231)"><i>sudo apt install mint-meta-codecs</i></span>
+                            </li>
+                            <li>Install Microsoft fonts.<br>
+                                You can use the Linux Software Manager or the Synaptic package manager to do so.<br>
+                            </li>
+                                <ul>
+                                    <li>Launch the Software Manager and type in the search entry: <strong>ttf-mscorefonts-installer</strong></li>
+                                    <li>Click install.</li>
+                                </ul>
+                            <li>Setup a firewall. Setting up a firewall can be a complicated business and hence Linux Mint comes pre-installed with UFw (Uncomplicated Firewall).
+                                Just search for the Firewall icon in the  *System Settings* window and enable it at least for the Home or Public mode.
+                            </li>
+                            <li>While having  <u>System Settings</u> open. make use of it to set and configure all other kind of things, keyboard, mouse, display, background, window behavior, and etcetera.<br>
+                                Some hints:
+                            </li>
+                                <ol>
+                                    <li>To change the size and inter-icon distance of the on desktop icons, right click somewhere in empty desktop space. Select from the fall-down menu [Customize]
+                                        In the pop up window select the **icon size** by clicking the button at the right.<br>
+                                        Select the vertical and horizontal icon inter-distance by moving the vertical and/or horizontal slides at the right side and bottom of the window.
+                                    </li>
+                                    <li>Change the size of the panel (bottom) and icons in it by opening the [System Settings] - [Panel]. Move the slide [Panel hight] and set a fix size
+                                        for the different zones in the panel.<br>
+                                        Set there also the panel action, always visible or hide (two options).
+                                    </li>
+                                    <li>To rearrange the applets on the Panel, first right-click on a blank spot on the panel, and then enable *Panel Edit Mode* from the menu that appears.
+                                        The blank areas on the panel will turn pale green once *Panel Edit Mode*. Left-click on the applet you want to move, hold down the left button,
+                                        and then drag the applet to its new location on the panel. Turn the *Panel Edit Mode* off afterward.
+                                    </li>
+                                </ol>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">Install Necessary Software</h2>
+                        <h3 class="card-subtitle">VPN</h3>
+                        <p class="card-text">A must have these days in my opinion.<br>
+                        Install openVPN and subscribe to a VPN provider as NordVPN.</p>
+                        <ul>
+                            <li>Subscribing to a VPN service delivers you a password and user ID necessary to use the VPN bridges.</li>
+                                <ul>
+                                    <li>Once subscribed, download the list with VPN access points and their configuration.<br>
+                                        Change to a directory where the downloaded file can be saved, example: <i>/Downloads</i><br>
+                                        Download the configuration and access files.<br>
+                                        <span style="background-color: rgb(238, 231, 231)"><i>sudo wget https://downloads.nordcdn.com/configs/archives/servers/ovpn.zip</i></span><br>
+                                    </li>
+                                    <li>Unzip the downloaded <i></i>ovpn.zip</li> file.<br>
+                                        The result is two directories *ovpn_udp* and <i>ovpn_tcp</i>.<br>
+                                        Each directory contains the settings for connection protocol severs you can use.<br>
+                                        <strong>REMARK:</strong> It seems that the <i>.ovpn</i> files are no longer available as <i>.zip</i> file.<br>
+                                        But need to be downloaded as individual file(s) per VPN accesspoint.
+                                    </li>
+                                    <li><strong>REMARK:</strong> When while downloading an error pops up, download ca-certificates <span style="background-color: rgb(238, 231, 231)"><i>sudo apt-get install ca-certificates</i></span> and start again.</li>
+                                    <li> <strong>REMARK:</strong> There is a new and better protocol  calle WIREGUARD available.<br>
+                                        To use that protocol one must install the application NordVPN provides and I guess it is the same for other VPN providers.
+                                    </li>
+                                </ul>
+                            <li>Setup openVPN:</li>
+                                <ul>
+                                    <li>Start a terminal window (CTRL+ALT+T).</li>
+                                    <li>Install openVPN by typing: <span style="background-color: rgb(238, 231, 231)"><i>sudo apt-get install openvpn</i></span></li>
+                                    <li><strong>REMARK:</strong> It is very well possible that openVPN is already installed. When it’s the most recent version the terminal will reply with:<br>
+                                    <pre>
+                                    <code>
+                                        Reading package lists... Done
+                                        Building dependency tree
+                                        Reading state information... Done
+                                        openvpn is already the newest version (2.4.4-2ubuntu1.3).
+                                        0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+                                    </code>
+                                    </pre>
+                                    </li>
+                                    <li>Copy/move the two protocol access directories to the openVPN setup.<br>
+                                        <span style="background-color: rgb(238, 231, 231)"><i>cd /etc/openvpn/client</i></span><br>
+                                        <span style="background-color: rgb(238, 231, 231)"><i>sudo mv /home/<you>/Downloads/ovpn_* </i></span>
+                                    </li>
+                                    <li>To test the installation, pick a server form one of the directories.<br>
+                                      The files in the ovpn_udp and ovpn_tcp directories have following format: <i><county><number>.nordvpn.com.<protocol>.ovpn</i><br>
+                                      Example: <i>us349.nordvpn.com.udp.ovpn</i> This is a US access point running the UDP protocol.<br>
+                                      The other way to pick a access point is to go to: <https://nordvpn.com/servers/tools/> and pick the server you want form there.<br>
+                                      Select the country of the server you want to access and the tool provides you the best option for that moment.
+                                    </li>
+                                    <li>In the terminal window start *openVPN* and access the server of choice.</li>
+                                    <li>Examples:<br>
+                                        <span style="background-color: rgb(238, 231, 231)"><i>sudo openvpn us349.nordvpn.com.udp.ovpn</i></span> or<br>
+                                        <span style="background-color: rgb(238, 231, 231)"><i>sudo openvpn /etc/openvpn/client/ovpn_udp/us349.nordvpn.com.udp.ovpn</i></span>.
+                                    </li>
+                                    <li>Enter your NordVPN account details (username and password).</li>
+                                    <li>After a login process, displaying text in the terminal screen you should see a successful login.</li>
+                                    <li>To disconnect type: CTRL+C</li>
+                                </ul>
+                            <li>OpenVPN per Network Manager.<br>
+                                It is not very handy to need to use VPN via the terminal window, therefore it is possible to use a graphical setup. Above proved that openVPN
+                                is working. We can use the network manager of Mint to do the same, with a mouse click, as what was typed in the terminal. To make that
+                                happening do:
+                            </li>
+                                <ul>
+                                    <li>Click the network icon in the right-bottom of the screen and select [Network Settings].<br>
+                                        <img alt="Figure 11" src="Figures/Mint19/Figure_11.png?lastModify=1591601290" onerror="onImageErrorFunc(event)" onload="onLoadedFuncForQuickAction(event)"  style="width:30%"">
+                                    </li>
+                                    <li>Click the ”<strong>+</strong>“ in the left bottom of the popped up screen.</li>
+                                    <li>Select in the Add VPN pop up <i>Import from File…</i></li>
+                                    <li>Enter your NordVPN User name and Password.</li>
+                                    <li>Browse to <i>/etc/openvpn/client/ovpn_udp</i> and select the configuration file of the server/access point to be used, like: <i>us349.nordvpn.com.udp.ovpn</i></li>
+                                    <li>Click [Add], and close the Network window.</li>
+                                    <li>Clicking now the network icon in the right-bottom will show a new selection, the VPN access point/sever that’s just add.<br>
+                                        <img alt="Figure 12" src="Figures/Mint19/Figure_12.png?lastModify=1591601290" onerror="onImageErrorFunc(event)" onload="onLoadedFuncForQuickAction(event)"  style="width:30%"">
+                                    </li>
+                                    <li>To test the VPN connection click the just added VPN link.<br>
+                                        When everything works well, the normal network icon in the task-bar will change into a key-lock  and a short pop up shows that you are now on VPN.
+                                        <img alt="Figure 13" src="Figures/Mint19/Figure_13.png?lastModify=1591601290" onerror="onImageErrorFunc(event)" onload="onLoadedFuncForQuickAction(event)"   style="width:5%"">)
+                                    </li>
+                                </ul>
+                                <p class="tab">This is a lot handier than running a VPN connection from the terminal.</p>
+                                <p class="tab"></p>
+                                <p class="tab">Advantages:</p>
+                                <ul>
+                                    <li>The VPN connection can be terminated using the slider switch in the network pop up.</li>
+                                    <li>A list of VPN access points can be add so that each time or when necessary another server/access point can be chosen.</li>
+                                </ul>
+                                <p class="tab">As easy as it is now to start a VPN session, it is required to each time perform the manual operation to start the VPN service. If you forget to do it, you are vulnerable.</p>
+                            <li>Auto start VPN at boot.</li>
+                                <ul>
+                                    <li>Click the network icon, possibly changed into a lock when using VPN, and select in the pop up menu [Network Connections].</li>
+                                    <li>Select in the pop up window the wired or wireless connection used to access the network/internet and clock the little wheel, right of + and -, in the left bottom<br>
+                                        <img alt="Figure 14" src="Figures/Mint19/Figure_14.png?lastModify=1591601290" onerror="onImageErrorFunc(event)" onload="onLoadedFuncForQuickAction(event)"  style="width:30%"">
+                                    </li>
+                                    <li>Click the [General] tab</li>
+                                    <li>Tick the square voting box in front of ‘Automatically connect to VPN when using this connection’.<br>
+                                        Select in the box the server/access point that needs to be used as VPN access point.
+                                    </li>
+                                    <li><strong>REMARK:</strong> before doing this, add first one or more VPN connections as described in <strong>OpenVPN per Network Manager</strong></li>
+                                    <li>[Save] and close the window.</li>
+                                </ul>
+                                <p class="tab">When rebooting or booting the PC a VPN connection is automatically established and internet connection is always secure.
+                                It is also still possible to switch or close the VPN connection using the Network Manager in the bottom right of the screen</p>
+                        </ul>
+                        <h3 class="card-subtitle">NFS</h3>
+                        <p class="card-text">Having a Network Attached Storage (NAS) device for storing backups, photos, music, movies and lots of other things is no longer a luxury. Those NAS devices are most of the time equipped with dual harddisks providing a very safe way to store all kinds of data that cannot be lost.
+                            NAS devices can be accessed different ways; some have a web/browser interface but all support SMB (samba) and/or NFS (Network File System) access.</p>
+                            <p>Years ago I’ve been told NFS was difficult to setup and not user friendly and … thus I’ve used for a long time samba to access my NAS devices. Accessing the NAS that way turned very often into issues/problems of folders not wanting to mount, NAS not found, and ….
+                            Therefore I decided to try NFS and surprisingly its relative easy to setup, supported in all Linux distributions and access and transfer speed are fast. So, I’m thus setting up on every Linux PC in house a NFS connection to the NAS.</p>
+                            <p><strong>Static NFS mounts</strong></p>
+                            <p>Since the NAS is always running, I setup static NFS mounts, this way:</p>
+                        <ul>
+                            <li>Start a terminal</li>
+                            <li>Install the necessary software packages: <span style="background-color: rgb(238, 231, 231)"><i>sudo apt install nfs-common</i></span></li>
+                            <li>Type in the terminal <span style="background-color: rgb(238, 231, 231)"><i>showmount -e <servername or server IP></i></span>.<br>
+                            The response in the terminal will be something like:
+                            </li>
+                            <pre>
+                                <code>
+                                user@hostname:~$ showmount -e 192.100.1.1
+                                Export list for 192.100.1.1:
+                                /volume1/PublicMedia 192.100.1.1/255.255.255.192
+                                /volume1/Family      192.100.1.1/255.255.255.192
+                                /volume1/Josephine   192.100.1.1/255.255.255.192
+                                /volume1/Marcel      192.100.1.1/255.255.255.192
+                                </code>
+                            </pre>
+                            <li>Create the mount point main directory on the client (PC): <span style="background-color: rgb(238, 231, 231)"><i>sudo mkdir -p /mnt/DiskStation</i></span><br>
+                                Directory name <i>DiskStation</i> can be any possible name (Example: Use the name of the NAS station.). Create the mount point in <i>/mnt</i>. Since <i>/mnt</i> is
+                                a directory of the operating system root/sudo access is required in order to create new sub-directories. Sub-directories created as root/sudo get the permissions
+                                of root/sudo and when leaving those it possible access issues pop up when trying to access the mount points as normal user.<br>
+                                <p>Explained with an example:</p>
+                            </li>
+                                <ul>
+                                    <li>Assume the mount point for the NAS top level is going to be created in */mnt* and will get the name of the NAS drive, <i>Testarossa</i>.</li>
+                                    <li>Create the mount point thus as: <span style="background-color: rgb(238, 231, 231)"><i>sudo mkdir -p /mnt/Testarossa</i></span></li>
+                                    <li>The permissions of the Testarossa directory will be: <span style="background-color: rgb(238, 231, 231)"><i>drwxr-xr-x 3 root root <size> <date> Testarossa</i></span><br>
+                                        As expected, the just created directory is owned by root and by the group of root.
+                                    </li>
+                                    <li>Before doing anything else, change the permissions of the top share into those of the user of the system.<br>
+                                        <span style="background-color: rgb(238, 231, 231)"><i>sudo chown <usersname> Testarossa</i></span><br>
+                                        <span style="background-color: rgb(238, 231, 231)"><i>chgrp <usersname> Testarossa</i></span><br>
+                                        Check the changes: ` ls -la /mnt` should report something like:<br>
+                                        <span style="background-color: rgb(238, 231, 231)"><i>drwxr-xr-x 3 <usersname> <usersname> <size> <date> Testarossa</i></span>
+                                    </li>
+                                </ul>
+                                <li>Create under <i>Testarossa</i> directories with the names of the shared/exported file names of the NAS. In this case, as the earlier given <i>showmount</i> command
+                                    revealed: <i>Marcel</i>, <i>Josephine</i>, <i>Family</i> and <i>PublicMedia</i>.
+                                </li>
+                                <li>Make sure the NAS and shared directories are mount at boot, change the <i>/etc/fstab</i> file.</li>
+                                <li>Add a mount command line to the <i>fstab</i> file. That line needs to tell what folder of the NAS to mount for what folder on the client. In a lot of cases it needs
+                                    some tuning with nfs options.<br>
+                                    For the options consult the documentation and blogs on the WWW.
+                                </li>
+                                <li>Edit <span style="background-color: rgb(238, 231, 231)"><i>sudo xed /etc/fstab</i></span> and add lines like that below to the <i>fstab</i> file;<br>
+                                    <span style="background-color: rgb(238, 231, 231)"><i># NFS mounts on Testarossa (Synology NAS)</i></span><br>
+                                    <span style="background-color: rgb(238, 231, 231)"><i>NAS.IP.Address:/volume1/ShareDirName /mnt/Testarossa/ShareDirName nfs noauto,x-systemd.automount  0  0</i></span><br>
+                                    <span style="background-color: rgb(238, 231, 231)"><i>NAS.IP.Address:/volume1/PublicMedia /mnt/Testarossa/PublicMedia nfs noauto,x-systemd.automount  0  0</i></span>
+                                </li>
+                                <li>Save, logout or reboot and log back in.</li>
+                                <li>Open the file browser (Nemo) and go to <i>/mnt/Testarossa</i>.</li>
+                                <li>Double click on each of the directories in Testarossa and view the sub-directories and files of these directories on the NAS.</li>
+                                <li>While in <i>/mnt/Testarossa</i> single click (select) one of the sub-directories and click then in the menu top bar [Bookmarks] [Add Bookmark].</li>
+                                <li>This will create a bookmark in the left pane of Nemo called: <i>Testarossa</i></li>
+                                <li>When clicking the bookmark, the NAS sub-directories are shown and ready to be used.</li>
+                            </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">Install programs</h2>
+                        <p class="card-text">Here is the list of programs and tools installed on my computer but depending on what you use the computer for you might need other tools.</p>
+                        <h3 class="card-subtitle">Rhytmbox</h3>
+                        <p class="card-text"><strong>What is it:</strong></p>
+                        <p>Rhythmbox is a music playing application for GNOME and gnome oriented desktop environments as Cinnamon.</p>
+                        <p><strong>Installation:</strong>
+                        <p>Rhytmbox itself is pre-installed with Mint/Ubuntu. When the earlier given instructions for enabling of Bluetooth are followed, Rhytmbox can be used with Bluetooth
+                        speakers, headphones or other. The only thing missing is a good equalizer tool to adjust sound to your mood.</p>
+                        <p>When searching the web for install instructions, sometimes the instruction to install "rhytmbox-plugin-complete" is given. THIS IS WRONG! Follow below instructions.</p>
+                        <pre>
+                            <code>
+                            sudo add-apt-repository ppa:fossfreedom/rhythmbox-plugins
+                            sudo apt update
+                            sudo apt install rhythmbox-plugin-equalizer
+                            </code>
+                        </pre>
+                        <h3 class="card-subtitle">Synaptic</h3>
+                        <p class="card-text"><strong>What is it:</strong></p>
+                        <p>Synaptic is a graphical package Manager for <strong>apt (apt-get)</strong>. Allows to install, remove packages (programs) in the system, and perform other actions
+                            associated with managing packages.</p>
+                        <p><strong>Installation:</strong>
+                        <ul>
+                            <li>Software manager tool.</li>
+                            <li><strong>Normally pre-installed with Linux-Mint, just use it!</strong></li>
+                            <li>If it's not sure it's pre-installed or if it's not pre-installed at all do:</li>
+                                <ul>
+                                    <li>Start the graphical <i>Software manager</i></li>
+                                    <li>Enter in the search box <i>synaptic</i><br>
+                                        While typing the synaptic package install line will raise to the top of the selection.
+                                    </li>
+                                    <li>A green sign right of the name of the tool indicates it's installed and the Software Manager can e closed.</li>
+                                    <li>When nothing is indicated right of the tools name, click to select the tool and in the new window click the green [Install] button.</li>
+                                </ul>
+                        </ul>
+
+                        <h3 id="gdebi">Gdebi</h3>
+                        <h4 id="what-is-it-">What is it:</h4>
+                        <p>According to the utility&#39;s official documentation: &quot;GDebi lets you install local deb packages resolving and installing its dependencies. apt does the same,
+                            but only for remote (http, ftp) located packages.&quot;</p>
+                        <h4 id="installation-">Installation:</h4>
+                        <ul>
+                            <li>Simple tool to view and install DEB files.</li>
+                            <li><strong>Normally it is pre-installed with Linux-Mint, just use it</strong>. When double clicking a downloaded file with .deb extension, gdebi will
+                                start and let you install the new software.
+                            </li>
+                            <li>When for one reason or another gdebi is not installed, act like for the <em>Synaptic</em> tool above</li>
+                        </ul>
+
+                        <h3 id="gparted">Gparted</h3>
+                        <h4 id="what-is-it-">What is it:</h4>
+                        <ul>
+                            <li>GNOME partition editor (Hard- Disk management tool). This tool can help managing portable disks and USB drives.</li>
+                        </ul>
+                        <h4 id="installation-">Installation:</h4>
+                        <ul>
+                            <li><strong>Normally it is pre-installed with Linux-Mint, just use it</strong>. if not, launch the Software Manager and type gparted in the search box.
+                            While typing the application raises to the top of the window. Click the gparted line and click the [Install] button.
+                            </li>
+                        </ul>
+
+                        <h4 id="dconf-editor">dconf-editor</h4>
+                        <h4 id="what-is-it-">What is it:</h4>
+                        <p>Starting with GNOME 3.0, for storing system settings uses the <strong>GSettings</strong> framework, based on the file format <strong>dconf</strong>.
+                            <strong>GSettings</strong>  is used to store environment settings and applications and track their  changes. For the user and the applications they are
+                            represented as a  single &quot;<strong>tree</strong>&quot; of options, like the <a href="https://mintguide.org/tools/537-crossover-run-any-windows-programs-on-linux-mint.html">Windows</a>
+                            registry. In addition, GSettings allows system administrators to limit  the change of those or other settings, making them mandatory for users.
+                            <a href="https://mintguide.org/engine/dude/index/leech_out.php?a%3AaHR0cHM6Ly93aWtpLmdub21lLm9yZy9hY3Rpb24vc2hvdy9Qcm9qZWN0cy9kY29uZj9hY3Rpb249c2hvdyZyZWRpcmVjdD1kY29uZg%3D%3D">
+                            <strong>dconf</strong></a>  is a low-level configuration system, the configuration system is based  on keys, which stores the settings for most applications. The  configuration keys
+                            are in the unstructured database (keys are logically  interconnected grouped into categories), the key database is stored in a  binary file located:
+                        </p>
+                        <h4 id="installation-">Installation:</h4>
+                        <ul>
+                            <li>Launch the Software Manager and type dconf in the search box. While typing the application raises to the top of the window.
+                                Click the Dconf-editor line and click the [Install] button.
+                            </li>
+                        </ul>
+
+                        <h3 id="bleachbit">Bleachbit</h3>
+                        <h4 id="what-is-it-">What is it:</h4>
+                        <p>Clean Your System and Free Disk Space.
+                            When your computer is getting full, BleachBit quickly frees disk  space. When your information is only your business, BleachBit guards  your privacy.
+                            With BleachBit you can free cache, delete cookies, clear  Internet history, shred temporary files, delete logs, and discard junk  you didn&#39;t know was there.
+                            Designed for Linux and Windows systems, it  wipes clean thousands of applications including Firefox, Internet  Explorer, Adobe Flash, Google Chrome, Opera,
+                            Safari,and <a href="https://www.bleachbit.org/features">more</a>.  Beyond simply deleting files, BleachBit includes advanced features such  as shredding files
+                            to prevent recovery, wiping free disk space to hide  traces of files deleted by other applications, and vacuuming Firefox to  make it faster. Better than free,
+                            BleachBit is open source.
+                        </p>
+                        <h4 id="installation-">Installation:</h4>
+                        <ul>
+                            <li>Launch the Software Manager and type Bleachbit in the search box. While typing the application raises to the top of the window. Click the Bleachbit line and
+                                click the [Install] button.
+                            </li>
+                            <li>When launching Bleachbit from the main Mint menu (Type bleachbit in the top search area. While typing the tool will pop up in the list) and ticking the voting
+                                box “Check periodically for software ….” under [Edit] [Preferences] the tool will nearly immediately tell there is an update.</li>
+                            <li>Click to get the update/upgrade and from the web page download the version for Mint 19.
+
+                            </li>
+                            <li>A .deb file will be downloaded and saved on the system. By default in /Downloads.</li>
+                            <li>If not done already, close the running Bleachbit tool.</li>
+                            <li>Open with Nemo (file browser) the /Downloads directory and double click the <em>bleachbit_x.x_all_ubuntu1804.deb</em> file. The previous installed Gdebi tool
+                                will start and from here the new version of Bleachbit can be installed [Install Package].
+                            </li>
+                            <li>The Gdebi tool will announce that and older version is available, just answer by clicking [Close] and let to tool install the new version.</li>
+                            <li>Restart Bleachbit as user and when down again as administrator.
+                                <ul>
+                                    <li>When Bleachbit starts it shows again the <em>Preferences</em> window as pop up.</li>
+                                    <li>Tick:
+                                        <ul>
+                                            <li>Hide irrelevance cleaners</li>
+                                            <li>Overwrite contents of files to prevent recovery (safety option)</li>
+                                            <li>Exit after cleaning</li>
+                                            <li>Confirm before delete</li>
+                                        </ul>
+                                    </li>
+                                    <li>Click [Close]</li>
+                                </ul>
+                            </li>
+                            <li>Select in the left pane of the main menu the options that need to be cleaned out.
+                            This will probably be different in normal and administrator mode.
+                            </li>
+                            <li>Run a clean operation.</li>
+                        </ul>
+
+                        <h3 id="dropbox">dropbox</h3>
+                        <h4 id="what-is-it-">What is it:</h4>
+                        <p>Keep everything organized without breaking your flow.
+                            Dropbox  brings your files together, in one central place. They’re easy to find  and safely synced across all your devices—so you can access them
+                            anytime, anywhere. No more wasting the day tracking down work.
+                        </p>
+                        <h4 id="installation-">Installation:</h4>
+                        <ul>
+                            <li>Open a web browser and go to <a href="http://www.dropbox.com">http://www.dropbox.com</a></li>
+                            <li>Click the [Download] button</li>
+                            <li>Download the 64-bit .deb file and save it (default in /Downloads).</li>
+                            <li>Close the web browser, open Nemo and go to where the dropbox .deb file is saved.</li>
+                            <li>Double click the deb file and let gdebi install the tool.
+                                It is possible that with the installation some extra files need to be installed, allow it.
+                            </li>
+                            <li>When gdebi has finished installing, close it and start dropbox from the main menu.</li>
+                            <li>This will install more stuff and finally open the dropbox web site asking for credentials.</li>
+                            <li>If you have a dropbox account, log in else create an account and log in. Continue and finalize the installation.</li>
+                        </ul>
+
+                        <h3 id="oracle-java">Oracle Java</h3>
+                        <h4 id="what-is-it-">What is it:</h4>
+                        <p>Java is a programming language and computing platform first released by Sun Microsystems in 1995. There are lots of applications and websites that will
+                            not work unless you have Java installed, and more are created every day. Java is fast, secure, and reliable.  From laptops to datacenters, game
+                            consoles to scientific supercomputers, cell phones to the Internet, Java is everywhere!
+                            The Java slogan of Oracle: Java Powers Our Digital World
+                        </p>
+                        <h4 id="installation-">Installation:</h4>
+                        <ul>
+                            <li>Start a web browser and go to the <a href="https://www.oracle.com/technetwork/java/javase/downloads/index.html">Oracle Java download page</a></li>
+                            <li>Click on the download icon (It says now, Jul 2019, Java Platform (JDK) 12 but might show an newer version) in the middle of the page
+                            Agree to the license terms and download the .DEB file for 64-bit.<img src="./Figures/Figure_20.png" alt="Figure 20">
+                            </li>
+                            <li>The downloaded file is by default save in the /Download directory.</li>
+                            <li>Double click the .deb file or right click the .deb file and select open with gdebi.</li>
+                            <li>When gdebi is ready to install the application and <strong>before installing</strong> click the [Include File] tab.<br>
+                                Search in the long list of file for <em><some_path>/bin/java</em> and  <em><some_path>/bin/java</em>c<em>.<br>
+                                In my case the path to </em>java<em> looked like; <code>/usr/lib/jvm/jdk-12.0.2/bin/java</code><br>
+                                Write the </em><some_path>* down for later use.
+                            </li>
+                            <li>Click the [Install Package] button and let gdebi install the tool.</li>
+                            <li>When installed close gdebi and open a terminal.</li>
+                            <li>In the terminal enter following commands:<br>
+                            <pre>
+                                <code>
+                                sudo <span class="hljs-keyword">update</span>-alternatives --install <span class="hljs-string">"/usr/bin/java"</span> <span class="hljs-string">"java"</span> <span class="hljs-string">"&lt;some_path&gt;/bin/java"</span> <span class="hljs-number">1500</span>
+                                sudo <span class="hljs-keyword">update</span>-alternatives --install <span class="hljs-string">"/usr/bin/javac"</span> <span class="hljs-string">"javac"</span> <span class="hljs-string">"&lt;some_path&gt;/bin/javac"</span> <span class="hljs-number">1500</span>
+                                The <span class="hljs-symbol">&lt;some_path&gt;</span> <span class="hljs-keyword">is</span> the retained path discovered in gdebi.
+                                </code>
+                            </pre>
+                            </li>
+                            <li>Run now following command in the terminal: <code>sudo update-alternatives --config java</code><br>
+                                This will pop up in the terminal following text<br>
+                            <pre>
+                                <code>
+                                here are <span class="hljs-number">2</span> choices <span class="hljs-keyword">for</span> the alternative java (providing /usr/bin/java).
+
+                                  Selection    Path                                         Priority   Status
+                                ------------------------------------------------------------
+                                * <span class="hljs-number">0</span>            /usr/<span class="hljs-class"><span class="hljs-keyword">lib</span>/<span class="hljs-title">jvm</span>/<span class="hljs-title">jdk</span>-12.0.1/<span class="hljs-title">bin</span>/<span class="hljs-title">java</span>              1500      <span class="hljs-title">auto</span> <span class="hljs-title">mode</span></span>
+                                  <span class="hljs-number">1</span>            /usr/<span class="hljs-class"><span class="hljs-keyword">lib</span>/<span class="hljs-title">jvm</span>/<span class="hljs-title">java</span>-11-<span class="hljs-title">openjdk</span>-<span class="hljs-title">amd64</span>/<span class="hljs-title">bin</span>/<span class="hljs-title">java</span>   1101      <span class="hljs-title">manual</span> <span class="hljs-title">mode</span></span>
+                                  <span class="hljs-number">2</span>            /usr/<span class="hljs-class"><span class="hljs-keyword">lib</span>/<span class="hljs-title">jvm</span>/<span class="hljs-title">jdk</span>-12.0.1/<span class="hljs-title">bin</span>/<span class="hljs-title">java</span>              1500      <span class="hljs-title">manual</span> <span class="hljs-title">mode</span></span>
+
+                                Press &lt;enter&gt; to keep the current choice[*], or <span class="hljs-keyword">type</span> selection <span class="hljs-symbol">number:</span> ^C
+                                </code>
+                            </pre>
+                            </li>
+                            <li>Do what is asked, press enter to keep the * choice or provide a value and press enter.</li>
+                            <li>Add a JAVA_HOME to the environment. Do this to allow programs using Java to know where to go and what to use. In the alternatives menu the path of each install Java  version
+                                is displayed. Copy the path of the Java install setup as default version.
+                            </li>
+                            <li>Open and edit <em>/home/<user>/.bash_aliases</em> or <em>/home/<user>/.bash</em> and add JAVA_HOME to the environments. Add below lines to one of the files:</li>
+                            <li>
+                            <pre>
+                                <code>
+                                    <span class="hljs-comment"># Oracle Java</span>
+                                    JAVA_HOME=<span class="hljs-regexp">/usr/</span>lib<span class="hljs-regexp">/jvm/</span>jdk-<span class="hljs-number">12.0</span>.<span class="hljs-number">1</span><span class="hljs-regexp">/bin/</span>java
+                                </code>
+                            </pre>
+                            </li>
+                        </ul>
+                        <h3 id="remark-">Remark:</h3>
+                        <ul>
+                            <li>This is an in-between the installation of software item.</li>
+                            <li>At the end of all messages after running <code>sudo apt update</code> a message as below can be displayed
+                            <pre>
+                                <code>
+                                    Reading <span class="hljs-keyword">state</span> information... Done
+                                    <span class="hljs-number">2</span> packages can be upgraded. Run 'apt list --upgradable' <span class="hljs-keyword">to</span> see them.
+                                </code>
+                            </pre>
+                            It is possible to run apt with suggested options in order to get the packages updated/upgraded but it is possibly easier to do the graphical way.
+                            After doing this regularly checking the icon in the taskbar keeps the machine up to date with the latest packages.
+                                <ul>
+                                    <li>Check the taskbar for the icon of figure 19. When the taskbar is at the bottom of the screen, it will be displayed at the right side.
+                                        <ul>
+                                            <li>If the icons is displayed as in figure 19, updates to software are available.</li>
+                                            <li>Click the icon and tick [Install Updates]</li>
+                                            <li>The the icon will change into the icon as showed in figure 20.</li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                    <img alt="Figure 19" src="Figures/Mint19/Figure_19.png?lastModify=1591601290" onerror="onImageErrorFunc(event)" onload="onLoadedFuncForQuickAction(event)"  style="width:5%"">
+                                    &nbsp &nbsp &nbsp
+                                    <img alt="Figure 21" src="Figures/Mint19/Figure_21.png?lastModify=1591601290" onerror="onImageErrorFunc(event)" onload="onLoadedFuncForQuickAction(event)"  style="width:5%""><br>
+                                            Figure 19       Figure 20
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                        <h3 id="eid-electronic-id-belgium-">Eid (Electronic ID Belgium)</h3>
+                        <h4 id="what-is-it-">What is it:</h4>
+                        <p>The Belgian <strong>eID</strong> <strong>is</strong> an essential element in the chain of trust that provides a framework for safe digital exchanges. By its virtue of certifying the
+                            identity of the person doing the exchange and protecting access to citizens&#39; data, the Belgian <strong>eID</strong> card actively participates in the success of e-Government policy.</p>
+                        <h4 id="installation-">Installation:</h4>
+                        <ul>
+                            <li>Go to: <a href="https://eid.belgium.be/en">https://eid.belgium.be/en</a></li>
+                            <li>Click the link: <a href="https://eid.belgium.be/en/block/18/popup?width=970&amp;height=570&amp;top=10">Download eID software for another operating system</a></li>
+                            <li>In the new window that pops up, browse down to the button [Download for Linux], click on it.</li>
+                            <li>Click the button: [Download eid-archive.deb]</li>
+                            <li>Click [Accept and download] and save it into <em>/Downloads</em>
+                                This does not close or do anything else, the windows stays open what can cause confusion.
+                            </li>
+                            <li>Browse using Nemo to the <em>/Downloads</em> directory.</li>
+                            <li>Double click the downloaded <em>eid-archive_<year>.<version>.deb</em></li>
+                            <li>Allow gdebi to install the repositories and security keys (that is what the .deb file is).</li>
+                            <li>open a terminal</li>
+                            <li>Type:
+                            <pre>
+                                <code>
+                                sudo apt <span class="hljs-keyword">update</span> (the terminal <span class="hljs-keyword">output</span> should <span class="hljs-keyword">include</span> repositories <span class="hljs-keyword">for</span> Eid)
+                                sudo apt <span class="hljs-keyword">install</span> eid-mw
+                                sudo apt <span class="hljs-keyword">install</span> eid-viewer
+                                </code>
+                            </pre>
+                            </li>
+                            <li>Attach a card reader or use the build in card reader.</li>
+                            <li>Restart the computer.</li>
+                            <li>Go to the main menu and start the eid-viewer.</li>
+                            <li>Plug your eid card into the reader.</li>
+                            <li>Normally, when everything is working the eid-viewer should show the data on the eid card.</li>
+                            <li>Leave the card in the reader.</li>
+                            <li>Browse to this web page: <a href="http://test.eid.belgium.be/">http://test.eid.belgium.be/</a>
+                                <ul>
+                                    <li>Wait a couple of seconds (10) while the card is read.</li>
+                                    <li>Password will be asked.</li>
+                                    <li>Click on [Start de test]</li>
+                                    <li>Normally the test should end by popping up into a new page telling the test is successful.</li>
+                                </ul>
+                            </li>
+                            <li>Finally go to this site: <a href="https://iamapps.belgium.be/tma/?lang=en">https://iamapps.belgium.be/tma/?lang=en</a>
+                                <ul>
+                                    <li>Hit [Start test]</li>
+                                    <li>Hit [Log in]</li>
+                                    <li>Click [OK] for the user certificate</li>
+                                    <li>Provide the passcode</li>
+                                    <li>Wait for &quot;Log in Successful&quot;</li>
+                                    <li>Click the [Sign Out] button and close the web browser.</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                        <h3 id="cheese">Cheese</h3>
+                        <h4 id="what-is-it-">What is it:</h4>
+                        <p>Cheese for Linux uses your webcam to take photos and videos, applies fancy special effects, and lets you share the fun with others. Under the hood, Cheese uses GStreamer to apply fancy effects to photos and
+                        videos. With Cheese it is easy to take photos of you, your friends, pets, or whatever you want and share them with others.</p>
+                        <h4 id="installation-">Installation:</h4>
+                        <ul>
+                            <li>Start the Software Manager</li>
+                            <li>Type in the search box: cheese</li>
+                            <li>While typing the line with the Cheese tool will raise to the top of the window.
+                                <img alt="Figure 23" src="Figures/Mint19/Figure_23.png?lastModify=1591601290" onerror="onImageErrorFunc(event)" onload="onLoadedFuncForQuickAction(event)"  style="width:80%"">
+                            <li>Click the selection and in the new popping up window click [Install]</li>
+                            <li>Possibly extra tools need to be installed, allow this by clicking the [Continue] button.</li>
+                            <li>When installed, test Cheese by clicking the [Launch] button.</li>
+                        </ul>
+
+                        <h3 id="deluge">Deluge</h3>
+                        <h4 id="what-is-it-">What is it:</h4>
+                        <p><a href="http://deluge-torrent.org/">Deluge</a> is one of the most used <strong>torrent</strong> downloaders. It’s stable and easier to use as any other torrent client but the team makes it more stable by providing fix updates.</p>
+                        <h4 id="installation-">Installation:</h4>
+                        <ul>
+                            <li>Open a terminal and type one line after the other:<br>
+                            <pre>
+                                <code>
+                                sudo<span class="hljs-built_in"> add-apt-repository </span>ppa:deluge-team/ppa
+                                sudo apt update
+                                sudo apt install deluge
+                                </code>
+                            </pre>
+                            </li>
+                        </ul>
+                        <p>Although the default settings work pretty well, it might be useful to tune <em>Deluge</em> for a faster, better download experience. Possibly you can then use <a href="https://www.techsupportalert.com/optimizing-deluge-speed">this</a> web site. To make Deluge use a VPN connection and that VPN connection only, go <a href="https://forum.deluge-torrent.org/viewtopic.php?t=49883">here</a> for instructions. With this script installed when there is no VPN running <em>Deluge</em> is killed.</p>
+
+                        <h3 id="vokoscreen">VokoScreen</h3>
+                        <h4 id="what-is-it-">What is it:</h4>
+                        <p>A screencasting tool for Linux.
+                        <a href="http://www.kohaupt-online.de">Vokoscreen</a> is a new application that helps you to record your Linux desktop. It’s very simple and it uses a minimalistic GUI.</p>
+                        <h4 id="installation-">Installation:</h4>
+                        <ul>
+                            <li>To install it, launch the Software Manager and type in the search box: vokoscreen</li>
+                            <li>While typing the line with vokoscreen will raise to the top of the window.</li>
+                            <li>Double click the line and hit the [Install] button.<br>
+                                OR
+                            </li>
+                            <li>To install it open a terminal and type:
+                            <pre>
+                                <code>
+                                sudo<span class="hljs-built_in"> add-apt-repository </span>ppa:vokoscreen-dev/vokoscreen
+                                sudo apt-get update
+                                sudo apt-get install vokoscreen
+                                </code>
+                            </pre>
+                            </li>
+                            <li>Find here everything about <a href="http://www.kohaupt-online.de">Vokoscreen</a></li>
+                        </ul>
+
+                        <h3 id="darktable">Darktable</h3>
+                        <h4 id="what-is-it-">What is it:</h4>
+                        Darktable is an open source photography workflow application and raw developer. A virtual lighttable and darkroom for photographers. It manages your digital negatives in a database, lets you view them through a zoom-able lighttable and enables you to develop raw images and enhance
+                        them.
+                        <h4 id="installation-">Installation:</h4>
+                        <ul>
+                            <li>Open a terminal and type one line after the other:
+                            <pre>
+                                <code>
+                                sudo<span class="hljs-built_in"> add-apt-repository </span>ppa:pmjdebruijn/darktable-release
+                                sudo apt-get update
+                                sudo apt install darktable
+                                </code>
+                            </pre>
+                            </li>
+                            <li>Find darktable stuff <a href="https://www.darktable.org/">here</a></li>
+                        </ul>
+
+                        <h3 id="pinegrow">Pinegrow</h3>
+                        <h4 id="what-is-it-">What is it:</h4>
+                        <p>Pinegrow is a <strong>non-free</strong> web editor that lets you build responsive websites faster with live multi-page editing, CSS &amp; SASS styling, CSS Grid editor and smart components for Bootstrap, Foundation and
+                        WordPress.</p>
+                        <h4 id="installation-">Installation:</h4>
+                        <ul>
+                        <li>Download it and run the free trial or buy a license. Go for the Pinegrow-Pro version (normally its about $90 but regularly there are sales and then its possible to get up to 25% off).
+                        </li>
+                        <li>Download the zip file.
+                        </li>
+                        <li>Open a terminal and do following to get Pinegrow running.
+                        <ul>
+                        <li>First check this: Since Pinegrow 4.2, In case Pinegrow doesn&#39;t start on Linux, this is probably because the <em>libnss</em> system library needs to be updated
+                        </li>
+                        <li>Use <em>Synaptic Package Manager</em> to check if <em>libnss3</em> is installed.
+                          If it is nothing needs to be done, else
+                          Launch a terminal ans install <em>libnss</em> as showed below.
+                        <pre><code>  sudo apt-<span class="hljs-built_in">get</span> <span class="hljs-keyword">update</span>
+                          sudo apt-<span class="hljs-built_in">get</span> install libnss3
+                        </code></pre></li>
+                        </ul>
+                        </li>
+                        <li>Remember that tools are installed in Unix/Linux systems in the <em>/opt</em> directory owned by root. Thus In the terminal change directory to <em>/opt</em>.
+                        </li>
+                        <li>Make a directory for <em>Pinegrow</em> and call it for easiness <em>Pinegrow</em>.
+                        </li>
+                        <li><pre><code>  <span class="hljs-keyword">cd</span> /<span class="hljs-keyword">opt</span>
+                          sudo <span class="hljs-built_in">mkdir</span> Pinegrow
+                          <span class="hljs-keyword">cd</span> Pinegrow
+                        </code></pre></li>
+                        <li>Use the graphical unzip tool, as root/sudo, to unzip the contents of the downloaded zip file into the just created <em>Pinegrow</em> directory.
+                        </li>
+                        <li>Go back to the terminal and change directory to <em>/opt/Pinegrow</em>.
+                          In that directory find a file called <em>pinegrow.desktop</em>.
+                        </li>
+                        <li>Type: `sudo xed pinegrow.desktop&#39;
+                        </li>
+                        <li>Exchange the contents of that file with the contents showed here below
+                        <pre><code>  [Desktop Entry]
+                          Name[en.US]=Pinegrow
+                          Comment=Create Amazing Web Sites
+                          GenericName=HTML Editor
+                          StartupNotify=<span class="hljs-literal">true</span>
+                          Terminal=<span class="hljs-literal">false</span>
+                          Type=Application
+                          Categories=Application
+                          Icon=/opt/Pinegrow/Pinegrow.png
+                          Exec=/opt/Pinegrow/PinegrowLibrary
+                          Keywords=webpages;web;
+                          Categories=GNOME;GTK;Internet;
+                        </code></pre><ul>
+                        <li>REMARK: The icon statement in the file refers to a <em>Pinegrow.png</em> icon file. Possibly this is not present in the downloaded zip file. Select a different icon or download the Pinegrow.png file.</li>
+                        </ul>
+                        </li>
+                        <li>Save the file.
+                        </li>
+                        <li>Copy the <em>pinegrow.desktop</em> file to <code>/home/&lt;user&gt;/.local/share/applications</code>
+                          <strong>REMARK:</strong> It&#39;s possible that the directory <em>applications</em> does not exist. If that is the case create the directory and copy then the <em>pinegrow.desktop</em> file into it.
+                        </li>
+                        <li>Pinegrow is now available as a launcher icon in the start menu [Graphics] collection.
+                          Click the icon to launch Pinegrow.
+                        </li>
+                        <li>Start a 30-day trial period or buy Pinegrow or enter email address and license key.
+                        </li>
+                        <li>Start working.
+                        </li>
+                        <li>Find Pinegrow stuff <a href="https://pinegrow.com/">here</a> and tutorials <a href="https://pinegrow.com/support">here</a>.
+                        </li>
+                        </ul>
+                        <h3 id="gimp">Gimp</h3>
+                        <h4 id="what-is-it-">What is it:</h4>
+                        <p>The Free &amp; Open Source Image Editor</p>
+                        <p>GIMP stands for the GNU Image Manipulation Program.
+                        GIMP is a cross-platform image editor available for GNU/Linux, OS X, Windows and more operating systems. It is <a href="https://www.gnu.org/philosophy/free-sw.html">free software</a>, you can change its <a href="https://git.gnome.org/browse/gimp">source code</a> and <a href="https://www.gnu.org/licenses/quick-guide-gplv3.en.html">distribute</a> your changes.                     Whether you are a graphic designer, photographer, illustrator, or scientist, GIMP provides you with sophisticated tools to get your job done. You can further enhance your productivity with GIMP thanks to many customization options and 3rd party plugins.</p>
+                        <h4 id="installation-">Installation:</h4>
+                        <ul>
+                        <li>Open a terminal and type one line after the other:
+                        <pre><code>  sudo<span class="hljs-built_in"> add-apt-repository </span>ppa:otto-kesselgulasch/gimp
+                          sudo apt update
+                          sudo apt install gimp
+                        </code></pre></li>
+                        <li>Adjust the software tool to your needs.
+                        </li>
+                        <li>Tutorials and guides:
+                        <ul>
+                        <li><a href="https://conceptartempire.com/free-gimp-tutorials/">https://conceptartempire.com/free-gimp-tutorials/</a></li>
+                        <li><a href="https://www.gimp.org/tutorials/">https://www.gimp.org/tutorials/</a></li>
+                        <li><a href="https://daviesmediadesign.com/20-gimp-2-10-tutorials-for-beginners/">https://daviesmediadesign.com/20-gimp-2-10-tutorials-for-beginners/</a></li>
+                        </ul>
+                        </li>
+                        </ul>
+                        <h3 id="inkscape">Inkscape</h3>
+                        <h4 id="what-is-it-">What is it:</h4>
+                        <p>Inkscape is professional quality vector graphics software which runs on Windows, Mac OS X and GNU/Linux. It is used by design professionals and hobbyists worldwide, for creating a wide variety of graphics such as illustrations, icons, logos, diagrams, maps and web graphics. Inkscape uses the <a href="http://www.w3.org/">W3C</a> open standard <a href="http://www.w3.org/Graphics/SVG/">SVG</a> (Scalable Vector Graphics) as its native format, and is free and open-source software.</p>
+                        <h4 id="installation-">Installation:</h4>
+                        <ul>
+                        <li>Open a terminal and type one line after the other:
+                        <pre><code>  sudo<span class="hljs-built_in"> add-apt-repository </span>ppa:inkscape.dev/stable
+                          sudo apt update
+                          sudo apt install inkscape
+                        </code></pre></li>
+                        <li>Adjust the software tool to your needs.
+                        </li>
+                        <li>Tutorials and guides:
+                        <ul>
+                        <li><a href="http://goinkscape.com/">http://goinkscape.com/</a></li>
+                        <li><a href="https://daviesmediadesign.com/inkscape-tutorials/">https://daviesmediadesign.com/inkscape-tutorials/</a></li>
+                        </ul>
+                        </li>
+                        </ul>
+                        <h3 id="freecad">FreeCad</h3>
+                        <h4 id="what-is-it-">What is it:</h4>
+                        <p>Freedom to build what you want. FreeCAD is an open-source parametric 3D modeler made primarily to           design real-life objects of any size. Parametric modeling allows you to easily modify your design by going back into your model history and changing its parameters. Create 3D from 2D &amp; back. FreeCAD allows you to sketch geometry constrained 2D shapes and use them as a base to build other objects. It contains many components to adjust dimensions or extract design details from 3D models to create high quality production ready drawings.</p>
+                        <h4 id="installation-">Installation:</h4>
+                        <ul>
+                        <li>To install the latest version of FreeCad and afterwards get updates when necessary, do:
+                        <ul>
+                        <li>Launch a terminal and enter following
+                        <pre><code>  sudo<span class="hljs-built_in"> add-apt-repository </span>ppa:freecad-maintainers/freecad-stable
+                          sudo apt update
+                          sudo apt install freecad
+                        </code></pre></li>
+                        </ul>
+                        </li>
+                        <li>Find all information about FreeCad <a href="https://www.freecadweb.org/">here</a>.
+                        </li>
+                        <li>A basics tutorial can be found <a href="https://www.freecadweb.org/wiki/Basic_Part_Design_Tutorial">here</a>.
+                        </li>
+                        <li>Video tutorials on YouTube can be found <a href="https://www.youtube.com/watch?v=QzfT-ZDp0Wo">here</a>, (this is the first tutorial of a series).
+                        </li>
+                        </ul>
+
+
+                        <h3 id="freeplane">FreePlane</h3>
+                        <h4 id="what-is-it-">What is it:</h4>
+                        <p>Freeplane is a free and open source software application that supports thinking, sharing information and getting things done at work, in school and at home.  The software can be used for <a href="https://secure.wikimedia.org/wikipedia/en/wiki/Mind_map"><strong>mind mapping</strong></a>
+                        and analyzing the information contained in mind maps. Freeplane runs on any operating system that has a current version of Java installed. It can be run locally or <a href="https://en.wikipedia.org/wiki/Portable_application">portably</a> from removable storage like a USB drive</p>
+                        <h4 id="installation-">Installation:</h4>
+                        <ul>
+                        <li>Download the <a href="https://sourceforge.net/projects/freeplane/">zip file</a> from the FreePlane website (sourceforge) and save it (/Downloads).
+                        </li>
+                        <li>Create, using Nemo or from the command line in a terminal, a <em>/FreePlane</em> directory in <em>/opt</em>.
+                        </li>
+                        <li>Unzip the contents of the saved zip file into that directory.
+                        </li>
+                        <li>Launch a terminal and create a symbolic link for FreePlane
+                        <pre><code>  sudo ln -nsf <span class="hljs-regexp">/opt/</span>FreePlane<span class="hljs-regexp">/freeplane-1.7.9/</span>freeplane.sh <span class="hljs-regexp">/usr/</span>bin<span class="hljs-regexp">/freeplane</span>
+                        </code></pre></li>
+                        <li>FreePlane can now be launched from the command line by simply typing <em>freeplane</em> in a terminal.
+                        </li>
+                        <li>To start FreePlane graphically do:
+                        <ul>
+                        <li>Right click the main menu icon (left-bottom-corner) and select [Configure] in the menu.</li>
+                        <li>In the popped up Menu window select [Menu].</li>
+                        <li>Click now the big-wide [Open the menu editor] button</li>
+                        <li>Select in the left pane an application category, like Engineering, Graphics, Office or ...</li>
+                        <li>Hit now in the right pane the [Add Item] button.</li>
+                        <li>A small [Launcher Properties] window will pop up.<ul>
+                        <li>Enter as [Name:] FreePlane</li>
+                        <li>Enter as [Command:] : freeplane</li>
+                        <li>Enter as [Comment:] : A free mind mapping tool</li>
+                        <li>Click the icon in the top-left corner and change the icon to that of FreePlane.
+                          get the Freeplane icon from : <em>/opt/FreePlane/freeplane-1.7.9/freeplane.svg</em></li>
+                        <li>Click [Select] and then [OK].</li>
+                        </ul>
+                        </li>
+                        <li>Find a FreePlane icon under the Engineering options in the main menu.</li>
+                        </ul>
+                        </li>
+                        <li>REMARK:</li>
+                        <ul>
+                        <li>To beautify the whole setup change directory to: <code>cd /home/marc/.local/share/applications</code></li>
+                        <li>In there you will find a file named like below:
+                          <code>alacarte-made-2a16d922-c0f9-11e9-8b3a-34e6d7289be6.desktop</code></li>
+                        <li>Right click the file and select [properties] in teh menu.</li>
+                        <li>Change under the [Basic] tab the entry named [Name:] to FreePlane.</li>
+                        <li>Tick under the [Permissions] tab the box left of &quot;Allow executing file as program&quot;.</li>
+                        <li>The file named as indicated above will now change into a FreePlane iconized file without extension.</li>
+                        </ul>
+                        </li>
+                        <li>FreePlane tutorials on <a href="https://www.youtube.com/watch?v=yUsaWHyvxOY">YouTube</a>.
+                        </li>
+                        </ul>
+                        <h3 id="foxit-reader">Foxit Reader</h3>
+                        <h4 id="what-is-it-">What is it:</h4>
+                        <p>Foxit Reader is a fast, free, lightweight alternative to Adobe Reader for opening and displaying PDF files. It&#39;s also feature-packed. I&#39;ve been using Foxit Reader since back in the day… The day when Adobe Reader had become a fat slob of a program that took forever to boot and load files. Adobe has improved greatly, but so has Foxit Reader.</p>
+                        <h4 id="installation-">Installation:</h4>
+                        <ul>
+                        <li>Open a web browser and got <a href="https://www.foxitsoftware.com/downloads/">here</a></li>
+                        <li>Scroll down to:<ul>
+                        <li>Foxit Reader - and click the [Free Download] button.
+                          Save the download somewhere on disk, by default in <em>/Downloads</em></li>
+                        </ul>
+                        </li>
+                        <li>Extract the &quot;FoxitReader.enu.setup.<version>.x64.run.tar.gz&quot; file.</li>
+                        <li>Open a terminal and change directory to <em>/Downloads</em> when the extracted file is stored there.</li>
+                        <li>Rename the extracted file to FoxitReader.enu.setup.2.4.4.0911.x64.run
+                          Remove thus: (r057d814)</li>
+                        <li>Type: <code>sudo ./FoxitReader.enu.setup.2.4.4.0911.x64.run</code></li>
+                        <li>Follow the install GUI!<ul>
+                        <li>Install the Foxit PDF reader in /opt/Foxitsoftware/FoxitReader</li>
+                        <li>Accept the license</li>
+                        <li>Wait till Foxit is installed and click [Finish].</li>
+                        </ul>
+                        </li>
+                        <li>Start Foxit Reader and set the preferences; [Edit]-[Preferences]
+                          There is a Foxit Reader icon in the Linux-Mint Menu - Office</li>
+                        </ul>
+                        <h3 id="pdfsam">PDFsam</h3>
+                        <h4 id="what-s-it-">What&#39;s it?</h4>
+                        <p><strong>PDFsam</strong> Visual <strong>PDFsam</strong> Visual is a powerful tool to visually compose PDF files, reorder pages, delete pages. Split PDF files into individual pages, delete or rotate pages, easily merge PDF files together or edit and modify PDF files. A free and open source application, a powerful visual tool or a professional PDF editor,
+                        join thousands of happy users, we have the solution you are looking for.</p>
+                        <h4 id="installation-">Installation:</h4>
+                        <ul>
+                        <li>Start a web browser and go <a href="https://pdfsam.org/">to</a>.</li>
+                        <li>Click the [Download] button/tab.</li>
+                        <li>Download the .deb file of the <em>PDFsam Basic</em>.</li>
+                        <li>Save the downloaded file. By default in <em>/Downloads</em></li>
+                        <li>Open a file browser and open the <em>/Downloads</em> directory</li>
+                        <li>Double click the &quot;pdfsam_<version>_amd64.deb&quot; file to make Gdebi start and load the file for installation.</li>
+                        <li>Let GDebi install the tool.</li>
+                        </ul>
+                        <h3 id="texlive">Texlive</h3>
+                        <h4 id="what-is-it-">What is it:</h4>
+                        <p>TeX Live is an easy way to get up and running with the <a href="https://tug.org/">TeX document production system</a>.</p>
+                        <h4 id="installation-">Installation:</h4>
+                        <ul>
+                        <li>Start a web browser and go to: <a href="https://tug.org/texlive/acquire-netinstall.html">https://tug.org/texlive/acquire-netinstall.html</a>
+                        </li>
+                        <li>Click on the download for a <a href="http://mirror.ctan.org/systems/texlive/tlnet/install-tl.zip">install-tl.zip</a> file and save it (/Downloads)
+                        </li>
+                        <li>Extract the zip file. The result will be a directory called install-tl-<invers-date>
+                        </li>
+                        <li>Launch a terminal and change into the directory created by the unzip operation.
+                        </li>
+                        <li>Run the install script <code>./install-tl -gui</code>
+                        <ul>
+                        <li><strong>REMARK:</strong> The GUI installer needs Tcl/Tk!
+                          When it is not installed yet, go to the Tcl/Tk chapter and install it first.
+                          When the GUI is started it offers very few options, but there is an ‘Advanced’ button for more configuration options.</li>
+                        </ul>
+                        </li>
+                        <li>Run the install script <code>./install-tl -gui text</code>
+                        <ul>
+                        <li>The most important in the install script is the install location .</li>
+                        <li>Type &#39;D&#39; [enter] and then [1] enter</li>
+                        <li>Provide the install directory <code>/opt/TexLive/&lt;year&gt;</code></li>
+                        <li>Type &#39;5&#39; and enter the location for personal files `~/.TexLive<year></li>
+                        <li>Enter &#39;R&#39; to return to the main menu</li>
+                        <li>Enter &#39;I&#39; to start the installation process.</li>
+                        </ul>
+                        </li>
+                        <li>Installing TexLive will take a while, so be patient.
+                        </li>
+                        <li>........ (waiting)
+                        </li>
+                        <li>When installed, or even during install, add the TexLive installation to the path.
+                        <ul>
+                        <li>In the user home directory, open with a edit, xed, the <em>.bash_aliases</em> or <em>.bashrc</em> file.
+                        </li>
+                        <li>Add following lines to the file and save it afterwards.
+                        <pre><code>  export TL_ROOT=<span class="hljs-regexp">/opt/</span>TexLive/<span class="hljs-number">2019</span>
+                          export PATH=<span class="hljs-variable">$PATH</span><span class="hljs-symbol">:TL_ROOT/bin/x86_64-linux</span>
+                        </code></pre></li>
+                        </ul>
+                        </li>
+                        </ul>
+                        <h3 id="texmaker">Texmaker</h3>
+                        <h4 id="what-is-it-">What is it:</h4>
+                        <p>Texmaker is a free, modern and cross-platform LaTeX editor for linux systems that integrates many tools needed to develop documents with LaTeX, in just one application. It includes unicode support, spell checking, auto-completion, code folding and a built-in pdf viewer with synctex support and continuous view mode.
+                        Texmaker is easy to use and to configure.
+                        Texmaker is released under the GPL license .</p>
+                        <h4 id="installation-">Installation:</h4>
+                        <ul>
+                        <li>In a web browser go to: <a href="https://www.xm1math.net/texmaker/download.html">https://www.xm1math.net/texmaker/download.html</a></li>
+                        <li>Select, download and save the Linux Package for Ubuntu 18.04 - 64-bit.</li>
+                        <li>Double click the saved texmaker_... .deb file and install Texmaker.<ul>
+                        <li>Gdebi will start and install TexMaker.</li>
+                        <li><strong>REMARK:</strong> Probably a tool called <em>libqt5script5</em> will need to be installed.</li>
+                        <li>Close Gdebi and use the Synaptic Package Manager to install this <em>libqt5script5</em>.</li>
+                        </ul>
+                        </li>
+                        <li>Double click the saved <em>texmaker_... .deb</em> file and install Texmaker.</li>
+                        <li>Click the main menu button, select the Office group of programs and find a Texmaker icon ready to be used.</li>
+                        <li>For updates, a timely visit to the Texmaker website or click the [Help] tab in Textmaker selecting [Check for Updates].</li>
+                        </ul>
+                        <h3 id="latexdraw">LaTeXDraw</h3>
+                        <h4 id="what-is-it-">What is it:</h4>
+                        <p>LaTeXDraw is a graphical drawing editor for LaTeX.
+                        LaTeXDraw can be used to:</p>
+                        <ul>
+                        <li>Generate <a href="http://tug.org/PSTricks/main.cgi/"><strong>PSTricks</strong></a> code;</li>
+                        <li>Directly create PDF or PS pictures.</li>
+                        </ul>
+                        <p>LaTeXDraw is developed in Java (Java 8 is needed).</p>
+                        <h4 id="installation-">Installation:</h4>
+                        <ul>
+                        <li>To install LaTeXDraw, go to the <a href="http://latexdraw.sourceforge.net/">web page</a> of the tool and hit the [Download] button.
+                        </li>
+                        <li>Download (from sourceforge) the <em>LaTeXDraw-<version>.zip</em> file and save it.
+                        </li>
+                        <li>Unzip the downloaded zip file.
+                        </li>
+                        <li>Launch a terminal and change directory into the created LaTeXDraw-<version> directory.
+                        </li>
+                        <li><strong>REMARK:</strong> Java 8 or later must be installed before installing LaTeXDraw!
+                          If Oracle java, when that is the Java tool of choice, is not yet installed, install it now.
+                          By default OpenJDK Java is installed.
+                          Check the version by typing in the terminal <code>java --version</code>.
+                        </li>
+                        <li>Run as root/sudo the debian-ubuntu script to install LaTeXDraw <code>sudo ./install_debian_ubuntu</code>
+                        </li>
+                        <li>Immediately after entering the sudo password this error message will pop up.
+                        <pre><code>  .<span class="hljs-regexp">/install_debian_ubuntu: 3: ./</span><span class="hljs-string">install_debian_ubuntu:</span> <span class="hljs-string">gksu:</span> not found
+                        </code></pre><p>  This error is correct because the gksu package, which provides GTK+ front-ends for su (gksu) and sudo (gksudo), is removed from Ubuntu 18.04 and Linux Mint 19 Tara repositories, so it won&#39;t be available anymore starting with this Ubuntu/Mint release.
+                          Editing the install_debian_ubuntu script learns that the file contains one line: <code>gksu java -jar installer.jar</code>. This is necessary when the script is run as normal user.</p>
+                        </li>
+                        <li>To install LaTeXDraw type and run: <code>sudo java -jar installer.jar</code>.
+                          This will start a graphical installer tool.
+                        </li>
+                        <li>Click [Next].
+                          The default install directory is set to <em>/opt</em> what the default install folder is for Unix/Linux applications.
+                        </li>
+                        <li>Click [Next]
+                        </li>
+                        <li>Click [End]
+                        </li>
+                        <li>Find in the main menu under the Office selection a LaTeXDraw icon.
+                          Click it to launch LaTeXDraw.
+                        </li>
+                        <li>For updates, a timely visit to the LaTeXDraw website is necessary!
+                        </li>
+                        </ul>
+
+                        <h3 id="typora">Typora</h3>
+                        <h4 id="what-is-it-">What is it:</h4>
+                        <p>Typora provides a seamless experience as both a Markdown reader and a writer.
+                        It removes the preview window, mode switcher, syntax symbols of markdown source code, and all other unnecessary distractions of other markdown readers &amp; writers.</p>
+                        <h4 id="installation-">Installation:</h4>
+                        <ul>
+                        <li>To install Typora go to the <a href="https://typora.io/">Typora</a> web site and click the down arrow at the bottom of the page.
+                        </li>
+                        <li>In the new page click the [Download] button (top - right) and then click the [Linux] button.
+                        </li>
+                        <li>Follow the on-screen instructions.
+                        </li>
+                        <li>Launch a terminal and copy - paste - execute the instructions provided on the web page.
+                        <pre><code>  wget -qO - https://typora.io/linux/public-key.asc | sudo apt-key<span class="hljs-built_in"> add </span>-
+                          <span class="hljs-comment"># Mint repository add</span>
+                              echo -e <span class="hljs-string">"\ndeb https://typora.io/linux ./"</span> | sudo tee -a /etc/apt/sources.list
+                          <span class="hljs-comment"># Ubuntu repository add</span>
+                              sudo<span class="hljs-built_in"> add-apt-repository </span>'deb https://typora.io/linux ./'
+                          sudo apt update
+                          sudo apt install typora
+                          sudo apt upgrade
+                        </code></pre></li>
+                        <li>This entire document is written using Typora!
+                        </li>
+                        </ul>
+                        <h3 id="pandoc">Pandoc</h3>
+                        <h4 id="what-is-it-">What is it:</h4>
+                        <p><a href="http://pandoc.org/">Pandoc</a> is a universal document text converter.
+                        Typora is using it to support file import/export features for several file types (pdf, html, docx, ...).
+                        The GitHub Atom text edit is also using it.</p>
+                        <h4 id="installation-">Installation:</h4>
+                        <ul>
+                        <li>When running Typora, find under the [Help] tab a menu item [Install and Use Pandoc].</li>
+                        <li>Clicking this menu item opens a Pandoc &#39;what is it&#39; and install page.</li>
+                        <li>Download the installer, .deb file, from <a href="https://github.com/jgm/pandoc/releases/latest">download page</a> save and install it or when having an older version, update <a href="http://pandoc.org/">Pandoc</a>.</li>
+                        <li>Double click the saved <em>pandoc-&lt;version.-amd64.deb</em> file and allow Gdebi to install Pandoc.</li>
+                        </ul>
+                        <h3 id="meld">Meld</h3>
+                        <p>What is it:</p>
+                        <p>Files and directories comparison is the task that is often required, Meld takes this job seriously and is considered one of the best tools to perform comparisons between files, directories, and version control
+                        projects. It is widely used by Linux desktop users and app developers to cater their daily comparison needs. Here are some of the noteworthy features of this application.</p>
+                        <h4 id="installation-">Installation:</h4>
+                        <ul>
+                        <li>Meld is part of the default Ubuntu/Mint repositories. To install it launch a terminal and do:
+                        <pre><code>  sudo apt <span class="hljs-keyword">update</span>
+                          sudo apt <span class="hljs-keyword">install</span> meld
+                        </code></pre></li>
+                        </ul>
+                        <h2 id="remark-">Remark:</h2>
+                        <p>Whenever the Linux Mint installation is going to be used for scientific use, programming, electronics, testing, and etcetera the below descriptions show part of the path.
+                        <h3 id="atom">Atom</h3>
+                        <h4 id="what-is-it-">What is it:</h4>
+                        <p><strong>Atom</strong> is a free and open-source text and source code editor for macOS, Linux, and Microsoft Windows with support for plug-ins written in Node.js, and embedded Git Control, developed by GitHub. Atom is a desktop application built using web technologies. Most of the extending packages have free software licenses and are community-built and maintained. Atom is based on Electron formerly known as Atom Shell, a framework that enables cross-platform desktop applications using Chromium and Node.js. It is written in CoffeeScript and Less.</p>
+                        <h4 id="installation-">Installation:</h4>
+                        <ul>
+                        <li>Goto the <a href="http://www.atom.io">Atom</a> web page.</li>
+                        <li>Click the [Download .deb] button and save the file on you system (by default it&#39;s saved in /Downloads).</li>
+                        <li>Browse into the directory where the <em>atom-amd64.deb</em> file is saved.</li>
+                        <li>Double click the file to launch Gdebi-gtk and load the .deb file in it for installation.</li>
+                        <li>Possibly Gdebi makes a remark about the fact that three extra packages need to be installed first.
+                          A [details] button provides more insight.<ul>
+                        <li>To be installed are: <em>git, git-man</em> and <em>liberror-perl</em></li>
+                        <li>Click the [Close] button</li>
+                        </ul>
+                        </li>
+                        <li>Click now the [Install Package] button in the main Gdebi window and allow that the three earlier named packages are installed. Click [Continue].</li>
+                        <li>The three packages and Atom are now installed.</li>
+                        <li>When done close Gdebi.</li>
+                        <li>There should now be a <em>Atom</em> icon in the [Menu] - [programming] section.</li>
+                        <li>launch Atom and configure it.</li>
+                        <li>When Atom starts there is a [Telemetry Consent], a [Welcome] and a [Welcome Guide] opened.<ul>
+                        <li>Telemetry Consent:
+                          Chose here what you want the editor does, send usage data or not, while using it.</li>
+                        <li>Welcome Screen - Welcome Guide:
+                          There are useful links displayed here.
+                          If Atom is completely new, it&#39;s always a good idea to click the links and learn how Atom behaves.
+                          If you don&#39;t want to see this screen each time Atom starts, untick the &quot;Show Welcome Guide when opening Atom&quot; box.</li>
+                        </ul>
+                        </li>
+                        <li>Close the three documents.</li>
+                        <li>Click [Edit] - [Preferences] to setup Atom following your needs.
+                          I&#39;m providing here how I&#39;ve configured Atom.
+                          Only the items I&#39;ve modified/changed are listed here below.<ul>
+                        <li>Core Settings:<ul>
+                        <li>Project Home: I&#39;ve not set it but this is important for GitHub to store projects.</li>
+                        <li>Reopen Project Menu Count: 10</li>
+                        <li>Restore Previous Windows on Start: No</li>
+                        </ul>
+                        </li>
+                        <li>Editor Settings:<ul>
+                        <li>Font Family: add at the end of the line &quot;, Ubuntu&quot; (no &quot;&quot;).</li>
+                        <li>Font Size: 10</li>
+                        <li>Line Hight: 1.4</li>
+                        <li>Preferred Line Length: 96</li>
+                        <li>Scroll Sensitivity: 50</li>
+                        <li>Tab Length: 4</li>
+                        <li>Tab Type: soft</li>
+                        </ul>
+                        </li>
+                        <li>Chose a Theme<ul>
+                        <li>UI Theme: Atom Light</li>
+                        <li>Syntax Theme: Atom Light</li>
+                        </ul>
+                        </li>
+                        <li>Install
+                          To find packages go <a href="https://atom.io/packages">here</a>.
+                          To install a package, start typing the name of the package in the entry bar. While typing the package will float to the top of the list.
+                          I have below given packages installed:<ul>
+                        <li>Column-Select</li>
+                        <li>Highlight-Selected  (Can be configured)</li>
+                        <li>Language-Markdown  (Can be configured)</li>
+                        <li>Language-Vhdl  (Can be configured)</li>
+                        <li>Linter-Markdown   (Can be configured)
+                          This will also install below packages. Allow it! Click [Yes]<ul>
+                        <li>Linter</li>
+                        </ul>
+                        </li>
+                        <li>Linter-ui-default   (Can be configured)
+                          This will also install below packages. Allow it! Click [Yes]<ul>
+                        <li>Intentions</li>
+                        <li>busy-signal</li>
+                        </ul>
+                        </li>
+                        <li>Linter-vhdl   (Can be configured)</li>
+                        <li>Markdown-preview-enhanced
+                          When Typora and Pandoc are installed configure this package<ul>
+                        <li>Tick the voting box in front of [Use Pandoc Parser]</li>
+                        <li>Open a terminal and type: <code>which pandoc</code></li>
+                        <li>Type the resulting output in the [Pandoc Options: Path] entry.</li>
+                        <li>When LaTeX is installed as earlier described, then:
+                          Enter in the [LaTeX Engine] bar: <em>/opt/TexLive/<year>/bin/x86_64-linux/pdftex</em></li>
+                        <li>Return to [Install]</li>
+                        </ul>
+                        </li>
+                        <li>Minimap  (Can be configured)</li>
+                        <li>Minimap-highlight-selected</li>
+                        <li>Split-diff
+                          Eventually configure the colors this package uses to show differences between file contents.</li>
+                        <li>Vhdl-entity-converter   (Can be configured)</li>
+                        <li>Xilinx-snippets
+                          This is a home made package, not published to GitHub yet.</li>
+                        </ul>
+                        </li>
+                        </ul>
+                        </li>
+                        <li>Click [Packages] - [Settings View] - [Manage Packages]<ul>
+                        <li>Jump over the &quot;Community Packages&quot; section as these are the packages installed following above list. Scroll down to &quot;Core Packages&quot;.</li>
+                        <li>Below list are the core packages I&#39;ve disabled.<ul>
+                        <li>Language-clojure</li>
+                        <li>Language-csharp</li>
+                        <li>Language-go</li>
+                        <li>Language-less</li>
+                        <li>Language-mustache</li>
+                        <li>Language-objective-c</li>
+                        <li>Language-php</li>
+                        <li>Language-ruby</li>
+                        <li>Language-ruby-on-rails</li>
+                        <li>Language-rust-bundled</li>
+                        <li>Language-sass</li>
+                        <li>Language-toml</li>
+                        <li>Language-yaml</li>
+                        <li>Markdown-preview</li>
+                        <li>Metrics</li>
+                        <li>Welcome</li>
+                        </ul>
+                        </li>
+                        <li>Below the core packages I&#39;ve configured<ul>
+                        <li>Spell-check<ul>
+                        <li>Add in the line [Grammars] &quot;source-vhdl&quot;</li>
+                        <li>Add in the line [Locales] &quot;en-US, nl-BE, fr-FR&quot;
+                          Make sure these language packs are installed before adding this information</li>
+                        </ul>
+                        </li>
+                        </ul>
+                        </li>
+                        </ul>
+                        </li>
+                        </ul>
+                        <h3 id="git-gitcola">Git - GitCola</h3>
+                        <h4 id="what-is-it-">What is it:</h4>
+                        <p>Git Cola is a sleek and powerful graphical user interface for Git.
+                        Git Cola is free software and written in Python (v2 + v3).
+                        It is mainly for use with GitHub.
+                            Github is now part of Microsoft and some people don&#39;t like that.
+                            Those can use Bitbucket.
+                            Then the use of the free version of GitKraken might be more useful than GitCola
+                        <h4 id="installation-">Installation:</h4>
+                        <ul>
+                        <li>Open a terminal.
+                        </li>
+                        <li>Enter following lines, one after the other, in the terminal.
+                        <pre><code>  sudo apt <span class="hljs-keyword">update</span>
+                          sudo apt <span class="hljs-keyword">install</span> git-cola
+                        </code></pre></li>
+                        <li>Git-Cola is now add to the Linux-Mint menu structure under the heading &quot;Programming&quot;.
+                        </li>
+                        </ul>
+                        <h3 id="gitkraken">GitKraken</h3>
+                        <h4 id="what-is-it-">What is it:</h4>
+                        <p><strong>GitKraken</strong> is an application for working with Git and includes two tools: the Git Client and Glo Boards. Developers can track code changes, switch between  branches and projects, and visualize workflow through the application.  Users can track tasks from inside the GitKraken Git Client, VS Code,  Atom, or a browser using Glo Boards.</p>
+                        <p>The <strong>GitKraken</strong> Git Client is free for open source, early-stage  startups and non-commercial use.</p>
+                        <h4 id="web-">web:</h4>
+                        <ul>
+                        <li><a href="https://www.gitkraken.com/">https://www.gitkraken.com/</a></li>
+                        </ul>
+                        <h4 id="installation-">Installation:</h4>
+                        <ul>
+                        <li>From the web page above, download and save the deb file for Ubuntu and Mint OSses.</li>
+                        <li>Double click the saved deb file in order to autostart the installation per the Gdebi tool.</li>
+                        <li>Once the installation is finalized, start the tool from the [Menu] [Programming] section.</li>
+                        <li>To start using the tool with Bitbucket and/or GitHub, watch the video: &quot;How to use Bitbucket with GitKraken&quot; on this <a href="https://www.gitkraken.com/bitbucket">page</a>.</li>
+                        </ul>
+                        <h2 id="remark-">Remark:</h2>
+                        <p>Of course in order to do something meaningful with GitCola and/or GitKraken it is necessary to have an account with <a href="https://github.com/">GitHub</a> or <a href="https://bitbucket.org/">Bitbucket</a> and also be a registered user for GitKraken.</p>
+                        <h3 id="cmake">Cmake</h3>
+                        <h4 id="what-is-it-">What is it:</h4>
+                        <p>CMake is an extensible, open-source system that manages the build process in an operating system and in a compiler-independent manner. Unlike many cross-platform systems, CMake is designed to be used in
+                        conjunction with the native build environment. CMake is designed to support complex directory hierarchies and applications dependent on several libraries. For example, CMake supports projects consisting of multiple toolkits (i.e., libraries), where each toolkit might contain several directories, and the application depends on the toolkits plus additional code. CMake can also handle situations where executables must be built in order to generate code that is then compiled and linked into a final application. Because CMake is open source, and has a simple, extensible design, CMake can be extended as necessary to support new features. Using CMake is simple.</p>
+                        <h4 id="web-">Web:</h4>
+                        <ul>
+                        <li><a href="https://cmake.org/">https://cmake.org/</a></li>
+                        </ul>
+                        <h4 id="installation-">Installation:</h4>
+                        <ul>
+                        <li>Open a command window and run, one after the other, the lines provided below.
+                        </li>
+                        <li><pre><code>  wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc <span class="hljs-number">2</span>&gt;/dev/null | sudo apt-key <span class="hljs-keyword">add</span><span class="bash"> -
+                        </span>  sudo apt-<span class="hljs-keyword">add</span><span class="bash">-repository <span class="hljs-string">'deb https://apt.kitware.com/ubuntu/ bionic main'</span>
+                        </span>  sudo apt update
+                          sudo apt install kitware-archive-keyring
+                          sudo apt-key --keyring /etc/apt/trusted.gpg del C1F34CDD40CD72DA
+                          sudo apt install cmake
+                        </code></pre></li>
+                        <li>When above commands are run in a terminal Cmake is installed as comamnd line version.
+                          There is a GUI available for Cmake that can be installed from the Software Manager platform.
+                        </li>
+                        <li>Open the Software Manager and type in the search box &quot;cmake&quot;.
+                          The first entry in the appearing list of tools is Cmake and it got a green OK mark.
+                        </li>
+                        <li>The third entry is the one for Cmake-qt-gui.
+                          Click on it and hit the [Install] button.
+                        </li>
+                        <li>After it&#39;s installed, check it by hitting the Linux Mint Menu button and then [Programming] [Cmake].
+                        </li>
+                        </ul>
+                        <h3 id="tcl-tk">Tcl-Tk</h3>
+                        <h4 id="what-is-it-">What is it:</h4>
+                        <p> Tcl (Tool Command Language) is a powerful, open source, business-friendly and easy to learn programming language. Tcl is a mature yet evolving language that is truly cross platform, easily deployed and highly extensible. It is suitable for a very wide range of uses, including web and desktop applications, networking, administration, testing and many more.</p>
+                        <p> Tk is a graphical user interface toolkit that act as the standard GUI for not only Tcl but for many other languages It can can produce rich, native applications that run unchanged across Windows, Mac OS X, Linux and more.</p>
+                        <h4 id="web-">Web:</h4>
+                        <ul>
+                        <li>The main Tcl-Tk web can be found <a href="https://www.tcl.tk/">here</a></li>
+                        <li>On the software page of the Tcl-Tk web page several ways to get and install the software are presented. The Tcl-Tk version preferably used is that from ActiveState and can be downloaded <a href="https://www.activestate.com/products/activetcl/downloads/">here</a>.
+                          ActiveState actively maintains the latest version and updates of Tcl-Tk, but to keep up withe new version releases of the language one must regularly visit the ActiveState web page, download and install new versions when required.</li>
+                        </ul>
+                        <h4 id="documentation">Documentation</h4>
+                        <p>Find <a href="https://www.tcl.tk/">here</a> beside software; tutorials, manuals and links to all kind of other related stuff.</p>
+                        <h4 id="installation">Installation</h4>
+                        <ul>
+                        <li>Download the latest version of the Tcl-Tk software from the ActiveState web side. Probably you’ll need to make an account in order to get it.
+                        </li>
+                        <li>Save the download on the machine, by default it goes into <em>/Downloads</em> . The latest version downloaded as of July 2019 is: <em>ActiveTcl-8.6.9.8609.2-x86_64-linux-glibc-2.5-dcd3ff05d.tar.gz</em>
+                        </li>
+                        <li>Uncompress the file in the <em>/Download</em> directory.
+                          A directory <em>ActiveTcl-<version>-x86_64-linux-glibc-<list></em> will be created.
+                        </li>
+                        <li>start a terminal and change into the above given directory.
+                          <code>cd ActiveTcl-8.6.9.8609.2-x86_64-linux-glibc-2.5-dcd3ff05d</code>
+                        </li>
+                        <li>Run the <em>install.sh</em> script as root (sudo) and install the Tcl-Tk tooling in <em>/opt/ActiveState</em>.
+                        <ul>
+                        <li>Accept the list of what is going to be installed, hit [enter].
+                        </li>
+                        <li>Accept the license of ActiveState by typing [A]
+                        </li>
+                        <li>Provide the path where ActiveState Tcl-Tk will be installed or accept the default value.
+                          The default value is /opt/ActiveTcl-8.6
+                          Hit [enter]cd ..
+                        <p>-</p>
+                        </li>
+                        <li>Provide the path where demo design will dropped or accept the default. Hit [enter]
+                        </li>
+                        <li>Specify the runtime installation or accept the default given value. Hit [enter]
+                        </li>
+                        <li>Hit [enter] to start the installation.
+                        </li>
+                        <li>At the end of the installation some settings are provided.
+                          Open the <em>.bash_aliases</em> or <em>.bashrc</em> file with a text editor.
+                          <code>xed ~/.bash_aliases</code> or <code>xed ~/.bashrc</code>
+                        </li>
+                        <li>Add following lines to one of the files.
+                        <pre><code>  <span class="hljs-comment"># TCL-TK settings (ActiveState)</span>
+                          export TCLTK_ROOT=<span class="hljs-regexp">/opt/</span>ActiveTcl-<span class="hljs-number">8.6</span>
+                          export PATH=$<span class="hljs-symbol">PATH:</span>$TCLTK_ROOT/<span class="hljs-symbol">bin:</span>$TCLTK_ROOT/<span class="hljs-class"><span class="hljs-keyword">lib</span></span>
+                          export MANPATH=$TCLTK_ROOT/man
+                        </code></pre></li>
+                        </ul>
+                        </li>
+                        </ul>
+                        <h3 id="pyenv">Pyenv</h3>
+                        <h4 id="what-is-it-">What is it:</h4>
+                        <p>Python, like most other modern programming languages, has its own unique way of downloading, storing, and resolving packages. Pyenv is a simple, powerful and cross-platform Python version management tool. pyenv is a wonderful tool for managing multiple Python  versions. Even if Python is already installed on the system, it  is worth having pyenv installed so that it is easy to try out new language features or help contribute to a project that is on a  different version of Python.</p>
+                        <p>“System Python” is the Python that comes default installed with the operating  system.
+                        If Python is already installed, why not use it?
+                        One way to look at it is that this &quot;System Python&quot; really <em>belongs</em> to the operating system. After all, it came installed with the operating system. Installing add-ons and new packages must be done system wide, as sudo, and there is the risk to get different versions of the same package with different tools. At the end it can end up in a real mess and create nightmares to be able to run tools. So leave the &quot;System Python&quot; what it is and use a dedicated Python for all programming work. pyenv even allows the use of different versions of Python on the same system.</p>
+                        <p>Thus when multiple versions of Python are needed or when wanting to keep teh operating system clean and save when programming in Python, install pyenv.</p>
+                        <p>Virtual environments are kind of different. that are isolated independent environments that can have both a specific version of Python and of any project-specific packages installed within them, without affecting any other projects. This is handled by tools, packages as <em>venv</em>.</p>
+                        <p>pyenv is one of the most important tools that most of the Python developers use.</p>
+                        <h4 id="web-">Web:</h4>
+                        <p>Great installation notes are available with the  <a href="https://github.com/pyenv/pyenv"><code>pyenv</code> documentation</a>
+                        Useful <a href="https://github.com/pyenv/pyenv/wiki">FAQ</a> along with <a href="https://github.com/pyenv/pyenv/wiki/Common-build-problems">common build problems</a> are also available.</p>
+                        <h4 id="installation-">Installation:</h4>
+                        <ul>
+                        <li>Launch a terminal and copy below into it.
+                        </li>
+                        <li><pre><code>  sudo apt install -y make build-essential libssl-<span class="hljs-built_in">dev</span> zlib1g-<span class="hljs-built_in">dev</span> \
+                          libbz2-<span class="hljs-built_in">dev</span> libreadline-<span class="hljs-built_in">dev</span> libsqlite3-<span class="hljs-built_in">dev</span> wget curl llvm libncurses5-<span class="hljs-built_in">dev</span> \
+                          libncursesw5-<span class="hljs-built_in">dev</span> xz-utils tk-<span class="hljs-built_in">dev</span> libffi-<span class="hljs-built_in">dev</span> liblzma-<span class="hljs-built_in">dev</span> python-openssl
+                        </code></pre></li>
+                        <li>After all above is installed install the real pyenv.
+                          It&#39;s not necessary to use <code>sudo</code> because pyenv is installed for you user of the system.
+                        </li>
+                        <li><pre><code>  curl <span class="hljs-string">https:</span><span class="hljs-comment">//pyenv.run | bash</span>
+                        </code></pre></li>
+                        <li>When done, change the <em>.bashrc</em> or <em>.bash_aliases</em> and add following lines:
+                        </li>
+                        <li><pre><code>  <span class="hljs-built_in">export</span> PATH=<span class="hljs-string">"/home/marc/.pyenv/bin:<span class="hljs-variable">$PATH</span>"</span>
+                          <span class="hljs-built_in">eval</span> <span class="hljs-string">"<span class="hljs-variable">$(pyenv init -)</span>"</span>
+                          <span class="hljs-built_in">eval</span> <span class="hljs-string">"<span class="hljs-variable">$(pyenv virtualenv-init -)</span>"</span>
+                        </code></pre></li>
+                        <li>Close the terminal and open it again to install Python in the next stage.
+                          Closing and reopening the terminal makes sure the modifications to the .bashrc or .bash_aliases file are going to be used.
+                        </li>
+                        </ul>
+                        <h3 id="python">Python</h3>
+                        <h4 id="what-is-it-">What is it:</h4>
+                        <p>Python is a general-purpose programming language that can be used on any modern operating system.
+                        It is used for processing  text, numbers, images, scientific data and just about anything else you.
+                        Examples where it is used: Google search engine, YouTube, NASA and even the New York Stock Exchange.</p>
+                        <p>Python is an interpreted language.  This means that it is not converted to computer-readable code before  the program is run but at runtime. In the past, this type of language  was called a scripting language, intimating its use was for trivial  tasks. However, programming languages such as Python have forced a  change in that nomenclature. Increasingly, large applications are  written almost exclusively in Python. Some ways that you can apply  Python include:</p>
+                        <h4 id="web-">Web:</h4>
+                        <ul>
+                        <li><a href="https://www.python.org/">https://www.python.org/</a></li>
+                        <li><a href="https://pypi.org/">https://pypi.org/</a></li>
+                        <li><a href="https://docs.python.org/3/">https://docs.python.org/3/</a></li>
+                        </ul>
+                        <h4 id="remark-">Remark:</h4>
+                        <p>For much more about Python, Jupyter Notebook (Jupyterlab), Using Python and QT, MyHDL and more view the <strong>Python and Tools</strong> document.</p>
+                        <h4 id="installation-">Installation:</h4>
+                        <p>Pyenv is installed, so it will be used to install one or multiple versions of Python.
+                        When using pyenv to avoid the use of the installed &quot;System Python&quot; one one or two versions need to be installed. With pyenv you can check first what versions of Python are available.</p>
+                        <ul>
+                        <li>Launch a terminal if it&#39;s not already done at the end of the pyenv installation.
+                        </li>
+                        <li>Type or copy following: <code>pyenv install --list | grep &quot; 3\.[6789]&quot;</code>.
+                        </li>
+                        <li>To view ALL available versions type or copy: <code>pyenv install --list</code>.
+                        </li>
+                        <li>Running the first above command shows all Python 3 versions from sub-version 6 to 9.
+                          the second command list all versions of everything that has to do with Python (a very long list).
+                          Unless you are really a advanced Python developer you&#39;re not going to use development (dev) version of the language. Use the most recent released version and that is Python_3.7.4. Because it&#39;s still used, let&#39;s also install the last version of Python 2, being 2.7.16
+                        </li>
+                        <li>In the terminal type or copy from here:
+                        <pre><code>  <span class="hljs-selector-tag">pyenv</span> <span class="hljs-selector-tag">install</span> <span class="hljs-selector-tag">-v</span> 3<span class="hljs-selector-class">.7</span><span class="hljs-selector-class">.4</span>
+                        </code></pre></li>
+                        </ul>
+                        <p>Run each of the commands and wait till finished before running the other.</p>
+                        <ul>
+                        <li>After installing both Python versions check where they are installed by typing the command
+                          <code>ls ~/.pyenv/versions/</code> and <code>pyenv versions</code>. The result of the latter command is:
+                          <img src="./Figures/Figure_28.png" alt="Figure 28" style="zoom:50%;" />
+                          The * in front of system means that the System Python version is in use.
+                        </li>
+                        <li>To use one of the just installed versions on your system type below in the terminal: <code>pyenv global 3.7.4</code> and check if the version sis now in use by typing <code>pyenv versions</code> . The * should be moved in front of the 3.7.4 version.
+                        </li>
+                        <li>A good way to check that the just installed and selected version is in use is by running the Python build in test suite. Type in the terminal <code>python -m test</code>
+                          Running the Python test suite might take a while!</p>
+                        </li>
+                        </ul>
+                        <h3 id="python-packages">Python packages</h3>
+                        <p>When using Python and needing certain or specific functions one does not need to invent then, there is <a href="https://pypi.org/">PyPi</a> . PyPi is a site with thousands of packages written in and for Python. These packages are written by users for users and having simply an account for PyPi allows on eto use all that power.
+                        Perhaps, one day, you can put a own written package on PyPi so that other people can use it.</p>
+                        <p>Below a list of &quot;necessary&quot; Python packages. Install all, none or some of these and maybe install even other packages you might need while developing tools in Python. A good rule is to look in PyPi when something particular is required during programming.</p>
+                        <ol>
+                        <li><strong>Sphinx</strong> Sphinx is a tool that makes it easy to create intelligent and beautiful documentation, written by Georg Brandl and licensed under the BSD license.</li>
+                        <li><strong>Requests</strong> the most famous http library written by kenneth reitz. It’s a must have for every python developer.</li>
+                        <li><strong>NumPy</strong> how can we leave this very important library ? It provides some advance math functionalities to python.</li>
+                        <li><strong>SciPy</strong> when we talk about NumPy then we have to talk about scipy. It is a library of  algorithms and mathematical tools for python and has caused many  scientists to switch from ruby to python.</li>
+                        <li><strong>matplotlib</strong> a numerical plotting library. It is very useful for any data scientist or any data analyzer.</li>
+                        <li><strong>SymPy</strong> can do algebraic evaluation, differentiation, expansion, complex  numbers, etc. It is contained in a pure Python distribution.</li>
+                        <li><strong>Pillow</strong> a friendly fork of PIL (Python Imaging Library). It is more user  friendly than PIL and is a must have for anyone who works with images.</li>
+                        <li><strong>SQLAlchemy</strong> a database library. Many love it and many hate it. The choice is yours.</li>
+                        <li><strong>BeautifulSoup 4</strong>  xml and html parsing library which is very useful for beginners.</li>
+                        <li><strong>Twisted</strong> the most  important tool for any network application developer. It has a very  beautiful api and is used by a lot of famous python developers.</li>
+                        <li><strong>nose</strong> a  testing framework for python. It is used by millions of python  developers. It is a must have if you do test driven development.</li>
+                        <li><strong>PySide2</strong> Qt for Python is the project that provides the official set of Python bindings (PySide2) that will supercharge your Python applications. While the Qt APIs are world renowned, there are more reasons why you should consider Qt for Python. The first official release of the PySide2 module is available now!</li>
+                        <li><strong>MyHDL</strong> turns Python into a hardware description and verification language, providing hardware engineers with the power of the Python ecosystem.</li>
+                        <li><strong>Jupyter Notebook / JupyterLab</strong></li>
+                        </ol>
+                        <p>To install a package do:
+                        <ul>
+                        <li>Open a web browser and go to: <a href="https://pypi.org/">https://pypi.org/</a></li>
+                        <li>In the &quot;Search Objects&quot; bar enter the name of the package that needs installed and hit [Enter].</li>
+                        <li>When the package is available and extensions, add-ons for the package exist it will pop up in a web page with kind of the same structure as the Linux Mint Software Manager. The most relevant package will end add the top of a list of similar packages.</li>
+                        <li>Click the square with the package that needs installed to open a package dedicated page.
+                          Find here links to the package home page, documentation, source code, download and much more.</li>
+                        <li>There are several ways to install the package, two are listed here:
+                        <ul>
+                        <li>One:<ul>
+                        <li>Launch a terminal and type <code>pip install &lt;package_name&gt;</code>.</li>
+                        <li>The package will be installed.</li>
+                        </ul>
+                        </li>
+                        <li>Two:
+                        <ul>
+                        <li>Click the [Download Files] button and then download and save the &#39;wheel&#39; file for the Phyton version used (Pyhton_3.7.x reflects in the file name as cp37) and x86-64-bit Linux.
+                          <strong>Hint:</strong> Maybe save the wheel files for the used Python version in a reserved directory.
+                          I&#39;ve created in the ~/.pyenv directory a ./Wheels/3.4.7 directory to hold the wheel files for Python_3.7.4.</li>
+                        <li>When all required/ wanted wheel files are downloaded and saved start installing the packages.</li>
+                        <li>Launch a terminal and type:
+                          <code>pip install ~/.pyenv/Wheels/3.7.4/&lt;package_wheel_file_name&gt;</code></li>
+                        </ul>
+                        </li>
+                        <li>Some packages will need to be installed following &#39;<em>One</em>&#39; other can be installed either of both &#39;<em>One</em>&#39;/&#39;<em>Two</em>&#39; ways.
+                        </li>
+                        <li>To show all installed packages type in a terminal <code>pip list</code>.</li>
+                        </ul>
+                        </li>
+                        <li><strong>Remark:</strong>
+                          After having installed a package, it&#39;s possible that Python complains about the version of pip.
+                          Upgrade it using the command given in the warning message <code>pip install --upgrade pip</code>.</li>
+                        </ul>
+                        <h3 id="qt">QT</h3>
+                        <h4 id="what-is-it-">What is it:</h4>
+                        <p>Qt is a free and open-source widget toolkit for creating graphical user interfaces as well as cross-platform applications that run on various software and hardware platforms such as Linux, Windows, macOS, Android
+                        or embedded systems with little or no change in the underlying codebase while still being a native application with native capabilities and speed. Qt is developed by The Qt Company, a publicly listed company, and the Qt Project under open-source governance, involving individual developers and organizations working to advance Qt</p>
+                        <h4 id="web-">Web:</h4>
+                        <p><a href="https://www.qt.io/">https://www.qt.io/</a></p>
+                        <h4 id="installation-">Installation:</h4>
+                        <p>Qt will be installed for use with Python.</p>
+                        <p>The Open Source version of the QT tools will be installed.
+                        This holds that some obligations need to be fulfilled by the user. Please read the text about licensing and obligations on the <a href="https://www.qt.io/download-open-source?hsCtaTracking=9f6a2170-a938-42df-a8e2-a9f0b1d6cdce%7C6cb0de4f-9bb5-4778-ab02-bfb62735f3e5">Qt web site</a>.</p>
+                        <ul>
+                        <li>Launch a terminal</li>
+                        <li>Launch a web browser and go to the <a href="https://www.qt.io/">Qt web page</a>. Hit the [Download. Try. Buy] button in the right-top of the page.</li>
+                        <li>Scroll down on the new page and select the [Go open source] button.</li>
+                        <li>Read on that page the obligation, restrictions between commercial and Open Source versions of Qt.</li>
+                        <li>Scroll down the page an hit the [Download the QT Online Installer] button.</li>
+                        <li>Download and safe the installer file.</li>
+                        <li>Launch a terminal and change directory to where the installer file is saved.</li>
+                        <li>Change the permissions of the file to make it executable <code>chmod 775 qt-unified....run</code>.</li>
+                        <li>Run the installer <code>sudo ./qt-unified-linux-x64-&lt;version&gt;-online.run</code></li>
+                        <li>A GUI will open.<ul>
+                        <li>Install the QT tools in /opt/Qt</li>
+                        <li>Provide your login and password for the QT repositories.</li>
+                        <li>Install the tools you need.</li>
+                        </ul>
+                        </li>
+                        <li>The Linux Mint menu will now have a &quot;Qt Creator (Community)&quot; icon in the Programming tab.
+                          This allows one to graphically create GUI interfaces.
+                          Read the <strong>Python and Tools</strong> document for proceedings!</li>
+                        </ul>
+                        <h3 id="kicad">KiCad</h3>
+                        <h4 id="what-is-it-">What is it:</h4>
+                        <p>A Cross Platform and Open Source Electronics Design Automation Suite.
+                        Now, June 2019, at version 5.1.</p>
+                        <h4 id="web-">Web:</h4>
+                        <ul>
+                        <li><a href="http://kicad-pcb.org/">http://kicad-pcb.org/</a></li>
+                        </ul>
+                        <h4 id="documentation-">Documentation:</h4>
+                        <ul>
+                        <li>Available at install of the tool.</li>
+                        </ul>
+                        <h4 id="remark">Remark</h4>
+                        <p>View, read the <strong>Use KiCad</strong> document for detailed information about the use and maintenance of KiCad.</p>
+                        <h4 id="installation-">Installation:</h4>
+                        <pre><code>sudo<span class="hljs-built_in"> add-apt-repository </span>ppa:js-reynaud/kicad-5.1
+                        sudo apt update
+                        sudo apt install --install-suggests kicad
+                        </code></pre><h3 id="kicad-add-ons">KiCad add-ons</h3>
+                        <h4 id="libaries">Libaries</h4>
+                        <p>Libraries are included along with KiCad installation. Downloading the libraries above is only necessary when a newer version is required than the one offered with the installed KiCad version. Libraries can be kept up to date with the latest additions by cloning the library repositories using Git. Tracking the library repositories using Git means that only the <em>changes</em> to the libraries need to be downloaded, rather than retrieving the entire library set each time.
+                        It is also a good idea to download the libraries and keep them up to date in case there is no internet connection available.</p>
+                        <ul>
+                        <li>Schematic symbols: <a href="https://kicad.github.io/symbols">https://kicad.github.io/symbols</a></li>
+                        <li>PCB footprints: <a href="https://kicad.github.io/footprints">https://kicad.github.io/footprints</a></li>
+                        <li>3D models: <a href="https://kicad.github.io/packages3d">https://kicad.github.io/packages3d</a></li>
+                        <li>Library data are updated weekly, and track the <a href="https://github.com/KiCad">KiCad GitHub repositories</a>.</li>
+                        </ul>
+                        <p>There are also third party libraries available form:</p>
+                        <ul>
+                        <li><a href="https://www.digikey.com">Digi-Key</a> maintains an atomic parts library for KiCad on their <a href="https://github.com/digikey/digikey-kicad-library/">GitHub page</a>. These libraries are licensed under an agreement similar to the official libraries.</li>
+                        <li><a href="https://sparkfun.com">SparkFun Electronics</a> provide KiCad library files for many of their products on their <a href="https://github.com/sparkfun/SparkFun-KiCad-Libraries">GitHub page</a>. These libraries are based on the SparkFun Eagle libraries.</li>
+                        <li><a href="https://www.snapeda.com">SnapEDA</a> provides KiCad symbol and footprint libraries for their customers.  The libraries are freely available and can be found on their <a href="https://www.snapeda.com/kicad">KiCad library page</a>.  The library license can be found on their <a href="https://www.snapeda.com/about/terms">terms of service page</a>.</li>
+                        </ul>
+                        <h4 id="more-to-come">More to come</h4>
+                        <h3 id="ghdl">GHDL</h3>
+                        <h4 id="what-is-it-">What is it:</h4>
+                        <p>The open-source compiler and simulator for VHDL, a Hardware Description Language (HDL).
+                        GHDL is not an interpreter: it allows you to analyze and elaborate sources to generate machine code from a design. Native program execution is the only way for high speed simulation.</p>
+                        <h4 id="web-">Web:</h4>
+                        <ul>
+                        <li><a href="https://github.com/ghdl/ghdl">https://github.com/ghdl/ghdl</a></li>
+                        </ul>
+                        <h4 id="documentation-">Documentation:</h4>
+                        <ul>
+                        <li><a href="https://ghdl.readthedocs.io/en/latest/index.html">https://ghdl.readthedocs.io/en/latest/index.html</a></li>
+                        </ul>
+                        <h4 id="installation-">Installation:</h4>
+                        <ul>
+                        <li><strong>REMARK:</strong> <u>A upfront remark about GHDL</u>.
+                          Installing GHDL is not the easiest thing to do, especially for a new-bee user!
+                          If you want a VHDL simulator that installs “easy”, then spend a couple of thousand euro/dollar.
+                          But for the results of simulation you just should not.</li>
+                        <li>GHDL comes periodically as pre-build binary package for different distributions through the GHDL github page <a href="https://github.com/ghdl/ghdl/releases">releases</a> tab. That is one way to install GHDL when the released binary package is available for the Linux distribution used.</li>
+                        <li>An other way is to download or clone the most recent released version of GHDL, then build and install it. GHDL can be build three different ways, each has its pros and cons.</li>
+                        <li>There are no repositories for GHDL, it is thus necessary to visit on timely base the GHDL-Github page and install the newest versions the way described here.</li>
+                        </ul>
+                        <h5 id="ghdl-sources-">GHDL sources:</h5>
+                        <ul>
+                        <li>Clone or download the zip file of GHDL onto your computer.
+                        By default it ends up in the <em>/Downloads</em> directory as <em>ghdl-master.zip</em>.
+                        <ul>
+                        <li>Unzip/extract the file. It creates a directory <em>ghdl-master</em> with sub-directories and files.</li>
+                        <li>Leave it here for now.</li>
+                        </ul>
+                        <h5 id="ada-compiler-">ADA Compiler:</h5>
+                        </li>
+                        </ul>
+                        <p>GHDL is written in ADA. Every way of setting up GHDL needs a ADA compiler. That will thus be the first action to accomplish.</p>
+                        <ul>
+                        <li>Get a ADA compiler from <a href="https://www.adacore.com/community">libre.adacore.com</a>.</li>
+                        <li>Click the big [GNAT COMMUNITY] button to download the ada compiler.</li>
+                        <li>Select the latest version for Intel machines: x86 GNU Linux (64 bits) download and safe it.</li>
+                        <li>Change to where the package is downloaded. default is this: <em>/Downloads</em>.</li>
+                        <li>Make the downloaded file executable: <code>chmod +x path_to_the_package/gnat-comunity-...-bin</code></li>
+                        <li>Execute the file: <code>sudo ./gnat-community-&lt;year&gt;-&lt;version&gt;-x86_64-linux-bin</code></li>
+                        <li>Follow the steps to install gnat presented by the installer. Click [Next].</li>
+                        <li>Remark that the installer targets the <em>/opt</em> directory! Click [Next], [Next], [Next] and [Install].</li>
+                        <li>Finally click [Finish].</li>
+                        </ul>
+                        <p>To recognize the just install GNAT tool add below lines to the .bashrc or .bah_aliases file:</p>
+                        <pre><code><span class="hljs-comment"># GNAT GPL (ADA Compiler) for GHDL</span>
+                        export PATH=<span class="hljs-variable">$PATH</span><span class="hljs-symbol">:/opt/Gnat/</span><span class="hljs-number">2019</span>/bin
+                        </code></pre><p>Save the file and open a new terminal window for the rest of the installation.</p>
+                        <p>Two GHDL build options provide a lot of simulation possibilities, the first is when GHDL is build using the Low Level Virtual Machine (LLVM), the second when the GNU Compiler Collection (GCC) approach is taken. Although GCC is default available with each Linux installation it is a lot more difficult than it is using the LLVM way. In both cases extra software needs to be installed before GHDL can be build.</p>
+                        <h5 id="get-and-install-llvm-">Get and install LLVM.</h5>
+                        <p>Install LLVM and CLANG only when it is the plan to build GHDL this way or when the plan is to use C/C++ to write software . Once LLVM and surroundings are installed, it is a lot simpler to build GHDL than with GCC while the possibilities and performance are similar. Although the GHDL <a href="https://ghdl.readthedocs.io/en/latest/building/llvm/index.html#build-llvm">documentation</a> states that LLVM can be used till version 5.0 it perfectly works with the latest available version 8. Let’s get it and make it work.</p>
+                        <ol>
+                        <li>Go to the Debian/Ubuntu <a href="https://apt.llvm.org/">page</a> of the LLVM compiler.
+                        </li>
+                        <li>Browse down the page to the Ubuntu chapter and find there the version 18.04 (Bionic) repository data for <em>apt</em>.
+                        </li>
+                        <li>Open a terminal and change directories to <em>/etc/apt/sources.list.d</em>
+                         Start a root a text editor session, <code>sudo xed</code>, and copy the apt lines for latest version in the open document.
+                        </li>
+                        <li>Save the document as <em>llvm-eight.list</em>. Use any name but the extension must be .list
+                        </li>
+                        <li>Download the archive signature or fingerprint: &quot;6084 F3CF 814B 57C1 CF12 EFD5 15CF 4D18 AF4F 7421&quot;. <code>wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key|sudo apt-key add -</code>
+                        </li>
+                        <li>Refresh the repositories of the system by: <code>sudo apt update</code>
+                         The comments from this action should end without any error, else probably some typo is made.
+                        </li>
+                        <li><strong>Remark:</strong>
+                         The text shows how to install version 9 of LLVM.
+                         It is very likely that the latest version of LLVM has a higher ranking number (10 or even ..).
+                         If that is the case, replace the <strong>9</strong> in all <em>apt install</em> commands by the latest version number.
+                        </li>
+                        <li>Perform these steps one after the other:
+                        <ol>
+                        <li>Install the LLVM Core libraries. A modern source- and target-independent <a href="https://llvm.org/docs/Passes.html">optimizer</a>, along with
+                         <a href="https://llvm.org/docs/CodeGenerator.html">code generation support</a> for many popular CPUs.</p>
+                        <pre><code> apt install libllvm<span class="hljs-number">-9</span>-ocaml-dev libllvm9 llvm<span class="hljs-number">-9</span> llvm<span class="hljs-number">-9</span>-dev llvm<span class="hljs-number">-9</span>-doc llvm<span class="hljs-number">-9</span>-examples llvm<span class="hljs-number">-9</span>-runtime
+                        </code></pre></li>
+                        <li>Install Clang and co, &quot;LLVM native&quot; C/C++/Objective-C compiler, which aims to deliver amazingly fast compiles (e.g. about <a href="http://clang.llvm.org/features.html#performance">3x faster than GCC</a> when compiling Objective-C code in a debug configuration), extremely useful <a href="http://clang.llvm.org/diagnostics.html">error and warning messages</a> and to provide a platform for building great source level tools.</p>
+                        <pre><code> apt install clang<span class="hljs-number">-9</span> clang-tools<span class="hljs-number">-9</span> clang<span class="hljs-number">-9</span>-doc libclang-common<span class="hljs-number">-9</span>-dev libclang<span class="hljs-number">-9</span>-dev libclang1<span class="hljs-number">-9</span> clang-format<span class="hljs-number">-9</span> python-clang<span class="hljs-number">-9</span>
+                        </code></pre></li>
+                        <li>libfuzzer
+                         <code>apt install libfuzzer-9-dev</code>
+                        </li>
+                        <li>lldb. Builds on libraries provided by LLVM and Clang to provide a great native debugger.
+                         <code>apt install lldb-9</code>
+                        </li>
+                        <li>lld is a new linker. That is a drop-in replacement for system linkers and runs much faster.
+                         <code>apt install lld-9</code>
+                        </li>
+                        <li>libc++ provide a standard conform and high-performance implementation of the C++ Standard Library, including full support for C++11 and C++14.
+                         <code>apt install libc++-9-dev libc++abi-9-dev</code>
+                        </li>
+                        <li>OpenMP provides an <a href="http://openmp.org">OpenMP</a> runtime for use with the OpenMP implementation in Clang.
+                         <code>apt install libomp-9-dev</code>
+                        </li>
+                        </ol>
+                        </li>
+                        <li>Test the installation, type <code>clang-9 -–version</code>
+                         When getting an output in the terminal as below, then everything is installed perfectly.
+                        <pre><code> user@machine:~$ clang-<span class="hljs-number">9</span> --<span class="hljs-keyword">version</span>
+                         clang <span class="hljs-keyword">version</span> <span class="hljs-number">9.0</span>.<span class="hljs-number">1</span>-svn363027-<span class="hljs-number">1</span>~exp1~<span class="hljs-number">20190611211629.77</span> (branches/release_90)
+                         Targe<span class="hljs-variable">t:</span> x86_64-<span class="hljs-keyword">pc</span>-linux-gnu
+                         Thread <span class="hljs-keyword">mode</span><span class="hljs-variable">l:</span> posix
+                         InstalledDir: /usr/bin
+                        </code></pre></li>
+                        </ol>
+                        <p><strong>Remark 1:</strong> This are the extra, extra things I had to do to make everything work:
+                        <strong>Remark 2:</strong> The latest version of Mint_19.2 I installed from scratch on a PC already had below <em>zlib1g-dev</em> installed.</p>
+                        <ul>
+                        <li>Go into <em>/usr/bin</em> and find the files <em>clang</em> <code>ls clang*</code>
+                          This lists following files: <em>clang-9  clang++-9  clang-cpp-9  clang++-libc++</em>
+                          Create two symbolic links, one for <em>clang</em> and one for <em>clang++</em>
+                          <code>sudo ln -s /usr/bin/clang-9 clang</code>
+                          <code>sudo ln -s /usr/bin/clang++-9 clang++</code>
+                          A new ls, list now <em>clang  clang++ clang-9  clang++-9  clang-cpp-9  clang++-libc++</em></li>
+                        <li>Install a missing library (zlib1g-dev)
+                          This can be done using Synaptic, search for <em>zlib1g-dev</em>, right click and from the menu select [Mark for Installation]. Then click [Apply] to apply the changes or
+                          Using the Software manager, type in the search bar <em>zlib</em>, browse down till <em>zlib1g</em>. Click the selection and in the new window click [Install]
+                          From the command line,  type:  <code>sudo apt install zlib1g-dev</code></li>
+                        </ul>
+                        <h5 id="build-and-install-ghdl-using-llvm">Build and install GHDL using LLVM</h5>
+                        <ol>
+                        <li>The downloaded zip file, <em>ghdl-master.zip</em>, has earlier been unzipped and has created a directory <em>ghdl-master</em> in the directory where the zip was saved, normally <em>/Downloads</em>.</li>
+                        <li>Change into that directory. <code>cd ~/Downloads/ghdl-master</code></li>
+                        <li>Create a build directory, <code>mkdir build</code>, and change into it <code>cd build</code>.</li>
+                        <li>Configure GHDL for you system:
+                         <code>../configure --with-llvm-config=/usr/lib/llvm-9/bin/llvm-config --prefix=/opt/Ghdl</code><ol>
+                        <li>--with-llvm-config=/usr/lib/llvm-9/bin/llvm-config : this is the path where LLVM has been installed when the procedure <strong>Get and Install LLVM</strong> has been followed. To be sure that the path is correct
+                         do a search in Nemo (file browser) for llvm-config.</li>
+                        <li>--prefix=/opt/Ghdl : /opt is normally the directory where user programs are installed so it is used for GDHL.</li>
+                        </ol>
+                        </li>
+                        <li>Run make <code>make</code></li>
+                        <li>Install the GHDL tool.<ol>
+                        <li>In the configuration step it is decided to install the tool in <em>/opt/Ghdl</em>. <em>/opt</em> is a system directory and under control of root (sudo). When running the command  <code>sudo make install</code> an error pops up about <em>gnatmake</em>.</li>
+                        <li>Make the user the owner of the Ghdl directory and in one take drop the directory in the users group.
+                         <code>sudo chown -R &lt;user&gt; /opt/Ghdl</code>
+                         <code>sudo chgrp -R &lt;user&gt; /opt/Ghdl</code></li>
+                        <li>Remove the already create directories from /opt/Ghdl.</li>
+                        <li>Run <em>make install</em> again but now <u>without</u> <code>sudo</code>
+                         Process ends without errors or warnings.</li>
+                        </ol>
+                        </li>
+                        <li>Add GHDL to the path.
+                         Edit <em>/home/<user>/.bash_aliases</em> or <em>/home/<user>/.bash</em> and add Ghdl to the PATH.</li>
+                        <li>DONE.</li>
+                        <li>The installation is done, but it&#39;s only possible to simulate straight VHDL. When the VHDL source contains instantiated Xilinx or Lattice Semicon library elements, simulation will fail.
+                         It is thus necessary to install one or both of these tools and create simulation libraries for GHDL out of that installation.
+                         Creating simulation libraries is easy!
+                         Follow the README.md document found in the <code>/opt/Ghdl/lib/ghdl/vendors</code> directory.</li>
+                        </ol>
+                        <h3 id="gtkwave">GTKwave</h3>
+                        <h4 id="what-is-it-">What is it:</h4>
+                        <p>GTKWave is a fully featured  wave viewer for Unix, Win32, and Mac OSX which reads LXT, LXT2, VZT, FST, and GHW files as well as standard Verilog VCD/EVCD files and allows  their viewing.</p>
+                        <h4 id="web-">Web:</h4>
+                        <p><a href="http://gtkwave.sourceforge.net/">http://gtkwave.sourceforge.net/</a></p>
+                        <p>Click <a href="http://gtkwave.sourceforge.net/gtkwave-3.3.101.tar.gz">here</a> to download the latest release as of July 2019 (gtkwave-3.3.101.tar.gz) and save it on the machine. The <em>/Downloads</em> directory is the default space where downloads get saved.</p>
+                        <h4 id="documentation-">Documentation:</h4>
+                        <p>Can be found <a href="http://gtkwave.sourceforge.net/gtkwave.pdf">here</a> as PDF file.</p>
+                        <h4 id="installation">Installation</h4>
+                        <p>There are NO repositories, thus for updates timely visit the gtkwave web site.
+                        That is when the most up to date version is wanted because earlier (older) versions are available in Linux Mint repositories and can simply be installed by typing: <code>sudo apt install gtkwave</code></p>
+                        <p>To install the latest version do this:</p>
+                        <ol>
+                        <li>Unzip the .tar.gz file obtained from the GTK website.
+                         This creates a new directory <em>gtkwave<version></em> (at time of writing it’s -3.3.101).
+                        </li>
+                        <li>Start a terminal and create in the <em>gtkwave-<version></em> directory a <em>build</em> directory.
+                         <code>cd ~/Downloads/gtkwave&lt;verion&gt;</code> and then <code>mkdir build</code>.
+                        </li>
+                        <li>Change directory into the build directory <code>cd build</code>
+                        </li>
+                        <li>Run the command <code>../configure -–prefix=/opt/GtkWave</code>
+                         The command takes of and generates status text lines ending with an error about TCL.
+                        <pre><code> checking <span class="hljs-keyword">for</span> Tcl <span class="hljs-keyword">configuration</span>... configure: <span class="hljs-literal">error</span>: Can<span class="hljs-symbol">'t</span> find Tcl <span class="hljs-keyword">configuration</span> definitions. <span class="hljs-keyword">Use</span> <span class="hljs-comment">--with-tcl to specify a directory containing tclConfig.sh</span>
+                        </code></pre><p> The new Mint 19 installation does not seem to have Tcl-Tk installed by default and that is confirmed after a check (type in the terminal <em>tclsh</em> and <em>wish</em>  to find out if Tcl and Tk are installed). Thus the first thing to do now is to install Tcl-Tk. Consult the description on how to do this somewhere else in this document. After install and testing of Tcl-Tk come back to this point 4 and run <code>../configure --prefix=/opt/GtkWave</code> again.</p>
+                        <p> After installation of Tcl-TK and running <code>../configure –prefix=/opt/GtkWave</code> the same errors pops up. At least now Tcl-Tk is installed and we know it :-). The error complains about some tcl file that cannot be found. So give the path to the file with the configure command. Do the same for Tk.</p>
+                        <p> <code>../configure --prefix=/opt/GtkWave --with-tcl=/opt/ActiveTcl-8.6/lib --with-tk=/opt/ActiveTcl-8.6/lib</code>
+                         After running configure with teh above command a lot more status text is displayed in the terminal but it end with an new error message</p>
+                        <pre><code> <span class="hljs-attribute">configure</span>: <span class="hljs-attribute">error</span>: Couldn't find a usable gperf program.
+                         Please install gperf which is available from
+                         <span class="hljs-attribute">ftp</span>:<span class="hljs-comment">//ftp.gnu.org/pub/gnu/gperf/</span>
+                        </code></pre><p> Install gperf as instructed but use apt to do it. Use this command line: <code>sudo apt install gperf</code>
+                        <p> Third time configure, good time? run the configure command again.
+                         No, it seems that the third time is not the good time because a new error ends configure.</p>
+                        <pre><code> checking <span class="hljs-keyword">for</span> lzma_end <span class="hljs-keyword">in</span> -llzma... no
+                         configure: error: LZMA support <span class="hljs-keyword">for</span> VZT is enabled, but xz could <span class="hljs-keyword">not</span> be found.
+                         Please install <span class="hljs-keyword">the</span> xz-devel package, see <span class="hljs-keyword">the</span> <span class="hljs-keyword">http</span>://tukaani.org/xz website, <span class="hljs-keyword">or</span> use <span class="hljs-keyword">the</span> <span class="hljs-comment">--disable-xz flag.</span>
+                        </code></pre><p> A check shows that <em>xz-utils</em> are installed but it seems that the configure command cannot find it.
+                         Run the Synaptic tol and [Search] for <code>xz-dev</code> . Synaptic pops up one library: <em>golang-xi2-x-xz-dev</em>.
+                         Install that library, right click and select &#39;&#39;Mark for Installation&quot;, then hit [Apply].
+                         This will pop up some other stuff that needs to be installed, allow it.
+                         <code>../configure --prefix=/opt/GtkWave --with-tcl=/opt/ActiveTcl-8.6/lib --with-tk=/opt/ActiveTcl-8.6/lib</code>
+                        <p> This new run end in yet another error</p>
+                        <pre><code> checking <span class="hljs-keyword">for</span> GTK... no
+                         configure: <span class="hljs-literal">error</span>: <span class="hljs-keyword">Package</span> requirements (gtk+-<span class="hljs-number">2.0</span> &gt;= <span class="hljs-number">2.2</span>.<span class="hljs-number">0</span>) were <span class="hljs-keyword">not</span> met:
+
+                         No <span class="hljs-keyword">package</span> <span class="hljs-symbol">'gtk</span>+-<span class="hljs-number">2.0</span>' found
+                        </code></pre></li>
+                        </ol>
+                        <p>Consider adjusting the PKG_CONFIG_PATH environment variable if you
+                           installed software in a non-standard prefix.</p>
+                        <p>   Alternatively, you may set the environment variables GTK_CFLAGS
+                           and GTK_LIBS to avoid the need to call pkg-config.
+                        See the pkg-config man page for more details.</p>
+                        <pre><code>   The machine <span class="hljs-built_in">has</span> everything <span class="hljs-keyword">for</span> gtk-<span class="hljs-number">3</span> installed. A <span class="hljs-built_in">search</span> how <span class="hljs-keyword">to</span> <span class="hljs-built_in">get</span> gtk-<span class="hljs-number">2</span> learns <span class="hljs-keyword">to</span> run this <span class="hljs-keyword">command</span>: `sudo apt install libgtk2.<span class="hljs-number">0</span>-dev`. Running that <span class="hljs-keyword">command</span> in <span class="hljs-keyword">a</span> terminal seem <span class="hljs-keyword">to</span> install <span class="hljs-keyword">a</span> lot of stuff.
+
+                           Rerun the <span class="hljs-keyword">command</span>: `../configure --prefix=/<span class="hljs-keyword">opt</span>/GtkWave --with-<span class="hljs-keyword">tcl</span>=/<span class="hljs-keyword">opt</span>/ActiveTcl-<span class="hljs-number">8.6</span>/lib --with-tk=/<span class="hljs-keyword">opt</span>/ActiveTcl-<span class="hljs-number">8.6</span>/lib` <span class="hljs-built_in">and</span> now <span class="hljs-keyword">finally</span> the process ends without warnings <span class="hljs-built_in">or</span> errors.
+
+                           Change the
+
+                        <span class="hljs-number">5</span>. Run `<span class="hljs-keyword">make</span>`
+
+                        <span class="hljs-number">6</span>. Run the `sudo <span class="hljs-keyword">make</span> install` <span class="hljs-keyword">command</span> <span class="hljs-keyword">to</span> install the GtkWave tool.
+
+                        <span class="hljs-number">7</span>. Add GTKwave <span class="hljs-keyword">to</span> the path.
+                           Edit */home/<span class="hljs-symbol">&lt;user&gt;</span>/.bash_aliases* <span class="hljs-built_in">or</span> */home/<span class="hljs-symbol">&lt;user&gt;</span>/.bash* <span class="hljs-built_in">and</span> <span class="hljs-built_in">add</span> GtkWave <span class="hljs-keyword">to</span> the PATH.
+                        </code></pre><h2 id="gtkwave-viewer">GTKwave viewer</h2>
+                        <p>   export GTKWAVE_ROOT=&quot;/opt/GtkWave&quot;
+                           export PATH=$PATH:$GTKWAVE_ROOT/bin</p>
+                        <pre><code><span class="hljs-number">8</span>. <span class="hljs-keyword">Open</span> a <span class="hljs-keyword">new</span> terminal <span class="hljs-keyword">and</span> check <span class="hljs-keyword">if</span> GtkWave works; <span class="hljs-keyword">type</span> `gtkwave` <span class="hljs-keyword">and</span> watch what happens.
+                           An <span class="hljs-literal">error</span> <span class="hljs-keyword">is</span> what happens.
+                        </code></pre><p>   gtkwave: error while loading shared libraries: libtcl8.6.so: cannot open shared object file: No such file or directory</p>
+                        <pre><code>   That library must be installed when ActiveState Tcl-Tk was installed <span class="hljs-keyword">and</span> a search <span class="hljs-keyword">for</span> <span class="hljs-keyword">it</span> proves <span class="hljs-keyword">it</span>’s installed <span class="hljs-keyword">and</span> available <span class="hljs-keyword">in</span>: */opt/ActiveTcl<span class="hljs-number">-8.6</span>/lib*
+                           How make GtkWave know <span class="hljs-keyword">that</span> <span class="hljs-keyword">the</span> library <span class="hljs-keyword">is</span> available, well:
+                           Open/edit <span class="hljs-keyword">the</span>  */home/&lt;user&gt;/.bash_aliases* <span class="hljs-keyword">or</span> */home/&lt;user&gt;/.bash* again <span class="hljs-keyword">and</span> add following <span class="hljs-keyword">to</span> <span class="hljs-keyword">the</span> Tcl-Tk settings: `export LD_LIBRARY_PATH=$TCLTK_ROOT/lib` <span class="hljs-keyword">and</span> save <span class="hljs-keyword">the</span> <span class="hljs-built_in">file</span>.
+
+                        <span class="hljs-number">9.</span> Start a new terminal <span class="hljs-keyword">and</span> <span class="hljs-built_in">run</span> again: `gtkwave` <span class="hljs-keyword">and</span> view <span class="hljs-keyword">the</span> waveforms window popping up.
+                           &lt;img src=<span class="hljs-string">"./Figures/Figure_17.png"</span> alt=<span class="hljs-string">"Figure 17"</span> style=<span class="hljs-string">"zoom:50%;"</span> /&gt;
+
+                        <span class="hljs-comment">## Final</span>
+
+                        Linux Mint <span class="hljs-number">19.2</span> <span class="hljs-keyword">is</span> installed <span class="hljs-keyword">and</span> all tools needed <span class="hljs-keyword">to</span> start developing hardware <span class="hljs-keyword">and</span>/<span class="hljs-keyword">or</span> software are installed.
+                        Not all are installed! because <span class="hljs-keyword">it</span>'s now possible <span class="hljs-keyword">to</span> <span class="hljs-built_in">write</span> VHDL <span class="hljs-keyword">and</span> simulate <span class="hljs-keyword">it</span> <span class="hljs-keyword">or</span> <span class="hljs-built_in">write</span> Python <span class="hljs-keyword">and</span> simulate <span class="hljs-keyword">it</span> <span class="hljs-keyword">but</span> <span class="hljs-keyword">it</span>'s still <span class="hljs-keyword">not</span> possible <span class="hljs-keyword">to</span> implement what's created. Also <span class="hljs-keyword">some</span> <span class="hljs-keyword">of</span> <span class="hljs-keyword">the</span> tools <span class="hljs-keyword">or</span> tool add-ons relay <span class="hljs-keyword">on</span> <span class="hljs-keyword">not</span> yet installed tools <span class="hljs-keyword">for</span> libraries <span class="hljs-keyword">and</span> other stuff.
+
+                        What's still needed are <span class="hljs-keyword">the</span> tools <span class="hljs-keyword">from</span> Xilinx <span class="hljs-keyword">and</span>/<span class="hljs-keyword">or</span> Lattice Semiconductor.
+                        </code></pre>
+                    </div>
+               </div>
+            </div>
+        </div>
+        <!-- Bootstrap core JavaScript
+                    ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="assets/js/jquery.min.js"></script>
+        <script src="assets/js/popper.js"></script>
+        <script src="bootstrap/js/bootstrap.min.js"></script>
+    </body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="How-to BIOS Upgrade" content="">
+        <meta name="ZirconfleX" content="">
+        <title>Blank Template for Bootstrap</title>
+        <!-- Bootstrap core CSS -->
+        <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+        <!-- Custom styles for this template -->
+        <link href="BiosUpgrade.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=ABeeZee&display=swap">
+        <meta name="keywords" content="BIOS, Upgrade, Motherboard, Dell">
+    </head>
+    <body>
+        <div class="container" style="border-bottom: 2px solid; display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 50px 50px; grid-template-rows: 50px 50px 50px 50px 20px; grid-template-areas: 'Logo Logo Title Title Title Title' 'Logo Logo Title Title Title Title' 'Logo Logo Zirco Zirco Zirco Zirco' 'Logo Logo Web Web Zirco Zirco' '. . . . . .'; margin-top: -50px;">
+            <img src="Figures/Kamiel_2.svg" style=" width: 100%; height: 100%; object-fit: fill;grid-area:1 / 1 / 5 / 3;" data-html="false">
+            <h1 style=" font-weight: bold; text-align: right; font-family: 'ABeeZee', sans-serif; align-self: center; font-size: 70px; line-height: 97px;grid-area:1 / 3 / 3 / 7;">De Kamiel</h1>
+            <img src="Figures/ZirconfleX_Logo_Web_45_Jun20.svg" style="width: 100%; height: 100%; object-fit: fill; grid-area: 3 / 5 / 5 / 7;">
+            <p style="font-family: 'ABeeZee', sans-serif; text-align: right; grid-area: 3 / 3 / 4 / 5; width: 100%; height: 100%; padding-top: 24px;">Offered by: ZirconfleX</p>
+            <p style="grid-area: 4 / 3 / 5 / 5; text-align: right; font-family: 'ABeeZee', sans-serif; color: #1d5de4; width: 100%; height: 100%;">http://www.<a href="http://www.zirconflex.be" target="_blank">zirconflex</a>.be</p>
+        </div>
+        <div class="container">
+            <div class="row" style="margin-top: 20px;">
+                <p><h1 cid="n0" mdtype="heading">FreeDOS on a Linux USB removable device </h1><h2 cid="n2" mdtype="heading">Introduction</h2><p cid="n3" mdtype="paragraph">As of writing (Nov 2019), unetbootin doesn&apos;t support versions of FreeDOS more recent than 1.0 (current  version is 1.2). The following procedure worked to upgrade a Dell XPS18 from a A06 to the A10 BIOS. </p><p cid="n4" mdtype="paragraph">Some notes before starting: </p><ul cid="n5" mdtype="list" data-mark="-">
+                        <li cid="n6" mdtype="list_item">
+                            <p cid="n7" mdtype="paragraph">You can check the current BIOS version. </p>
+                            <ul cid="n8" mdtype="list" data-mark="-">
+                                <li cid="n9" mdtype="list_item">
+                                    <p cid="n10" mdtype="paragraph">Possible that it can be observed when booting (under the Dell logo).</p>
+                                </li>
+                                <li cid="n11" mdtype="list_item">
+                                    <p cid="n12" mdtype="paragraph">Press F12 at boot and enter the setup. On the first setup page all system settings are shown, including BIOS version and Dell Tag code (necessary to download software drivers including BIOS). </p>
+                                </li>
+                                <li cid="n13" mdtype="list_item">
+                                    <p cid="n14" mdtype="paragraph">If the Latest BIOS is already installed read no further and exit here!</p>
+                                </li>
+                            </ul>
+                        </li>
+                        <li cid="n15" mdtype="list_item">
+                            <p cid="n16" mdtype="paragraph">Dell BIOS updates are always delivered as .EXE files. Modern (after 2016) Dell machines have a BIOS upgrade option in the F12 pop-up menu. Earlier machines need an approach were the .exe file can be read and executed. </p>
+                        </li>
+                        <li cid="n17" mdtype="list_item">
+                            <p cid="n18" mdtype="paragraph">Laptop users should not attempt this without AC power</p>
+                        </li>
+                        <li cid="n19" mdtype="list_item">
+                            <p cid="n20" mdtype="paragraph">This is dangerous, and you assume all risk for following this procedure.</p>
+                            <ul cid="n21" mdtype="list" data-mark="-">
+                                <li cid="n22" mdtype="list_item">
+                                    <p cid="n23" mdtype="paragraph">Backup on an external device all important information (documents, programs and other) before attempting to follow this BIOS upgrade procedure.</p>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul><h2 cid="n24" mdtype="heading">Procedure</h2><ol start="" cid="n25" mdtype="list">
+                        <li cid="n26" mdtype="list_item">
+                            <p cid="n27" mdtype="paragraph">Create a bootable USB device.</p>
+                            <ul cid="n28" mdtype="list" data-mark="-">
+                                <li cid="n29" mdtype="list_item">
+                                    <p cid="n30" mdtype="paragraph">Use a tool as <em>Gparted</em> to do this.</p>
+                                </li>
+                                <li cid="n31" mdtype="list_item">
+                                    <p cid="n32" mdtype="paragraph">Create a &apos;GPT&apos; partition table.</p>
+                                </li>
+                                <li cid="n33" mdtype="list_item">
+                                    <p cid="n34" mdtype="paragraph">Create a new partition, FAT32, and set the boot/esp/lba flags.</p>
+                                </li>
+                                <li cid="n35" mdtype="list_item">
+                                    <p cid="n36" mdtype="paragraph">Format the partition and give it a name to easily recognize it.</p>
+                                </li>
+                            </ul>
+                        </li>
+                        <li cid="n37" mdtype="list_item">
+                            <p cid="n38" mdtype="paragraph">Download from Dell the latest BIOS for your computer. It will be something as <em>&quot;ComputerType_BiosVersion.exe&quot;</em> (XPS18_A10.exe).</p>
+                        </li>
+                        <li cid="n39" mdtype="list_item">
+                            <p cid="n40" mdtype="paragraph">Grab the latest USB installer from the FreeDOS Download Page.</p>
+                            <ul cid="n41" mdtype="list" data-mark="-">
+                                <li cid="n42" mdtype="list_item">
+                                    <p cid="n43" mdtype="paragraph"><a href="https://www.freedos.org/">https://www.freedos.org/</a></p>
+                                </li>
+                                <li cid="n44" mdtype="list_item">
+                                    <p cid="n45" mdtype="paragraph">The latest version at the time of writing is version 1.2.</p>
+                                </li>
+                                <li cid="n46" mdtype="list_item">
+                                    <p cid="n47" mdtype="paragraph">It is possible to download several versions of the Freedos OS but since CD&apos;s and Floppy&apos;s are outdated, the only valuable download can be that for USB. </p>
+                                </li>
+                                <li cid="n48" mdtype="list_item">
+                                    <p cid="n49" mdtype="paragraph">Download and save the &quot;Full&quot; version on suspicion that it might include more than the &quot;Lite&quot; version.</p>
+                                </li>
+                            </ul>
+                        </li>
+                        <li cid="n50" mdtype="list_item">
+                            <p cid="n51" mdtype="paragraph">Extract the archive:</p>
+                            <ul cid="n52" mdtype="list" data-mark="-">
+                                <li cid="n53" mdtype="list_item">
+                                    <p cid="n54" mdtype="paragraph">This produces three files.</p>
+                                </li>
+                                <li cid="n55" mdtype="list_item">
+                                    <p cid="n56" mdtype="paragraph">Keep only the <em>.img</em> file.</p>
+                                </li>
+                            </ul>
+                        </li>
+                        <li cid="n57" mdtype="list_item">
+                            <p cid="n58" mdtype="paragraph">Determine which of <code>/dev/sdX</code> is your USB stick (use <code>fdisk -l</code>)</p>
+                        </li>
+                        <li cid="n59" mdtype="list_item">
+                            <p cid="n60" mdtype="paragraph">Write the image directly to the block device: </p>
+                            <ul cid="n61" mdtype="list" data-mark="-">
+                                <li cid="n62" mdtype="list_item">
+                                    <p cid="n63" mdtype="paragraph"><code>dd if=FD12FULL.img of=/dev/sdX status=progress</code>  where <code>X</code> is the letter representing your USB stick as a block device. Don&apos;t write the image to a partition)</p>
+                                </li>
+                            </ul>
+                        </li>
+                        <li cid="n64" mdtype="list_item">
+                            <p cid="n65" mdtype="paragraph">Double-check that the image copying worked: </p>
+                            <ul cid="n66" mdtype="list" data-mark="-">
+                                <li cid="n67" mdtype="list_item">
+                                    <p cid="n68" mdtype="paragraph">Run <code>fdisk -l</code> in a terminal. It should show a single partition on a DOS disk with the bootable (&quot;boot&quot; *) flag set.</p>
+                                </li>
+                            </ul>
+                        </li>
+                        <li cid="n69" mdtype="list_item">
+                            <p cid="n70" mdtype="paragraph">Mount the USB drive.</p>
+                            <ul cid="n71" mdtype="list" data-mark="-">
+                                <li cid="n72" mdtype="list_item">
+                                    <p cid="n73" mdtype="paragraph">In most cases it&apos;s enough to unplug the USB drive and plug it back in to mount it.</p>
+                                </li>
+                                <li cid="n74" mdtype="list_item">
+                                    <p cid="n75" mdtype="paragraph">Else, run the <em>&quot;disks&quot;</em> tool and click the mount button for the USB drive.</p>
+                                </li>
+                            </ul>
+                        </li>
+                        <li cid="n76" mdtype="list_item">
+                            <p cid="n77" mdtype="paragraph">Copy the downloaded and saved Dell BIOS .exe used to update your firmware.</p>
+                            <ul cid="n78" mdtype="list" data-mark="-">
+                                <li cid="n79" mdtype="list_item">
+                                    <p cid="n80" mdtype="paragraph">First rename the file (remove the undersore).</p>
+                                </li>
+                                <li cid="n81" mdtype="list_item">
+                                    <p cid="n82" mdtype="paragraph">Stay on the safe side and limit the filename to 8 characters (without extension).</p>
+                                </li>
+                                <li cid="n83" mdtype="list_item">
+                                    <p cid="n84" mdtype="paragraph">Use only upper case characters.</p>
+                                </li>
+                                <li cid="n85" mdtype="list_item">
+                                    <p cid="n86" mdtype="paragraph">Ensure that you verified any checksums provided by your hardware vendor.</p>
+                                </li>
+                            </ul>
+                        </li>
+                        <li cid="n87" mdtype="list_item">
+                            <p cid="n88" mdtype="paragraph">Unmount the USB disk.</p>
+                            <ul cid="n89" mdtype="list" data-mark="-">
+                                <li cid="n90" mdtype="list_item">
+                                    <p cid="n91" mdtype="paragraph">Plug it in another PC (not booted yet).</p>
+                                </li>
+                                <li cid="n92" mdtype="list_item">
+                                    <p cid="n93" mdtype="paragraph">Leave it in the PC used to create the USB disk.</p>
+                                </li>
+                            </ul>
+                        </li>
+                        <li cid="n94" mdtype="list_item">
+                            <p cid="n95" mdtype="paragraph">Boot or reboot and do whatever is needed to boot from the USB drive.</p>
+                            <ul cid="n96" mdtype="list" data-mark="-">
+                                <li cid="n97" mdtype="list_item">
+                                    <p cid="n98" mdtype="paragraph">For Dell devices:</p>
+                                    <ul cid="n99" mdtype="list" data-mark="-">
+                                        <li cid="n100" mdtype="list_item">
+                                            <p cid="n101" mdtype="paragraph">When the Dell logo is presented hit the F12 key a couple of times and watch the &quot;boot options&quot; message change style.</p>
+                                        </li>
+                                        <li cid="n102" mdtype="list_item">
+                                            <p cid="n103" mdtype="paragraph">Select the &quot;boot form USB&quot; in the legacy menu part.</p>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ol><h2 cid="n104" mdtype="heading">Freedos</h2><p cid="n105" mdtype="paragraph">Freedos will boot from the USB drive.</p><ul cid="n106" mdtype="list" data-mark="-">
+                        <li cid="n107" mdtype="list_item">
+                            <p cid="n108" mdtype="paragraph">In my case I had to hit the F5 key during the boot process to get the classic <code>&quot;C:\&gt;&quot;</code> prompt. If I didn&apos;t do this the PC went beeping continuously (only way to get rid of it - shut down the PC). </p>
+                        </li>
+                        <li cid="n109" mdtype="list_item">
+                            <p cid="n110" mdtype="paragraph">A different scenario can happen and then Freedos will ask questions.</p>
+                            <ul cid="n111" mdtype="list" data-mark="-">
+                                <li cid="n112" mdtype="list_item">
+                                    <p cid="n113" mdtype="paragraph">Select your language.</p>
+                                </li>
+                                <li cid="n114" mdtype="list_item">
+                                    <p cid="n115" mdtype="paragraph">A prompt to install FreeDOS might appear</p>
+                                    <ul cid="n116" mdtype="list" data-mark="-">
+                                        <li cid="n117" mdtype="list_item">
+                                            <p cid="n118" mdtype="paragraph"><strong>Select &quot;No - Return to DOS&quot;</strong></p>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li cid="n119" mdtype="list_item">
+                                    <p cid="n120" mdtype="paragraph">Now the <code>C:\&gt;</code> prompt shoul pop up.</p>
+                                </li>
+                            </ul>
+                        </li>
+                        <li cid="n121" mdtype="list_item">
+                            <p cid="n122" mdtype="paragraph">Run <code>dir</code> and verify that the firmware upgrade .exe tool is present.</p>
+                        </li>
+                        <li cid="n123" mdtype="list_item">
+                            <p cid="n124" mdtype="paragraph">Run the executable, type &apos;&lt;<em>filename</em>&gt;.exe&apos;</p>
+                        </li>
+                        <li cid="n125" mdtype="list_item">
+                            <p cid="n126" mdtype="paragraph">Let the PC do it&apos;s job. </p>
+                        </li>
+                        <li cid="n127" mdtype="list_item">
+                            <p cid="n128" mdtype="paragraph">Don&apos;t be too impatient and don&apos;t touch the PC during the update process!</p>
+                        </li>
+                        <li cid="n129" mdtype="list_item">
+                            <p cid="n130" mdtype="paragraph">Once the process completes verify the new BIOS version.</p>
+                            <ul cid="n131" mdtype="list" data-mark="-">
+                                <li cid="n132" mdtype="list_item">
+                                    <p cid="n133" mdtype="paragraph">Through the BIOS setup screen (F12 menu).</p>
+                                </li>
+                                <li cid="n134" mdtype="list_item">
+                                    <p cid="n135" mdtype="paragraph">As well as by running <a spellcheck="false" href="https://www.archlinux.org/packages/?name=dmidecode">dmidecode</a> when you&apos;re back in linux.</p>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul><p cid="n136" mdtype="paragraph">Marc Defossez</p><p cid="n137" mdtype="paragraph">06 Nov 2019</p></p>
+            </div>
+        </div>
+        <!-- Bootstrap core JavaScript
+    ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="assets/js/jquery.min.js"></script>
+        <script src="assets/js/popper.js"></script>
+        <script src="bootstrap/js/bootstrap.min.js"></script>
+    </body>
+</html>

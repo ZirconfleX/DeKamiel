@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="De Kamiel; Test" content="">
+        <meta name="author" content="ZirconfleX">
+        <title>Test</title>
+        <!-- Bootstrap core CSS -->
+        <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+        <!-- Custom styles for this template -->
+        <link href="Test.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=ABeeZee&display=swap">
+        <meta name="keywords" content="Linux-Mint,VHDL,Python,FPGA">
+    </head>
+    <body>
+        <div class="container" style="border-bottom: 2px solid; display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 50px 50px; grid-template-rows: 50px 50px 50px 50px 20px; grid-template-areas: 'Logo Logo Title Title Title Title' 'Logo Logo Title Title Title Title' 'Logo Logo Zirco Zirco Zirco Zirco' 'Logo Logo Web Web Zirco Zirco' '. . . . . .'; margin-top: -50px;">
+            <img src="Figures/Kamiel_2.svg" style=" width: 100%; height: 100%; object-fit: fill;grid-area:1 / 1 / 5 / 3;" data-html="false">
+            <h1 style=" font-weight: bold; text-align: right; font-family: 'ABeeZee', sans-serif; align-self: center; font-size: 70px; line-height: 97px;grid-area:1 / 3 / 3 / 7;">De Kamiel</h1>
+            <img src="Figures/ZirconfleX_Logo_Web_45_Jun20.svg" style="width: 100%; height: 100%; object-fit: fill; grid-area: 3 / 5 / 5 / 7;">
+            <p style="font-family: 'ABeeZee', sans-serif; text-align: right; grid-area: 3 / 3 / 4 / 5; width: 100%; height: 100%; padding-top: 24px;">Offered by: ZirconfleX</p>
+            <p style="grid-area: 4 / 3 / 5 / 5; text-align: right; font-family: 'ABeeZee', sans-serif; color: #1d5de4; width: 100%; height: 100%;">http://www.<a href="http://www.zirconflex.be" target="_blank">zirconflex</a>.be</p>
+        </div>
+        <div class="container">
+            <h2 id="linux-ubuntu-mint-">Linux (Ubuntu/Mint)</h2>
+            <h3 id="introduction">Introduction</h3>
+            <p>Running Linux (Ubuntu 18.04/ Mint 19 or newer) and want to use python?
+You could use the default system install Python, “System Python”.
+On Linux Python is installed by default, when you type <code>python</code> in a terminal, a reply is showed as: </p>
+            <pre><code>Python <span class="hljs-number">3.8</span>.<span class="hljs-number">0</span> (<span class="hljs-keyword">default</span>, Nov  <span class="hljs-number">6</span> <span class="hljs-number">2019</span>, <span class="hljs-number">18</span>:<span class="hljs-number">38</span>:<span class="hljs-number">15</span>)
+[GCC <span class="hljs-number">7.4</span>.<span class="hljs-number">0</span>] <span class="hljs-keyword">on</span> linux<span class="hljs-keyword">Type</span> <span class="hljs-string">"help"</span>, <span class="hljs-string">"copyright"</span>, <span class="hljs-string">"credits"</span> <span class="hljs-keyword">or</span> <span class="hljs-string">"license"</span> <span class="hljs-keyword">for</span> more information.
+&gt;&gt;&gt;</code></pre>
+            <p>Type <code>exit()</code> to exit the interpreter.</p>
+            <p>So, why not use it and forget all possible popping up issues and problems when installing different versions of Python? The Python installed by default really <em>belongs</em> to the operating system. It came installed with the operating system and is used by the system or tools installed on the system.</p>
+            <p>Using that Python version is very well possible but: For projects of your own possibly libraries and packages need to be installed and those can/might/will interfere, have impact on system tools using the default installed Python.
+Another reason not to use the default installed Python is that it is installed in system directories. System directories belong to the root or sudo user and that will cause all kind of permission problems.</p>
+            <p>Thus let us install our own version of Python, but install it such a way that it&#39;s easy to manipulate, upgrade, and ... In order to be able to do this a &quot;Package manager&quot; is needed. Package Managers are the software tools like <strong>apt</strong> for Ubuntu and derivatives. One of the package managers dealing with Python is <strong><em>pyenv</em></strong>. This tool allows one to </p>
+            <ol>
+                <li>Install Python in user space</li>
+                <li>Install and use multiple versions of Python</li>
+                <li>Specify the exact Python version wanted for a project.</li>
+                <li>Switch between the installed versions</li>
+                <li>Use multiple versions of Python on one system.</li>
+                <li>... (much more).</li>
+            </ol>
+            <p>Let&#39;s install <em>pyenv</em> and walk through it</p>
+            <p><strong>Remark:</strong></p>
+            <p>​    <em>pyenv</em> is also a tool allowing to use virtual environments (above points 4 and 5 benefit from that).
+​    This is something for later on or read about it on the <em>pyenv</em> pages on the WWW.
+​    The goal of this document is to use <em>pyenv</em> to easily run and use python and to easily maintain it.</p>
+            <h3 id="install-pyenv">Install Pyenv</h3>
+            <ul>
+                <li>
+                    <p>Before being able to flawless install <em>pyenv</em> some build dependencies need to be installed.
+  Installing <em>pyenv</em> means building it up from source. That process needs specific tools installed in the OS.</p>
+                </li>
+                <li>
+                    <p>Run below in a terminal for all <em>pyenv</em> Ubuntu/Mint build dependencies </p>
+                    <pre><code>  sudo apt install -y make build-essential libssl-<span class="hljs-built_in">dev</span> zlib1g-<span class="hljs-built_in">dev</span> \
+  libbz2-<span class="hljs-built_in">dev</span> libreadline-<span class="hljs-built_in">dev</span> libsqlite3-<span class="hljs-built_in">dev</span> wget curl llvm libncurses5-<span class="hljs-built_in">dev</span> \
+  libncursesw5-<span class="hljs-built_in">dev</span> xz-utils tk-<span class="hljs-built_in">dev</span> libffi-<span class="hljs-built_in">dev</span> liblzma-<span class="hljs-built_in">dev</span> python-openssl</code></pre>
+                </li>
+                <li>
+                    <p>When above dependencies are installed it&#39;s time to install <em>pyenv</em> itself.
+  Run below in a terminal (<em>pyenv</em> and Python are installed as user, so no need for sudo anymore):</p>
+                    <pre><code>  curl <span class="hljs-string">https:</span><span class="hljs-comment">//pyenv.run | bash</span></code></pre>
+                    <p>  Pyenv will be installed with a few useful plugins:</p>
+                    <ol>
+                        <li>
+                            <strong><code>pyenv</code></strong>: The actual 
+                            <code>pyenv</code> application
+                        </li>
+                        <li>
+                            <strong><code>pyenv-update</code></strong>: Plugin for updating 
+                            <code>pyenv</code>
+                        </li>
+                        <li>
+                            <strong><code>pyenv-doctor</code></strong>: Plugin to verify that 
+                            <code>pyenv</code> and build dependencies are installed
+                        </li>
+                        <li>
+                            <strong><code>pyenv-which-ext</code></strong>: Plugin to automatically lookup system commands
+                        </li>
+                        <li>
+                            <p><strong><code>pyenv-virtualenv</code></strong>: Plugin for <code>pyenv</code> and virtual environments</p>
+                            <p>Finally the install will show something like this in the terminal</p>
+                            <pre><code>WARNING: seems you still have not added <span class="hljs-string">'pyenv'</span> to the load path.<span class="hljs-comment"># Load pyenv automatically by adding</span><span class="hljs-comment"># the following to ~/.bashrc:</span><span class="hljs-built_in">export</span> PATH=<span class="hljs-string">"<span class="hljs-variable">$HOME</span>/.pyenv/bin:<span class="hljs-variable">$PATH</span>"</span><span class="hljs-built_in">eval</span> <span class="hljs-string">"<span class="hljs-variable">$(pyenv init -)</span>"</span><span class="hljs-built_in">eval</span> <span class="hljs-string">"<span class="hljs-variable">$(pyenv virtualenv-init -)</span>"</span></code></pre>
+                            <p>Edit the <code>.bashrc</code> file in your home directory or edit/create a <code>.bashrc_aliases</code> file.
+Add the lines, as given above, to one of the files or modify the lines a bit to fit a higher purpose.</p>
+                            <pre><code><span class="hljs-comment"># Pyenv Python installer, Python and other Python stuff goes below</span><span class="hljs-built_in">export</span> PYENV_ROOT=<span class="hljs-variable">$HOME</span>/.pyenv<span class="hljs-built_in">export</span> PATH=<span class="hljs-variable">$PYENV_ROOT</span>/bin:<span class="hljs-variable">$PATH</span><span class="hljs-built_in">eval</span> <span class="hljs-string">"<span class="hljs-variable">$(pyenv init -)</span>"</span><span class="hljs-built_in">eval</span> <span class="hljs-string">"<span class="hljs-variable">$(pyenv virtualenv-init -)</span>"</span></code></pre>
+                            <p><strong>Remark:</strong> a <em>.bashrc</em> file normally contains a command to source a <em>.bashrc_aliases</em> file when it is available. Using a <em>.bashrc_aliases</em> file is a save (and smart) solution. All user added items to a <em>.bashrc</em> file fit in this file making it easy to return to a basic setup.</p>
+                            <p>As extra install the <em>pyenv</em> pip-migrate plugin. This plugin makes it easy to take libraries and packages installed with pip from one Python version into another.</p>
+                            <pre><code>git clone git:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/pyenv/</span>pyenv-pip-migrate.git $(pyenv root)<span class="hljs-regexp">/plugins/</span>pyenv-pip-migrate</code></pre>
+                        </li>
+                    </ol>
+                </li>
+                <li>
+                    <p>Pyenv knows a lot of commands, the most used are listed here:</p>
+                    <ul>
+                        <li>help        Display help for a command</li>
+                        <li>version     Show the current Python version and its origin
+                            --version   Display the version of 
+
+                            <em>pyenv</em>
+                        </li>
+                        <li>
+                            <p>install     Install a Python version using python-build</p>
+                        </li>
+                        <li>
+                            <p>uninstall   Uninstall a specific Python version</p>
+                        </li>
+                        <li>local       Set or show the local application-specific Python version</li>
+                        <li>global      Set or show the global Python version</li>
+                        <li>
+                            <p>migrate     Migrate pip packages from a Python version to another</p>
+                            <p>For all other <em>pyenv</em> command just type <code>pyenv</code> in a terminal or command window.</p>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <h3 id="install-python_3-7-or-newer">Install Python_3.7 or newer</h3>
+            <ul>
+                <li>First find out what Python versions are available. This allows that the most recent version or the version required can be installed and use. From the list of versions several can be picked and installed.
+                    In a terminal type: 
+
+                    <code>pyenv install --list | grep &quot; 3\.[6789]&quot;</code>
+                    The terminal will output a list of available Python versions.
+                    When omitting the 
+
+                    <code>grep</code> the result will be a very long list! 
+                </li>
+                <li>Find the version needed and install it as: 
+                    <code>pyenv install -v 3.8.0</code>
+                    Pyenv will install Python version 3.8.0 and the -v (verbose) will list a lot of text while installing and building Python. Remove the -v to get rid of most text lines.
+                </li>
+                <li>pyenv Installs each Pyhton version in its own directory under the pyenv umbrella.
+                    The 3.8.0 version will be installed in 
+
+                    <code>./home/&lt;user&gt;/.pyenv/versions/3.8.0</code>
+                    When a second Python version is installed, let&#39;s say 3.7.4, it will reside in 
+
+                    <code>~/.pyenv/versions/3.7.4</code>.
+                </li>
+                <li>Packages installed with pip (the pip belonging to the python version) are also installed under the directory 
+                    <Python_version>.
+                </li>
+            </ul>
+            <h3 id="use-a-installed-python-version">Use a installed Python version</h3>
+            <ul>
+                <li>
+                    <p>Type in a terminal: <code>pyenv versions</code></p>
+                </li>
+                <li>
+                    <p>The output will most likely be something like:</p>
+                    <pre><code>  * <span class="hljs-keyword">system</span> (<span class="hljs-keyword">set</span> by <span class="hljs-comment">&lt;path</span>/to/<span class="hljs-comment">the</span>/<span class="hljs-keyword">system</span>/<span class="hljs-comment">python)</span>
+    2.7.15
+    3.7.4
+    3.8.0</code></pre>
+                    <p>  The <strong>*</strong> shows what Python version is in use.</p>
+                </li>
+                <li>
+                    <p>To use one of the just installed Python versions type: <code>pyenv global 3.8.0</code>
+  Running <code>pyenv versions</code> will now have a <strong>*</strong> in front of 3.8.0 indicating that this is now the version used by you as user.</p>
+                </li>
+                <li>
+                    <p>To check if the installation went OK and is working fully type <code>python -m test</code> in the terminal.
+  This will run a long list of Python checks and test, assuring at the end everything works OK.
+  This command will take a long time as a lot of tests are run (interrupt with CTRL-C).</p>
+                </li>
+                <li>
+                    <p>Everything is ready now to start using Python.
+  But better first install some packages that make a programmers life easier.
+  Go to <strong>Python Libraries/Packages</strong>.</p>
+                </li>
+            </ul>
+            <h2 id="microsoft">Microsoft</h2>
+            <h3 id="introduction">Introduction</h3>
+            <p>Python is not part of the windows OS and therefor it can be installed as any other application or tool for Windows. There is no real need for a package manager like <em>pyenv</em> although <em>pyenv</em> can be very useful on Windows too. </p>
+            <h3 id="install-python_3-7-or-newer">Install Python_3.7 or newer</h3>
+            <p><strong>Remark: </strong> <strong>DON&#39;T use Python 2.x anymore please!</strong></p>
+            <ul>
+                <li>Download the 64-bit version of python from the python website.
+                    <ul>
+                        <li>Downloaded the 64-bit web install version.</li>
+                    </ul>
+                </li>
+                <li>Save the download somewhere on disk.</li>
+                <li>Double click the downloaded exe file.</li>
+                <li>A python installer launches and proposes to “install Now”.
+                    <ul>
+                        <li>When you agree to this python will be installed in C:\Users&lt;Your_User_Name.....</li>
+                        <li>When you tick -&gt; Customise installation
+                            <ul>
+                                <li>Optional Features can be installed (all are selected, leave it like that).</li>
+                                <li>Click [Next] to get to the next option window.</li>
+                                <li>Tick:
+                                    <ul>
+                                        <li>Associate files with Python</li>
+                                        <li>Create shortcuts for installed applications</li>
+                                        <li>Add Python to the environment variables</li>
+                                        <li>Set the path where Python should be installed.
+                                            <ul>
+                                                <li>For me that’s: C:\CaeTools\Python</li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>Hit [Install] and wait and finally tick [Close]</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <h2 id="upgrade-a-python-installation">Upgrade a Python installation</h2>
+            <p>Every minor version of Python, that is any 3.x version, will install side-by-side with other versions on your computer. Only patch versions will upgrade existing installations.</p>
+            <p>As for PyPI packages, every Python installation comes with its own folder where modules are installed into. So if you install a new version and you want to use modules you installed for a previous version, you will have to install them first for the new version.</p>
+            <h2 id="python-libraries-packages">Python libraries/packages</h2>
+            <p>Python add-on libraries or packages are there to make life easier.
+When in need for something, in a lot of cases somebody already developed it.
+Those add-ons can be download from the PyPi website. PyPi is a huge database/repository of community developed and shared software utilities.</p>
+            <p>PyPi packages are installed in a terminal/command window using <strong>pip</strong> (<strong>pip</strong> works the same for Linux and Microsoft).</p>
+            <p><strong>Remark:</strong></p>
+            <p>Using a Python version allows that a set of packages/libraries for/with that version are installed and used. The packages are installed in the same <em>pyenv</em> directory containing the Python version.</p>
+            <p>When a new Python version is installed all in a previous version installed packages are gone. The remain installed with the old Python version. </p>
+            <p>To get all previous used packages back into the new Python version use the <strong>pyenv-pip-migrate</strong> tool.<code>pyenv migrate &lt;old_version&gt; &lt;new_version&gt;</code> Like: <em>pyenv migrate 3.7.4 3.8.0</em></p>
+            <p>For our needs we will install some:</p>
+            <h3 id="jupyter">Jupyter</h3>
+            <ul>
+                <li>
+                    <p>The Jupyter Notebook is an open-source web application that allows you to create and share documents that contain live code, equations, visualisations and narrative text. Uses include: data cleaning and transformation, numerical simulation, statistical modelling, data visualisation, machine learning, and much more. The next generation of Jupyter is called JupyterLabs and can be installed the same way as the classic Jupyter.</p>
+                </li>
+                <li>
+                    <p>The jupyter web site with documentation, tutorial and more can be found here:</p>
+                    <ul>
+                        <li>
+                            <a href="https://jupyter.org">https://jupyter.org</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <pre><code>  pip <span class="hljs-keyword">install </span>--upgrade pip
+  pip <span class="hljs-keyword">install </span><span class="hljs-keyword">jupyter</span> <span class="hljs-keyword">or</span>  pip <span class="hljs-keyword">install </span><span class="hljs-keyword">jupyterlab</span></code></pre>
+                </li>
+            </ul>
+            <h4 id="remark-jupyter-notebook-used-with-atom">Remark: Jupyter notebook used with Atom</h4>
+            <p>When Github Atom editor is installed and used, download and install the Hydrogen package.</p>
+            <ul>
+                <li>Launch Atom</li>
+                <li>Click in the top menu bar [Packages] - [Settings View] - [Install Packages/Themes]</li>
+                <li>Type in the entry bar under [Install Packages]: Hydrogen and click the [Install] button.</li>
+                <li>Configure the package afterwards by clicking the [Settings] button.</li>
+            </ul>
+            <h3 id="spyder">Spyder</h3>
+            <ul>
+                <li>
+                    <p>Spyder is a powerful scientific environment written in Python, for  Python, and designed by and for scientists, engineers and data analysts. It offers a unique combination of the advanced editing, analysis,  debugging, and profiling functionality of a comprehensive development  tool with the data exploration, interactive execution, deep inspection,  and beautiful visualization capabilities of a scientific package.</p>
+                    <p>  Beyond its many built-in features, its abilities can be extended even further via its plugin system and API. Furthermore, Spyder can also be  used as a PyQt5 extension library, allowing developers to build upon its functionality and embed its components, such as the interactive  console, in their own PyQt software.</p>
+                </li>
+                <li>
+                    <p>Web site: </p>
+                    <ul>
+                        <li>https//www.spyder-ide.org</li>
+                    </ul>
+                </li>
+                <li>
+                    <p>Before installation these dependencies MUST be installed.</p>
+                    <ul>
+                        <li>
+                            <p><a href="https://www.python.org/">Python</a> 2.7 or &gt;=3.3        DO NOT USE Python 2 ANYMORE, please!</p>
+                        </li>
+                        <li>
+                            <p><a href="https://www.riverbankcomputing.com/software/pyqt/download5">PyQt5</a> &gt;=5.5</p>
+                        </li>
+                        <li>
+                            <p><a href="https://github.com/jupyter/qtconsole">Qtconsole</a> &gt;=4.2.0 – for an enhanced Python interpreter.</p>
+                        </li>
+                        <li>
+                            <p><a href="https://github.com/python-rope/rope">Rope</a> &gt;=0.9.4 and <a href="https://github.com/davidhalter/jedi">Jedi</a> &gt;=0.9.0 – for code completion, go-to-definition and calltips in the Editor.</p>
+                        </li>
+                        <li>
+                            <p><a href="https://github.com/PyCQA/pyflakes">Pyflakes</a>  – for real-time code analysis.</p>
+                        </li>
+                        <li>
+                            <p><a href="https://www.sphinx-doc.org/en/master/">Sphinx</a> – for the Help pane rich text mode and to get our documentation.</p>
+                        </li>
+                        <li>
+                            <p><a href="http://pygments.org/">Pygments</a> &gt;=2.0 – for syntax highlighting and code completion in the Editor of all file types it supports.</p>
+                        </li>
+                        <li>
+                            <p><a href="https://www.pylint.org/">Pylint</a>  – for static code analysis.</p>
+                        </li>
+                        <li>
+                            <p><a href="https://github.com/PyCQA/pycodestyle">Pycodestyle</a> – for style analysis.</p>
+                        </li>
+                        <li>
+                            <p><a href="https://github.com/giampaolo/psutil">Psutil</a>  – for memory/CPU usage in the status bar.</p>
+                        </li>
+                        <li>
+                            <p><a href="https://github.com/jupyter/nbconvert">Nbconvert</a> – to manipulate Jupyter notebooks on the Editor.</p>
+                        </li>
+                        <li>
+                            <p><a href="https://github.com/spyder-ide/qtawesome">Qtawesome</a> &gt;=0.4.1 – for an icon theme based on FontAwesome.</p>
+                        </li>
+                        <li>
+                            <p><a href="https://github.com/pickleshare/pickleshare">Pickleshare</a> – To show import completions in the Editor and Consoles.</p>
+                        </li>
+                        <li>
+                            <p><a href="https://github.com/zeromq/pyzmq">PyZMQ</a> – To run introspection services in the Editor asynchronously.</p>
+                        </li>
+                        <li>
+                            <p><a href="https://github.com/spyder-ide/qtpy">QtPy</a> &gt;=1.2.0 – To run Spyder with different Qt bindings seamlessly.</p>
+                        </li>
+                        <li>
+                            <p><a href="https://github.com/chardet/chardet">Chardet</a> &gt;=2.0.0– Character encoding auto-detection in the Editor.</p>
+                        </li>
+                        <li>
+                            <p><a href="https://github.com/numpy/numpydoc">Numpydoc</a> Used by Jedi to get return types for functions with Numpydoc docstrings.</p>
+                        </li>
+                        <li>
+                            <p><a href="https://github.com/cloudpipe/cloudpickle">Cloudpickle</a> Serialize variables in the IPython kernel to send them to Spyder.</p>
+                            <p> <strong>Optional Modules</strong></p>
+                        </li>
+                        <li>
+                            <p><a href="https://matplotlib.org/">Matplotlib</a> &gt;=1.0 – for 2D and 3D plotting in the consoles.</p>
+                        </li>
+                        <li>
+                            <p><a href="https://pandas.pydata.org/">Pandas</a> &gt;=0.13.1 – for viewing and editing Series and DataFrames in the Variable Explorer.</p>
+                        </li>
+                        <li>
+                            <p><a href="https://www.numpy.org/">Numpy</a> – for viewing and editing two or three dimensional arrays in the Variable Explorer.</p>
+                        </li>
+                        <li>
+                            <p><a href="https://www.sympy.org/en/index.html">Sympy</a> &gt;=0.7.3 – for working with symbolic mathematics in the IPython console.</p>
+                        </li>
+                        <li>
+                            <p><a href="https://www.scipy.org/">Scipy</a> – for importing Matlab workspace files in the Variable Explorer.</p>
+                        </li>
+                        <li>
+                            <p><a href="http://cython.org/">Cython</a> &gt;=0.21 – to run Cython files or Python files that depend on Cython libraries in the IPython console.</p>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <p>Install now Spyder</p>
+                    <ul>
+                        <li>
+                            <pre><code>  pip <span class="hljs-keyword">install</span> spyder</code></pre>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <p>After installation, launch Spyder and customise it to your needs.</p>
+                </li>
+                <li>
+                    <p>Something that might be useful in Spider and when installed in Atom too is Kite.</p>
+                    <p> <strong>Kite</strong></p>
+                    <ul>
+                        <li>Kite is a plugin for Spyder and also for Atom.</li>
+                        <li>
+                            <strong>Kite</strong> is a free AI-powered autocomplete for 
+                            <strong>Python</strong> developers. Code faster with the 
+                            <strong>Kite</strong> plugin for your code editor, featuring Intelligent Snippets, Line-of-Code Completions, 
+                            <strong>Python</strong> docs, and cloudless processing.
+                        </li>
+                        <li>Read also this article before you start:
+                            <ul>
+                                <li>
+                                    <a href="https://qz.com/1043614/this-startup-learned-the-hard-way-that-you-do-not-piss-off-open-source-programmers/">https://qz.com/1043614/this-startup-learned-the-hard-way-that-you-do-not-piss-off-open-source-programmers/</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>Web site:
+                            <ul>
+                                <li>
+                                    <a href="https://kite.com/">https://kite.com/</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>Install Kite
+                            <ul>
+                                <li>When Spyder is launched the first time, it is possible that a popup appears asking to install Kite. Thus, just follow the installation procedure.</li>
+                                <li>If no popup appear or not using Spyder but Atom and want Kite, go to the Kite web site and follow the install procedure.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <h3 id="numpy">Numpy</h3>
+            <ul>
+                <li>
+                    <p>NumPy is the fundamental package for scientific computing with Python. It contains
+  among other things:</p>
+                    <ul>
+                        <li>A powerful N-dimensional array object.</li>
+                        <li>Sophisticated (broadcasting) functions.</li>
+                        <li>Tools for integrating C/C++ and Fortran code.</li>
+                        <li>Useful linear algebra, Fourier transform, and random number capabilities.
+                            Besides its obvious scientific uses, NumPy can also be used as an efficient multi-dimensional container of generic data. Arbitrary data-types can be defined. This allows NumPy to seamlessly and speedily integrate with a wide variety of databases.
+</li>
+                    </ul>
+                </li>
+                <li>
+                    <p>The numpy web site with documentation and more can be found here:</p>
+                    <ul>
+                        <li>
+                            <a href="https://numpy.org">https://numpy.org</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <pre><code>  pip <span class="hljs-keyword">install</span> numpy</code></pre>
+                </li>
+            </ul>
+            <h3 id="matplotlib">Matplotlib</h3>
+            <ul>
+                <li>
+                    <p>Matplotlib is a Python 2D plotting library which produces publication quality figures in a variety of hardcopy formats and interactive environments across platforms. Matplotlib can be used in Python scripts, the Python and |Python shells, the |: yr notebook, web application servers, and four graphical user interface toolkits.</p>
+                </li>
+                <li>
+                    <p>Matplotlib tries to make easy things easy and hard things possible. You can generate plots, histograms, power spectra, bar charts, errorcharts, Scatterplots, ¢ etc., with just a few lines of code. For examples, see the sample plots and thumbnail gallery For simple plotting the pyplot module rovides : a , MATLAB- like interface, “particularly when combined with IPython. For the power user, you have full control of line styles, font properties, axes properties, etc, via an object oriented interface or via a set of
+  functions familiar to MATLAB users.</p>
+                </li>
+                <li>
+                    <p>The matplotlib documentation can be found here:</p>
+                    <ul>
+                        <li>
+                            <a href="https://matplotlib.org">https://matplotlib.org</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <pre><code>  pip <span class="hljs-keyword">install</span> matplotlib</code></pre>
+                </li>
+            </ul>
+            <h3 id="pandas">Pandas</h3>
+            <ul>
+                <li>
+                    <p>Pandas is a Python package providing fast, flexible, and expressive data structures designed to make working with structured (tabular, multidimensional, potentially heterogeneous) and time series data both easy and intuitive. It aims to be the fundamental high-level building block for doing practical, real world data analysis in Python.</p>
+                </li>
+                <li>
+                    <p>Pandas is well suited for many different kinds of data:</p>
+                    <ul>
+                        <li>Tabular data with heterogeneously-typed columns, as in an SQL table or Excel spreadsheet.</li>
+                        <li>Ordered and unordered (not necessarily fixed-frequency) time series data.</li>
+                        <li>Arbitrary matrix data (homogeneously typed or heterogeneous) with row and column labels</li>
+                        <li>Any other form of observational / statistical data sets. The data actually need not be labelled at all to be placed into a pandas data structure.</li>
+                    </ul>
+                </li>
+                <li>
+                    <pre><code>  pip <span class="hljs-keyword">install</span> pandas</code></pre>
+                </li>
+            </ul>
+            <p>Above tools are all installed to make working with <em>MyHdl</em> easy. <em>Jupyter</em> allows one to write code and document it. Myhdl can create from a described hardware system verilog and/or vhdl files so that the system can be implemented in an FPGA using Vivado (Synthesis and implementation).
+On other side the output of MyHdl can be any other format that can be created by using python.
+Therefore the <em>numpy, matplotlib</em> and <em>pandas</em> python libraries can be used. Extra waveform help for those working with Jupyter notebook is offered with the MyHdlPeek library.</p>
+            <h3 id="myhdl">MyHdl</h3>
+            <ul>
+                <li>
+                    <p>MyHDL turns Python into a hardware description and verification language, providing hardware engineers with the power of the Python ecosystem. </p>
+                </li>
+                <li>
+                    <p>The MyHdl documentation can be found here:</p>
+                    <ul>
+                        <li>
+                            <a href="https://myhdl.org">https://myhdl.org</a>
+                        </li>
+                        <li>
+                            <a href="https://doc.myhdl.org/en/stable">https://doc.myhdl.org/en/stable</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <pre><code>  pip <span class="hljs-keyword">install</span> myhdl</code></pre>
+                </li>
+            </ul>
+            <h3 id="myhdlpeek">MyHdlPeek</h3>
+            <ul>
+                <li>
+                    <p>Why should or can you use this.</p>
+                </li>
+                <li>
+                    <p>In most designs the test bench is written out as a VCD file. This file format can be viewed by a waveform viewer as GtKwave, a free available tool for waveform viewing. The VCD file can also be displayed in the waveform viewer of Vivado[^1] or in Mentor Modelsim/Questasim[^2] when one or all of those are available or in other third party waveform viewers [^3][^4].</p>
+                </li>
+                <li>
+                    <p>MyHdlPeek provides a waveform viewer in the Jypiter notebook so that documenting notebooks with waveforms no longer require screen captures of waveform viewer windows. MyHdlPeek is a module that lets you monitor signals in a MyHDL digital system simulation and display them as wave-forms in a Jupyter notebook.</p>
+                </li>
+                <li>
+                    <p>Myhdlpeek implements a Peeker object that monitors a signal and records the time and value when it changes. Just add multiple Peekers where you want to monitor something (even at sub-levels of a hierarchical design) and then view the collected timing wave-forms with a single command. You can also select which signals are shown, set the beginning and ending times of the display, and set other options.</p>
+                </li>
+                <li>
+                    <p>Documentation can be found here:</p>
+                    <ul>
+                        <li>
+                            <a href="https://xesscorp.github.io/myhdlpeek/docs/_build/singlehtml/index.html">https://xesscorp.github.io/myhdlpeek/docs/_build/singlehtml/index.html</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <pre><code>  pip <span class="hljs-keyword">install</span> myhdlpeek</code></pre>
+                </li>
+            </ul>
+            <p>Below are two bonus Python libraries one can install to do more than just hardware system design.
+Pyside2 allows the use of QT for generating professional looking GUI tools and Urubu allows quick generation of static web pages.</p>
+            <h3 id="pyside2">PySide2</h3>
+            <ul>
+                <li>
+                    <p>Qt for Python is the project that provides the official set of Python bindings (PySide2) that will supercharge your Python applications. While the Qt APIs are world renowned, there are more reasons why you should consider Qt for Python. The first official release of the PySide2 module is available now! But what is Qt (Qute)?</p>
+                </li>
+                <li>
+                    <p>Qt is a platform to create high-performance, intuitive (if they are designed to be) UI, applications and other for embedded, desktop and all kind of other platforms. Qt appears in our homes, our cars, our workplaces and our pockets smart devices. Qt makes sure you can create unique &amp; modern connected devices that stand out from the crowd.</p>
+                </li>
+            </ul>
+            <h4 id="installation-1-">Installation 1:</h4>
+            <ul>
+                <li>Open a web browser and go to:
+                    <a href="https://download.qt.io/snapshots/ci/pyside/5.13/latest/pyside2/">https://download.qt.io/snapshots/ci/pyside/5.13/latest/pyside2/</a>
+                </li>
+            </ul>
+            <ul>
+                <li>
+                    <p>Download the latest version of PySide2 for the OS of the computer it needs to run
+  on. At the time of writing of this text it was:</p>
+                    <pre><code>[<span class="hljs-string">PySide2-5.13.1a1.dev1567626422-5.13.1-cp35.cp36.cp37-none-win_amd64.whl</span>](<span class="hljs-link">https://download.qt.io/snapshots/ci/pyside/5.13/latest/pyside2/PySide2-5.13.1a1.dev1567626422-5.13.1-cp35.cp36.cp37-none-win_amd64.whl</span>)</code></pre>
+                    <ul>
+                        <li>Save the downloaded wheel file.</li>
+                    </ul>
+                </li>
+                <li>
+                    <p>Open a command window and type:</p>
+                    <pre><code>  pip install &lt;drive&gt;<span class="hljs-symbol">:/&lt;Path&gt;/To/Downloaded/wheel/File</span></code></pre>
+                    <ul>
+                        <li>Test if everything went well pip show pyside2</li>
+                    </ul>
+                </li>
+            </ul>
+            <h4 id="installation-2-">Installation 2:</h4>
+            <ul>
+                <li>
+                    <p>Documentation on PyPi can be found here: <a href="https://pypi.org/project/PySide2">https://pypi.org/project/PySide2</a></p>
+                    <pre><code>pip <span class="hljs-keyword">install</span> pyside2</code></pre>
+                </li>
+            </ul>
+            <h4 id="remark-1-">Remark 1:</h4>
+            <ul>
+                <li>To do stuff with PySide, the Qt tools must be installed. That is subject for another text.</li>
+                <li>Qt (cute) is basically an aid to give to C/C++ easy graphical possibilities.</li>
+                <li>Due to that PySide2 has dependencies to a C/C++ parser clang.</li>
+            </ul>
+            <h4 id="remark-2-">Remark 2:</h4>
+            <ul>
+                <li>There is not so much information available on teh use of Python with Pyside. I found  a good web page that shows two possible uses of Qt and Python with Pyside2.</li>
+                <li>
+                    <a href="https://doc.qt.io/qtforpython/tutorials/basictutorial/uifiles.html">https://doc.qt.io/qtforpython/tutorials/basictutorial/uifiles.html</a>
+                </li>
+            </ul>
+            <h3 id="urubu">Urubu</h3>
+            <ul>
+                <li>A micro CMS for static websites</li>
+                <li>Goto this page for all documentation.</li>
+                <li>Install Urubu from the command line: pip instal] urubu</li>
+                <li>There is a quickstart tool that lowers the learning cost of Urubu. The quickstart tool is at the same time a kind of tutorial. To get it, download the quikstart zip file from the Urubu website.</li>
+            </ul>
+            <h4 id="the-end-for-now-">The end for now.</h4>
+            <!-- Bootstrap core JavaScript
+            ================================================== -->
+            <!-- Placed at the end of the document so the pages load faster -->
+            <script src="assets/js/jquery.min.js"></script>
+            <script src="assets/js/popper.js"></script>
+            <script src="bootstrap/js/bootstrap.min.js"></script>

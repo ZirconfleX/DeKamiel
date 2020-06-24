@@ -1,6 +1,6 @@
 # DeKamiel.github.io
 
-<img src="Figures/Kamiel_2.svg" alt="Kamiel_2" style="width:33%;" /> 
+<img src="Figures/Kamiel_2.svg" alt="Kamiel_2" style="width:5%;" /> 
 
 An articles, applications notes and guidelines site created by Zirconflex.be
 

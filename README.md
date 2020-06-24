@@ -4,6 +4,6 @@
 
 An articles, applications notes and guidelines site created by Zirconflex.be
 
-Find [here]( https://zirconflex.github.io/DeKamiel/.) articles, application notes and guidelines about Linux (Ubuntu & Mint), FPGA (Xilinx & other), and other useful stuff created by ZirconfleX.
+Find **[here]( https://zirconflex.github.io/DeKamiel/.)** articles, application notes and guidelines about Linux (Ubuntu & Mint), FPGA (Xilinx & other), and other useful stuff created by ZirconfleX.
 
 06 June 2020

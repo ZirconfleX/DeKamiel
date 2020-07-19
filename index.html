@@ -82,7 +82,12 @@
                             <p>It can be very handy to have two Xilinx development boards cannect together, using all the IO available in/on a FMC connector.<br>
                             It is that way possible to connect the two boards using one or more full IO-Banks of the FPGA, enabling high speed wide data transfers.</p>
                         </li>
-                        <li>Connect a ARM Microcontroller to a FPGA using its Extended Memory Interface (EMI)</li>
+                        <li>Connect a ARM Microcontroller to a FPGA using its Extended Memory Interface (EMI)   [
+                            <a href="ArmMicroToFpga.html" target="_blank">Click Here</a>&nbsp;]
+                            <p>Interface an FPGA and a microcontroller is possible by using teh in the microcontroller pheripherals as SPI, USRT or other.<br>
+                            But when teh microcontroller has a External Memory Interface/Controller (EMI/EMC) then the registersets or memory blocks can be defined in teh memeory map of the microcontroller.<br>
+                            Using an EMI/EMC defines memory regions in teh microcontroller address map, registers defined in teh FPGA can thus fit in those area.</p>
+                        </li>
                         <li>Mastering KiCad_5x</li>
                         <li>Using GHDL and GtkWave.</li>
                         <li>Python and Tools    [

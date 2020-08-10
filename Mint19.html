@@ -380,11 +380,26 @@
                                     <li>Above instructions can also be found on:<br>
                                         <span style="background-color: rgb(238, 231, 231)"><i>https://github.com/blueman-project/blueman/wiki/Packaged-versions</i></span>
                                     </li>
+                                    </li> <strong>REMARK:</strong> The described issue in the text below is not required anymore after upgrading or installation of Linux-Mint.20.4! <br>
+                                          I leave in the text because it can be usefull on other hardware, with other Ubuntu based distros or ... <br>
+                                          A new install or an upgrade updates at the same time the Blueman tools to the newest version. <br>
+                                          In fact, if Ofono is installed, remove it! <br>
+                                          With Ofono installed the ssytem log fiiles showed that a Bluetooth driver called bluetoothctl was crashing and also reported spurious responces from something <br>
+                                          called snd_hda_intel. These crashes did not affect the functioning of the PC nor the Bluetooth stuff but it created a lot of lines in the system log files.
+                                    </li>
                                     <li>After reboot of the PC, a Linux Log file reported: "[pulseaudio] backend-ofono.c: Failed to register as a handsfree audio ...... ..." .<br>
                                         This was Bluetooth related and installing ofono solved the issue.
                                     </li>
                                     <li>Open a terminal and enter: <span style="background-color: rgb(238, 231, 231)"><i>sudo apt install ofono</i></span><br>
                                         When done, enter <span style="background-color: rgb(238, 231, 231)"><i>systemctl enable ofono</i></span>.
+                                    </li>
+                                    <li><strong>A final REMARK:</strong> When after an upgrade to Linux-Mint.20.4 Bluetooth does seems stuck or no longer working, try this:
+                                        <li>After a boot or restart Blueman should start automatically and show an ativity icon in the toolbar. </li>
+                                        <li>Open Blueman and remove all installed/connected devices from the showed list. </li>
+                                        <li>Turn Bluetooth off and reboot.</li>
+                                        <li>After the reboot Blueman will be running again, open it.</li>
+                                        <li>Let it discover all Bluetooth devices and install them again.</li>
+                                        <li> Everything should work as before.</li>
                                     </li>
                                 </ul>
                             <li>Install codecs to be able to play movies and music.<br>
